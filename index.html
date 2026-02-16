@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Territory Words</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: #1e293b;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .score-box { font-size: 19px; font-weight: 700; min-width: 130px; }
+        #blue-score { color: #60a5fa; text-align: left; }
+        #red-score  { color: #f87171; text-align: right; }
+        #turn-info { text-align: center; flex: 1; }
+
+        #turn-indicator { font-size: 19px; font-weight: 700; transition: color 0.3s; }
+        #turns-left { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+        #sound-toggle {
+            padding: 6px 12px; font-size: 12px; font-weight: 600;
+            background: #334155; color: #94a3b8; border: none; border-radius: 6px;
+            cursor: pointer; margin-left: 12px; white-space: nowrap;
+        }
+        #sound-toggle:hover { background: #475569; }
+
+        #game-area {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            max-width: 900px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        #main-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #word-display {
+            text-align: center;
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            padding: 6px;
+            min-height: 34px;
+            margin-bottom: 6px;
+            color: #94a3b8;
+        }
+
+        #gameCanvas {
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            height: auto;
+        }
+
+        #controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 8px 20px; font-size: 14px; font-weight: 600;
+            border: none; border-radius: 8px; cursor: pointer;
+            background: #334155; color: #e2e8f0;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover { background: #475569; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        button:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+        #btn-submit { background: #059669; color: #fff; }
+        #btn-submit:hover:not(:disabled) { background: #047857; }
+
+        #btn-pass { background: #92400e; color: #fff; }
+        #btn-pass:hover:not(:disabled) { background: #78350f; }
+
+        #btn-accept { background: #b45309; color: #fff; display: none; }
+        #btn-accept:hover { background: #a16207; }
+
+        #message {
+            text-align: center; font-size: 14px; padding: 8px;
+            min-height: 34px; color: #fbbf24;
+            transition: opacity 0.5s; opacity: 0;
+        }
+
+        /* ===== History sidebar ===== */
+        #history-panel {
+            width: 220px;
+            min-width: 220px;
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 14px;
+            max-height: 680px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #history-panel h3 {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #history-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        #history-list::-webkit-scrollbar { width: 4px; }
+        #history-list::-webkit-scrollbar-track { background: transparent; }
+        #history-list::-webkit-scrollbar-thumb { background: #475569; border-radius: 2px; }
+
+        .history-entry {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            background: #0f172a;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .history-dot {
+            width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+        }
+        .history-dot.blue { background: #3b82f6; }
+        .history-dot.red { background: #ef4444; }
+
+        .history-word {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-info {
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .history-pass {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .history-collinear {
+            color: #94a3b8;
+        }
+
+        .history-empty {
+            color: #475569;
+            font-style: italic;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 13px;
+        }
+
+        /* ===== Game over overlay ===== */
+        #game-over {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.75); z-index: 100;
+            justify-content: center; align-items: center;
+        }
+        #game-over.visible { display: flex; }
+
+        .game-over-content {
+            background: #1e293b; border-radius: 16px;
+            padding: 40px 56px; text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+            animation: popIn 0.3s ease-out;
+        }
+        .game-over-content h1 { font-size: 34px; margin-bottom: 10px; }
+        #final-scores { font-size: 20px; margin-bottom: 6px; color: #cbd5e1; }
+        #winner-subtitle { font-size: 15px; color: #94a3b8; margin-bottom: 22px; }
+        .game-over-content button {
+            padding: 12px 36px; font-size: 17px;
+            background: #059669; color: #fff; border-radius: 10px;
+        }
+        .game-over-content button:hover { background: #047857; }
+
+        @keyframes popIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 920px) {
+            #game-area { flex-direction: column; align-items: center; }
+            #history-panel {
+                width: 100%; max-width: 650px;
+                max-height: 180px; min-width: auto;
+            }
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 10px; }
+            #header { padding: 10px 14px; min-width: auto; }
+            .score-box { font-size: 15px; min-width: 90px; }
+            #turn-indicator { font-size: 15px; }
+            #word-display { font-size: 15px; }
+            #controls { gap: 6px; }
+            button { padding: 7px 14px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div id="blue-score" class="score-box">Blue: 0</div>
+        <div id="turn-info">
+            <div id="turn-indicator">Blue's Turn</div>
+            <div id="turns-left">16 turns left</div>
+        </div>
+        <div style="display:flex;align-items:center">
+            <div id="red-score" class="score-box">Red: 0</div>
+            <button id="sound-toggle" onclick="toggleSound()">Sound: OFF</button>
+        </div>
+    </div>
+
+    <div id="game-area">
+        <div id="main-panel">
+            <div id="word-display">Select letters to form a word...</div>
+            <canvas id="gameCanvas" width="650" height="650"></canvas>
+            <div id="controls">
+                <button id="btn-submit" onclick="submitWord()">Submit Word</button>
+                <button id="btn-undo" onclick="undoSelection()">Undo</button>
+                <button id="btn-clear" onclick="clearSelections()">Clear</button>
+                <button id="btn-pass" onclick="passTurn()">Pass</button>
+                <button id="btn-accept" onclick="acceptAnyway()">Accept Anyway</button>
+            </div>
+            <div id="message"></div>
+        </div>
+
+        <div id="history-panel">
+            <h3>Turn History</h3>
+            <div id="history-list">
+                <div class="history-empty">No turns yet</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over">
+        <div class="game-over-content">
+            <h1 id="winner-title">Game Over!</h1>
+            <p id="final-scores"></p>
+            <p id="winner-subtitle"></p>
+            <button onclick="newGame()">New Game</button>
+        </div>
+    </div>
+
+    <script>
+        /* ===== Constants ===== */
+        const GRID = 12;
+        const CELL = 50;
+        const GRID_PX = GRID * CELL;
+        const PAD = 25;
+        const CW = GRID_PX + PAD * 2;
+        const CH = CW;
+        const TURNS_EACH = 8;
+        const MAX_RANGE = 4;
+        const FLASH_MS = 400;
+
+        const TEAM = { NONE: 0, BLUE: 1, RED: 2, NEUTRAL: 3 };
+        const TEAM_RGB = {
+            [TEAM.BLUE]:    { r: 59,  g: 130, b: 246 },
+            [TEAM.RED]:     { r: 239, g: 68,  b: 68  },
+            [TEAM.NEUTRAL]: { r: 168, g: 85,  b: 247 }
+        };
+        const STR_ALPHA = [0, 31, 61, 92, 122, 153];
+        const NEUTRAL_ALPHA = 40;
+        const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
+
+        // Weighted letter bag (English frequency approximation)
+        const LETTER_BAG =
+            'EEEEEEEEEEEEE' +
+            'TTTTTTTTT' +
+            'AAAAAAAA' +
+            'OOOOOOOO' +
+            'IIIIIII' +
+            'NNNNNNN' +
+            'SSSSSS' +
+            'RRRRRR' +
+            'HHHHHH' +
+            'LLLL' +
+            'DDDD' +
+            'CCC' +
+            'UUU' +
+            'MMM' +
+            'WW' +
+            'FF' +
+            'GG' +
+            'YY' +
+            'PP' +
+            'BB' +
+            'VV' +
+            'K' +
+            'J' +
+            'X' +
+            'Q' +
+            'Z';
+
+        /* ===== State ===== */
+        let grid = [];
+        let player = 'blue';
+        let sel = [];
+        let tOwner, tStrength;
+        let turnsLeft = { blue: TURNS_EACH, red: TURNS_EACH };
+        let gameOver = false;
+        let submitting = false;
+        let networkError = false;
+        let msgTimer = null;
+        let hoverCell = null;
+        let history = [];
+        let soundOn = false;
+
+        // Flash animation state
+        let flashCvs, flashCtx;
+        let flashStart = 0;
+        let flashing = false;
+
+        /* ===== Canvas refs ===== */
+        let cvs, ctx;
+        let tCvs, tCtx;
+
+        /* ===== Audio ===== */
+        let audioCtx = null;
+
+        function getAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            if (!soundOn) return;
+            const ac = getAudio();
+            const t = ac.currentTime;
+
+            function tone(freq, start, dur, vol, wave) {
+                const o = ac.createOscillator();
+                const g = ac.createGain();
+                o.type = wave || 'sine';
+                o.frequency.value = freq;
+                g.gain.setValueAtTime(vol, t + start);
+                g.gain.exponentialRampToValueAtTime(0.001, t + start + dur);
+                o.connect(g);
+                g.connect(ac.destination);
+                o.start(t + start);
+                o.stop(t + start + dur);
+            }
+
+            switch (type) {
+                case 'select':
+                    tone(800, 0, 0.06, 0.1);
+                    break;
+                case 'accept':
+                    tone(523, 0, 0.15, 0.1);
+                    tone(784, 0.12, 0.2, 0.12);
+                    break;
+                case 'reject':
+                    tone(200, 0, 0.25, 0.08, 'sawtooth');
+                    break;
+                case 'gameend':
+                    tone(523, 0, 0.3, 0.1);
+                    tone(659, 0.15, 0.3, 0.1);
+                    tone(784, 0.30, 0.3, 0.1);
+                    tone(1047, 0.45, 0.5, 0.12);
+                    break;
+            }
+        }
+
+        function toggleSound() {
+            soundOn = !soundOn;
+            document.getElementById('sound-toggle').textContent =
+                soundOn ? 'Sound: ON' : 'Sound: OFF';
+            if (soundOn) playSound('select');
+        }
+
+        /* ===== Init ===== */
+        function init() {
+            cvs = document.getElementById('gameCanvas');
+            ctx = cvs.getContext('2d');
+
+            tCvs = document.createElement('canvas');
+            tCvs.width = GRID_PX;
+            tCvs.height = GRID_PX;
+            tCtx = tCvs.getContext('2d');
+
+            flashCvs = document.createElement('canvas');
+            flashCvs.width = GRID_PX;
+            flashCvs.height = GRID_PX;
+            flashCtx = flashCvs.getContext('2d');
+
+            tOwner = new Uint8Array(GRID_PX * GRID_PX);
+            tStrength = new Uint8Array(GRID_PX * GRID_PX);
+
+            genGrid();
+            cvs.addEventListener('click', onClick);
+            cvs.addEventListener('mousemove', onMouseMove);
+            cvs.addEventListener('mouseleave', () => { hoverCell = null; render(); });
+            updateUI();
+            render();
+        }
+
+        function resetState() {
+            player = 'blue';
+            sel = [];
+            turnsLeft = { blue: TURNS_EACH, red: TURNS_EACH };
+            gameOver = false;
+            submitting = false;
+            networkError = false;
+            hoverCell = null;
+            flashing = false;
+            history = [];
+            tOwner = new Uint8Array(GRID_PX * GRID_PX);
+            tStrength = new Uint8Array(GRID_PX * GRID_PX);
+            tCtx.clearRect(0, 0, GRID_PX, GRID_PX);
+            flashCtx.clearRect(0, 0, GRID_PX, GRID_PX);
+            hideAcceptBtn();
+        }
+
+        function newGame() {
+            resetState();
+            document.getElementById('game-over').classList.remove('visible');
+            genGrid();
+            renderHistory();
+            updateUI();
+            render();
+        }
+
+        /* ===== Grid generation (weighted) ===== */
+        function genGrid() {
+            grid = [];
+            for (let r = 0; r < GRID; r++) {
+                grid[r] = [];
+                for (let c = 0; c < GRID; c++) {
+                    grid[r][c] = LETTER_BAG[Math.floor(Math.random() * LETTER_BAG.length)];
+                }
+            }
+        }
+
+        /* ===== Coordinate helpers ===== */
+        function cellCenter(r, c) {
+            return { x: PAD + c * CELL + CELL / 2, y: PAD + r * CELL + CELL / 2 };
+        }
+
+        function canvasToCell(cx, cy) {
+            const c = Math.floor((cx - PAD) / CELL);
+            const r = Math.floor((cy - PAD) / CELL);
+            if (r >= 0 && r < GRID && c >= 0 && c < GRID) return { r, c };
+            return null;
+        }
+
+        function inRange(r, c) {
+            if (sel.length === 0) return true;
+            const last = sel[sel.length - 1];
+            return Math.max(Math.abs(r - last.r), Math.abs(c - last.c)) <= MAX_RANGE;
+        }
+
+        function selectionArea() {
+            const pts = sel.map(s => cellCenter(s.r, s.c));
+            let area = 0;
+            for (let i = 0; i < pts.length; i++) {
+                const j = (i + 1) % pts.length;
+                area += pts[i].x * pts[j].y - pts[j].x * pts[i].y;
+            }
+            return Math.abs(area) / 2;
+        }
+
+        /* ===== Hover ===== */
+        function onMouseMove(e) {
+            const rect = cvs.getBoundingClientRect();
+            const sx = cvs.width / rect.width;
+            const sy = cvs.height / rect.height;
+            const cx = (e.clientX - rect.left) * sx;
+            const cy = (e.clientY - rect.top) * sy;
+            const cell = canvasToCell(cx, cy);
+            const prev = hoverCell;
+
+            hoverCell = cell;
+
+            // Cursor
+            if (gameOver || submitting || !cell) {
+                cvs.style.cursor = 'default';
+            } else if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
+                cvs.style.cursor = 'default';
+            } else if (!inRange(cell.r, cell.c)) {
+                cvs.style.cursor = 'not-allowed';
+            } else {
+                cvs.style.cursor = 'pointer';
+            }
+
+            if (!cellsEq(prev, cell)) render();
+        }
+
+        function cellsEq(a, b) {
+            if (!a && !b) return true;
+            if (!a || !b) return false;
+            return a.r === b.r && a.c === b.c;
+        }
+
+        /* ===== Click handler ===== */
+        function onClick(e) {
+            if (gameOver || submitting) return;
+
+            const rect = cvs.getBoundingClientRect();
+            const sx = cvs.width / rect.width;
+            const sy = cvs.height / rect.height;
+            const cx = (e.clientX - rect.left) * sx;
+            const cy = (e.clientY - rect.top) * sy;
+            const cell = canvasToCell(cx, cy);
+            if (!cell) return;
+            if (!inRange(cell.r, cell.c)) return;
+
+            if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
+                msg('Already selected!');
+                return;
+            }
+
+            hideAcceptBtn();
+            sel.push(cell);
+            playSound('select');
+            updateUI();
+            render();
+        }
+
+        /* ===== Button actions ===== */
+        function undoSelection() {
+            if (gameOver || submitting) return;
+            if (sel.length) {
+                hideAcceptBtn();
+                sel.pop();
+                updateUI();
+                render();
+            }
+        }
+
+        function clearSelections() {
+            if (gameOver || submitting) return;
+            hideAcceptBtn();
+            sel = [];
+            updateUI();
+            render();
+        }
+
+        function passTurn() {
+            if (gameOver || submitting) return;
+            hideAcceptBtn();
+            addHistory(player, null, 0, 0);
+            advanceTurn();
+            msg('Turn passed.');
+        }
+
+        async function submitWord() {
+            if (gameOver || submitting) return;
+            if (sel.length < 3) { msg('Minimum 3 letters!'); return; }
+
+            const word = sel.map(s => grid[s.r][s.c]).join('');
+            const strength = Math.min(sel.length - 2, 5);
+
+            // Dictionary API validation
+            submitting = true;
+            setButtonsDisabled(true);
+            document.getElementById('btn-submit').textContent = 'Checking...';
+            msg('Checking "' + word + '"...');
+
+            let valid = false;
+            try {
+                const resp = await fetch(API_URL + word.toLowerCase());
+                valid = resp.ok;
+            } catch (e) {
+                submitting = false;
+                setButtonsDisabled(false);
+                document.getElementById('btn-submit').textContent = 'Submit Word';
+                msg('Network error \u2014 retry or Accept Anyway.');
+                showAcceptBtn();
+                playSound('reject');
+                return;
+            }
+
+            submitting = false;
+            setButtonsDisabled(false);
+            document.getElementById('btn-submit').textContent = 'Submit Word';
+
+            if (!valid) {
+                msg('"' + word + '" is not a valid word!');
+                playSound('reject');
+                return;
+            }
+
+            finalizeWord(word, strength);
+        }
+
+        function acceptAnyway() {
+            if (gameOver || sel.length < 3) return;
+            hideAcceptBtn();
+            const word = sel.map(s => grid[s.r][s.c]).join('');
+            const strength = Math.min(sel.length - 2, 5);
+            finalizeWord(word, strength);
+        }
+
+        function finalizeWord(word, strength) {
+            // Collinear check
+            if (selectionArea() < 1) {
+                msg('"' + word + '" accepted \u2014 no territory (collinear).');
+                addHistory(player, word, strength, 0);
+                playSound('accept');
+                advanceTurn();
+                return;
+            }
+
+            const scoreBefore = countScores();
+            applyTerritory(strength);
+            startFlash(sel, player === 'blue' ? TEAM.BLUE : TEAM.RED);
+            const scoreAfter = countScores();
+
+            const gained = player === 'blue'
+                ? scoreAfter.blue - scoreBefore.blue
+                : scoreAfter.red - scoreBefore.red;
+
+            addHistory(player, word, strength, gained);
+            msg('"' + word + '" captured! Strength ' + strength);
+            playSound('accept');
+            advanceTurn();
+        }
+
+        function advanceTurn() {
+            turnsLeft[player]--;
+            sel = [];
+            player = player === 'blue' ? 'red' : 'blue';
+            updateUI();
+            render();
+
+            if (turnsLeft.blue <= 0 && turnsLeft.red <= 0) {
+                endGame();
+            }
+        }
+
+        function showAcceptBtn() {
+            document.getElementById('btn-accept').style.display = '';
+        }
+
+        function hideAcceptBtn() {
+            document.getElementById('btn-accept').style.display = 'none';
+            networkError = false;
+        }
+
+        function setButtonsDisabled(d) {
+            document.getElementById('btn-submit').disabled = d;
+            document.getElementById('btn-undo').disabled = d;
+            document.getElementById('btn-clear').disabled = d;
+            document.getElementById('btn-pass').disabled = d;
+        }
+
+        /* ===== Territory logic ===== */
+        function applyTerritory(strength) {
+            const tmp = document.createElement('canvas');
+            tmp.width = GRID_PX;
+            tmp.height = GRID_PX;
+            const tc = tmp.getContext('2d', { willReadFrequently: true });
+
+            tc.fillStyle = '#fff';
+            tc.beginPath();
+            for (let i = 0; i < sel.length; i++) {
+                const p = cellCenter(sel[i].r, sel[i].c);
+                if (i === 0) tc.moveTo(p.x - PAD, p.y - PAD);
+                else tc.lineTo(p.x - PAD, p.y - PAD);
+            }
+            tc.closePath();
+            tc.fill();
+
+            const px = tc.getImageData(0, 0, GRID_PX, GRID_PX).data;
+            const atkTeam = player === 'blue' ? TEAM.BLUE : TEAM.RED;
+
+            for (let i = 0; i < GRID_PX * GRID_PX; i++) {
+                if (px[i * 4] > 128) {
+                    const co = tOwner[i];
+                    const cs = tStrength[i];
+
+                    if (co === TEAM.NONE || co === TEAM.NEUTRAL) {
+                        tOwner[i] = atkTeam;
+                        tStrength[i] = strength;
+                    } else if (co === atkTeam) {
+                        tStrength[i] = Math.min(cs + strength, 5);
+                    } else {
+                        if (strength < cs) {
+                            tStrength[i] = cs - strength;
+                        } else if (strength === cs) {
+                            tOwner[i] = TEAM.NEUTRAL;
+                            tStrength[i] = 0;
+                        } else {
+                            tOwner[i] = atkTeam;
+                            tStrength[i] = strength - cs;
+                        }
+                    }
+                }
+            }
+
+            rebuildTerritoryVisual();
+        }
+
+        function rebuildTerritoryVisual() {
+            const imgData = tCtx.createImageData(GRID_PX, GRID_PX);
+            const d = imgData.data;
+
+            for (let i = 0; i < GRID_PX * GRID_PX; i++) {
+                const owner = tOwner[i];
+                const str = tStrength[i];
+                if (owner === TEAM.NONE) continue;
+
+                const col = TEAM_RGB[owner];
+                const idx = i * 4;
+                d[idx]     = col.r;
+                d[idx + 1] = col.g;
+                d[idx + 2] = col.b;
+                d[idx + 3] = owner === TEAM.NEUTRAL ? NEUTRAL_ALPHA : (str > 0 ? STR_ALPHA[str] : 0);
+            }
+
+            tCtx.putImageData(imgData, 0, 0);
+        }
+
+        /* ===== Flash animation ===== */
+        function startFlash(polygon, team) {
+            flashCtx.clearRect(0, 0, GRID_PX, GRID_PX);
+            const col = TEAM_RGB[team];
+            flashCtx.fillStyle = 'rgba(' + col.r + ',' + col.g + ',' + col.b + ',0.45)';
+            flashCtx.beginPath();
+            for (let i = 0; i < polygon.length; i++) {
+                const p = cellCenter(polygon[i].r, polygon[i].c);
+                if (i === 0) flashCtx.moveTo(p.x - PAD, p.y - PAD);
+                else flashCtx.lineTo(p.x - PAD, p.y - PAD);
+            }
+            flashCtx.closePath();
+            flashCtx.fill();
+
+            flashStart = performance.now();
+            flashing = true;
+            requestAnimationFrame(animateFlash);
+        }
+
+        function animateFlash(now) {
+            const progress = Math.min((now - flashStart) / FLASH_MS, 1);
+            render();
+
+            ctx.globalAlpha = 1 - progress;
+            ctx.drawImage(flashCvs, PAD, PAD);
+            ctx.globalAlpha = 1;
+
+            if (progress < 1) requestAnimationFrame(animateFlash);
+            else flashing = false;
+        }
+
+        /* ===== Scoring ===== */
+        function countScores() {
+            let blue = 0, red = 0;
+            for (let i = 0; i < GRID_PX * GRID_PX; i++) {
+                if (tOwner[i] === TEAM.BLUE) blue++;
+                else if (tOwner[i] === TEAM.RED) red++;
+            }
+            return { blue, red };
+        }
+
+        /* ===== History ===== */
+        function addHistory(plr, word, strength, gained) {
+            history.push({ player: plr, word, strength, gained });
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+
+            if (history.length === 0) {
+                list.innerHTML = '<div class="history-empty">No turns yet</div>';
+                return;
+            }
+
+            let html = '';
+            for (let i = 0; i < history.length; i++) {
+                const h = history[i];
+                const dotClass = h.player === 'blue' ? 'blue' : 'red';
+                html += '<div class="history-entry">';
+                html += '<span class="history-dot ' + dotClass + '"></span>';
+
+                if (!h.word) {
+                    html += '<span class="history-pass">Passed</span>';
+                } else if (h.gained === 0) {
+                    html += '<span class="history-word">' + h.word + '</span>';
+                    html += '<span class="history-info history-collinear">0 px</span>';
+                } else {
+                    html += '<span class="history-word">' + h.word + '</span>';
+                    html += '<span class="history-info">+' + h.gained.toLocaleString() + ' px</span>';
+                }
+
+                html += '</div>';
+            }
+
+            list.innerHTML = html;
+            list.scrollTop = list.scrollHeight;
+        }
+
+        /* ===== Game end ===== */
+        function endGame() {
+            gameOver = true;
+            playSound('gameend');
+            const scores = countScores();
+            const overlay = document.getElementById('game-over');
+            const title = document.getElementById('winner-title');
+            const scoresEl = document.getElementById('final-scores');
+            const subtitle = document.getElementById('winner-subtitle');
+
+            scoresEl.innerHTML =
+                '<span style="color:#60a5fa">Blue: ' + scores.blue.toLocaleString() + '</span>' +
+                '  \u2014  ' +
+                '<span style="color:#f87171">Red: ' + scores.red.toLocaleString() + '</span>';
+
+            if (scores.blue > scores.red) {
+                title.textContent = 'Blue Wins!';
+                title.style.color = '#60a5fa';
+                subtitle.textContent = 'by ' + (scores.blue - scores.red).toLocaleString() + ' pixels';
+            } else if (scores.red > scores.blue) {
+                title.textContent = 'Red Wins!';
+                title.style.color = '#f87171';
+                subtitle.textContent = 'by ' + (scores.red - scores.blue).toLocaleString() + ' pixels';
+            } else {
+                title.textContent = 'Draw!';
+                title.style.color = '#e2e8f0';
+                subtitle.textContent = 'Both players tied exactly';
+            }
+
+            overlay.classList.add('visible');
+        }
+
+        /* ===== Rendering ===== */
+        function render() {
+            // 1. Background
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 0, CW, CH);
+
+            // 2. Grid background
+            ctx.fillStyle = '#f8f5ee';
+            ctx.fillRect(PAD, PAD, GRID_PX, GRID_PX);
+
+            // 3. Territory
+            ctx.drawImage(tCvs, PAD, PAD);
+
+            // 3b. Range gray-out
+            if (sel.length > 0) {
+                for (let r = 0; r < GRID; r++) {
+                    for (let c = 0; c < GRID; c++) {
+                        if (!inRange(r, c)) {
+                            ctx.fillStyle = 'rgba(15,23,42,0.55)';
+                            ctx.fillRect(PAD + c * CELL, PAD + r * CELL, CELL, CELL);
+                        }
+                    }
+                }
+            }
+
+            // 4. Grid lines
+            ctx.strokeStyle = '#c8bea8';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= GRID; i++) {
+                const x = PAD + i * CELL + 0.5;
+                const y = PAD + i * CELL + 0.5;
+                ctx.beginPath(); ctx.moveTo(x, PAD); ctx.lineTo(x, PAD + GRID_PX); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(PAD + GRID_PX, y); ctx.stroke();
+            }
+
+            // 4b. Hover highlight
+            if (hoverCell && !gameOver && !submitting) {
+                const hs = sel.some(s => s.r === hoverCell.r && s.c === hoverCell.c);
+                if (!hs && inRange(hoverCell.r, hoverCell.c)) {
+                    ctx.fillStyle = player === 'blue'
+                        ? 'rgba(59,130,246,0.12)' : 'rgba(239,68,68,0.12)';
+                    ctx.fillRect(
+                        PAD + hoverCell.c * CELL + 1,
+                        PAD + hoverCell.r * CELL + 1,
+                        CELL - 1, CELL - 1
+                    );
+                }
+            }
+
+            // 5. Selection highlights
+            const hasSelection = sel.length > 0;
+            if (hasSelection) {
+                const hlFill = player === 'blue'
+                    ? 'rgba(59,130,246,0.15)' : 'rgba(239,68,68,0.15)';
+                const lineCol = player === 'blue'
+                    ? 'rgba(59,130,246,0.8)' : 'rgba(239,68,68,0.8)';
+
+                for (const s of sel) {
+                    ctx.fillStyle = hlFill;
+                    ctx.fillRect(PAD + s.c * CELL + 1, PAD + s.r * CELL + 1, CELL - 1, CELL - 1);
+                }
+
+                // Connecting lines (solid)
+                if (sel.length >= 2) {
+                    ctx.strokeStyle = lineCol;
+                    ctx.lineWidth = 2.5;
+                    ctx.setLineDash([]);
+                    ctx.beginPath();
+                    for (let i = 0; i < sel.length; i++) {
+                        const p = cellCenter(sel[i].r, sel[i].c);
+                        if (i === 0) ctx.moveTo(p.x, p.y);
+                        else ctx.lineTo(p.x, p.y);
+                    }
+                    ctx.stroke();
+                }
+
+                // Polygon preview: dashed closing line (last -> first)
+                if (sel.length >= 3) {
+                    const first = cellCenter(sel[0].r, sel[0].c);
+                    const last = cellCenter(sel[sel.length - 1].r, sel[sel.length - 1].c);
+                    ctx.strokeStyle = lineCol;
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([6, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(last.x, last.y);
+                    ctx.lineTo(first.x, first.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+
+            // 6. Letters
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            for (let r = 0; r < GRID; r++) {
+                for (let c = 0; c < GRID; c++) {
+                    const p = cellCenter(r, c);
+                    const isSel = sel.some(s => s.r === r && s.c === c);
+                    const oor = hasSelection && !isSel && !inRange(r, c);
+                    ctx.font = isSel
+                        ? 'bold 24px "Courier New", monospace'
+                        : 'bold 22px "Courier New", monospace';
+                    if (isSel) {
+                        ctx.fillStyle = player === 'blue' ? '#1d4ed8' : '#b91c1c';
+                    } else if (oor) {
+                        ctx.fillStyle = '#64748b';
+                    } else {
+                        ctx.fillStyle = '#334155';
+                    }
+                    ctx.fillText(grid[r][c], p.x, p.y);
+                }
+            }
+
+            // 7. Selection badges
+            if (hasSelection) {
+                const badgeCol = player === 'blue' ? '#2563eb' : '#dc2626';
+                ctx.font = 'bold 11px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                for (let i = 0; i < sel.length; i++) {
+                    const bx = PAD + sel[i].c * CELL + CELL - 10;
+                    const by = PAD + sel[i].r * CELL + 10;
+                    ctx.fillStyle = badgeCol;
+                    ctx.beginPath();
+                    ctx.arc(bx, by, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.fillText(i + 1, bx, by);
+                }
+            }
+        }
+
+        /* ===== UI updates ===== */
+        function updateUI() {
+            const ti = document.getElementById('turn-indicator');
+            if (gameOver) {
+                ti.textContent = 'Game Over';
+                ti.style.color = '#94a3b8';
+            } else {
+                ti.textContent = player === 'blue' ? "Blue's Turn" : "Red's Turn";
+                ti.style.color = player === 'blue' ? '#60a5fa' : '#f87171';
+            }
+
+            const totalLeft = turnsLeft.blue + turnsLeft.red;
+            document.getElementById('turns-left').textContent =
+                totalLeft + ' turn' + (totalLeft !== 1 ? 's' : '') + ' left';
+
+            const scores = countScores();
+            document.getElementById('blue-score').textContent =
+                'Blue: ' + scores.blue.toLocaleString();
+            document.getElementById('red-score').textContent =
+                'Red: ' + scores.red.toLocaleString();
+
+            const wd = document.getElementById('word-display');
+            if (sel.length === 0) {
+                wd.textContent = 'Select letters to form a word...';
+                wd.style.color = '#94a3b8';
+            } else {
+                const letters = sel.map(s => grid[s.r][s.c]).join(' - ');
+                const str = sel.length >= 3
+                    ? '  (Strength ' + Math.min(sel.length - 2, 5) + ')'
+                    : '';
+                wd.textContent = letters + str;
+                wd.style.color = player === 'blue' ? '#60a5fa' : '#f87171';
+            }
+        }
+
+        function msg(text) {
+            const el = document.getElementById('message');
+            el.textContent = text;
+            el.style.opacity = '1';
+            if (msgTimer) clearTimeout(msgTimer);
+            msgTimer = setTimeout(() => { el.style.opacity = '0'; }, 3000);
+        }
+
+        /* ===== Start ===== */
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
