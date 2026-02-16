@@ -18,6 +18,62 @@
             padding: 20px;
         }
 
+        /* ===== Menu Screen ===== */
+        #menu-screen {
+            position: fixed; inset: 0; z-index: 200;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #menu-screen.hidden {
+            opacity: 0; transform: scale(1.05);
+            pointer-events: none;
+        }
+
+        .menu-title {
+            font-size: 52px; font-weight: 900;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f87171);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .menu-subtitle {
+            font-size: 16px; color: #64748b;
+            margin-bottom: 48px; text-align: center;
+        }
+
+        .menu-cards {
+            display: flex; gap: 20px;
+            flex-wrap: wrap; justify-content: center;
+            max-width: 740px;
+        }
+
+        .menu-card {
+            width: 210px; padding: 28px 20px;
+            background: #1e293b; border-radius: 16px;
+            text-align: center; cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+        }
+        .menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+        .menu-card.pvp:hover { border-color: #a78bfa; }
+        .menu-card.pvc:hover { border-color: #60a5fa; }
+        .menu-card.tutorial:hover { border-color: #34d399; }
+
+        .menu-card-icon { font-size: 40px; margin-bottom: 12px; }
+        .menu-card-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+        .menu-card-desc { font-size: 13px; color: #94a3b8; line-height: 1.4; }
+
+        .menu-card.pvp .menu-card-title { color: #a78bfa; }
+        .menu-card.pvc .menu-card-title { color: #60a5fa; }
+        .menu-card.tutorial .menu-card-title { color: #34d399; }
+
+        /* ===== Header ===== */
         #header {
             display: flex;
             align-items: center;
@@ -35,7 +91,20 @@
         #red-score  { color: #f87171; text-align: right; }
         #turn-info { text-align: center; flex: 1; }
 
-        #turn-indicator { font-size: 19px; font-weight: 700; transition: color 0.3s; }
+        #turn-indicator {
+            font-size: 19px; font-weight: 700;
+            transition: color 0.3s, transform 0.2s;
+            display: inline-block;
+        }
+        #turn-indicator.pulse {
+            animation: turnPulse 0.35s ease-out;
+        }
+        @keyframes turnPulse {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.25); }
+            100% { transform: scale(1); }
+        }
+
         #turns-left { font-size: 12px; color: #94a3b8; margin-top: 2px; }
 
         #sound-toggle {
@@ -76,6 +145,7 @@
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
             max-width: 100%;
             height: auto;
+            transition: box-shadow 0.5s ease;
         }
 
         #controls {
@@ -90,14 +160,14 @@
             padding: 8px 20px; font-size: 14px; font-weight: 600;
             border: none; border-radius: 8px; cursor: pointer;
             background: #334155; color: #e2e8f0;
-            transition: background 0.2s, transform 0.1s;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
         }
-        button:hover { background: #475569; transform: translateY(-1px); }
-        button:active { transform: translateY(0); }
-        button:disabled { opacity: 0.4; cursor: default; transform: none; }
+        button:hover { background: #475569; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        button:active { transform: translateY(0); box-shadow: none; }
+        button:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
 
         #btn-submit { background: #059669; color: #fff; }
-        #btn-submit:hover:not(:disabled) { background: #047857; }
+        #btn-submit:hover:not(:disabled) { background: #047857; box-shadow: 0 4px 16px rgba(5,150,105,0.3); }
 
         #btn-pass { background: #92400e; color: #fff; }
         #btn-pass:hover:not(:disabled) { background: #78350f; }
@@ -201,12 +271,16 @@
         #game-over.visible { display: flex; }
 
         .game-over-content {
-            background: #1e293b; border-radius: 16px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 16px;
             padding: 40px 56px; text-align: center;
             box-shadow: 0 8px 40px rgba(0,0,0,0.6);
             animation: popIn 0.3s ease-out;
         }
-        .game-over-content h1 { font-size: 34px; margin-bottom: 10px; }
+        .game-over-content h1 {
+            font-size: 34px; margin-bottom: 10px;
+            text-shadow: 0 0 30px currentColor;
+        }
         #final-scores { font-size: 20px; margin-bottom: 6px; color: #cbd5e1; }
         #winner-subtitle { font-size: 15px; color: #94a3b8; margin-bottom: 22px; }
         .game-over-content button {
@@ -220,11 +294,47 @@
             to   { transform: scale(1);    opacity: 1; }
         }
 
+        /* ===== Tutorial overlay ===== */
+        #tutorial-overlay {
+            display: none; position: fixed;
+            bottom: 24px; left: 50%; transform: translateX(-50%);
+            z-index: 150;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid #34d399;
+            border-radius: 16px;
+            padding: 20px 28px;
+            max-width: 520px; width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(52,211,153,0.15);
+            animation: slideUp 0.3s ease-out;
+        }
+        #tutorial-overlay.visible { display: block; }
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        #tutorial-step-title {
+            font-size: 17px; font-weight: 700; color: #34d399;
+            margin-bottom: 8px;
+        }
+        #tutorial-step-desc {
+            font-size: 14px; color: #cbd5e1; line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .tutorial-buttons { display: flex; gap: 10px; justify-content: center; }
+        .tutorial-buttons button {
+            padding: 8px 24px; font-size: 14px; border-radius: 8px;
+        }
+        #btn-tutorial-next { background: #34d399; color: #0f172a; font-weight: 700; }
+        #btn-tutorial-next:hover { background: #6ee7b7; }
+        #btn-tutorial-skip { background: #475569; color: #e2e8f0; }
+        #btn-tutorial-skip:hover { background: #64748b; }
+
         /* ===== Responsive ===== */
         @media (max-width: 920px) {
             #game-area { flex-direction: column; align-items: center; }
             #history-panel {
-                width: 100%; max-width: 650px;
+                width: 100%; max-width: 600px;
                 max-height: 180px; min-width: auto;
             }
         }
@@ -237,10 +347,35 @@
             #word-display { font-size: 15px; }
             #controls { gap: 6px; }
             button { padding: 7px 14px; font-size: 13px; }
+            .menu-title { font-size: 36px; }
+            .menu-card { width: 180px; padding: 20px 16px; }
         }
     </style>
 </head>
 <body>
+    <!-- Menu Screen -->
+    <div id="menu-screen">
+        <div class="menu-title">Territory Words</div>
+        <div class="menu-subtitle">Capture territory by spelling words on the grid</div>
+        <div class="menu-cards">
+            <div class="menu-card pvp" onclick="startGame('pvp')">
+                <div class="menu-card-icon">&#9876;&#65039;</div>
+                <div class="menu-card-title">Player vs Player</div>
+                <div class="menu-card-desc">Two players take turns on the same device</div>
+            </div>
+            <div class="menu-card pvc" onclick="startGame('pvc')">
+                <div class="menu-card-icon">&#129302;</div>
+                <div class="menu-card-title">Player vs Computer</div>
+                <div class="menu-card-desc">Challenge the AI opponent</div>
+            </div>
+            <div class="menu-card tutorial" onclick="startGame('tutorial')">
+                <div class="menu-card-icon">&#128218;</div>
+                <div class="menu-card-title">Tutorial</div>
+                <div class="menu-card-desc">Learn how to play step by step</div>
+            </div>
+        </div>
+    </div>
+
     <div id="header">
         <div id="blue-score" class="score-box">Blue: 0</div>
         <div id="turn-info">
@@ -256,7 +391,7 @@
     <div id="game-area">
         <div id="main-panel">
             <div id="word-display">Select letters to form a word...</div>
-            <canvas id="gameCanvas" width="650" height="650"></canvas>
+            <canvas id="gameCanvas" width="600" height="600"></canvas>
             <div id="controls">
                 <button id="btn-submit" onclick="submitWord()">Submit Word</button>
                 <button id="btn-undo" onclick="undoSelection()">Undo</button>
@@ -284,9 +419,19 @@
         </div>
     </div>
 
+    <!-- Tutorial overlay -->
+    <div id="tutorial-overlay">
+        <div id="tutorial-step-title"></div>
+        <div id="tutorial-step-desc"></div>
+        <div class="tutorial-buttons">
+            <button id="btn-tutorial-next" onclick="tutorialNext()">Next</button>
+            <button id="btn-tutorial-skip" onclick="tutorialSkip()">Skip Tutorial</button>
+        </div>
+    </div>
+
     <script>
         /* ===== Constants ===== */
-        const GRID = 12;
+        const GRID = 11;
         const CELL = 50;
         const GRID_PX = GRID * CELL;
         const PAD = 25;
@@ -335,6 +480,92 @@
             'Q' +
             'Z';
 
+        /* ===== AI Word List (~2500 common 3-5 letter words) ===== */
+        const AI_WORDS_RAW = 'ace act add age ago aid aim air all ant ape apt arc are ark arm art ash ask ate awe axe bad bag ban bar bat bay bed bet bid big bin bit bog bow box boy bud bug bun bus but buy cab can cap car cat cop cot cow cry cub cup cut dab dad dam day den dew did dig dim dip dog dot dry dub dud due dug dun duo dye ear eat eel egg ego elm emu end era eve ewe eye fab fad fan far fat fax fed fee few fig fin fir fit fix fly foe fog for fox fry fun fur gag gal gap gas gel gem get gig gin god got gum gun gut guy gym had ham has hat hay hen her hew hid him hip his hit hog hop hot how hub hue hug hum hut ice icy ill imp ink inn ion ire ivy jab jag jam jar jaw jay jet jig job jog jot joy jug jut keg ken key kid kin kit lab lad lag lap law lay lea led leg let lid lie lip lit log lot low lug mad man map mar mat maw may men met mid mix mob mod mop mow mud mug mum nab nag nap nay net new nil nip nit nod nor not now nun nut oak oar oat odd ode off oft oil old one opt orb ore our out owe owl own pad pal pan pat paw pay pea peg pen per pet pew pie pig pin pit ply pod pop pot pow pox pro pry pub pug pun pup pus put rag ram ran rap rat raw ray red ref rib rid rig rim rip rob rod rot row rub rug rum run rut rye sac sad sag sap sat saw say sea set sew shy sin sip sir sit six ski sly sob sod son sop sot sow soy spa spy sty sub sue sum sun sup tab tad tag tan tap tar tax tea ten the thy tic tie tin tip tit toe ton too top tot tow toy try tub tug tun two urn use van vat vet vex via vie vim vow wad wag war was wax way web wed wet who why wig win wit woe wok won woo wow yak yam yap yaw yea yes yet yew you zap zed zen zip zoo able ache acid acre aged aide ally also arch area army aunt auto away axle back bait bake bald bale ball band bane bang bank bare bark barn base bass bath bead beak beam bean bear beat beef been beer bell belt bend best bias bike bile bill bind bird bite blow blue blur boar boat body bold bolt bomb bond bone book boom boot bore born boss both bout bowl braid bulk bull bump burn bury bush busy cafe cage cake calf call calm came camp cane cape card care cart case cash cast cave cell chat chef chin chip cite city clad clam clan clap claw clay clip clod clog club clue coal coat code coil coin cold colt comb come cone cook cool cope copy cord core cork corn cost cosy coup cove cozy crab crew crop crow cube cult curb cure curl cute dale damp dare dark darn dart dash data date dawn dead deaf deal dear deck deed deem deep deer defy deli deny desk dial dice diet dime dine dire dirt disc dish disk dock does dome done doom door dose dove down doze drab drag draw drew drip drop drum dual duck duct dude duel duet duke dull dumb dump dune dung dunk dupe dusk dust duty each earl earn ease east easy edge edit else emit envy epic even ever evil exam exit eyes face fact fade fail fair fake fall fame fang fare farm fast fate fawn fear feat feed feel feet fell felt fend fern file fill film find fine fire firm fish fist five flag flaw flea fled flee flew flip flit flock flog flow flue flux foam foil fold folk fond font food fool foot ford fore fork form fort foul four fowl free frog from fuel full fume fund funk fury fuse fuss gait gale gall game gang gape gash gasp gate gave gaze gear gene germ gift gild gill gist give glad glee glen glib glob glom glow glue glut gnat gnaw goat goes gold golf gone good gore gory gown grab gray grew grid grim grin grip grit grow grub gulf gull gulp gush gust guts gaze hack hail hair hale half hall halt hand hang hare hark harm harp hash haste hate haul have haze head heal heap hear heat heed heel held hell help herb herd here hero hide high hike hill hilt hind hint hire hold hole holy home hone hood hook hope horn hose host hour howl huff huge hull hump hung hunt hurl hurt husk hymn idea inch info into iron isle itch item jack jade jail jamb jape java jazz jeer jest jilt jive jobs jock john join joke jolt jury just kale keen keep kelp kept kick kind king kite knack knee knew knit knob knot know lace lack lade lady laid lake lame lamp land lane lard lark lash lass last late lawn lead leaf leak lean leap left lend lens less lick lien lieu life lift like limb lime limp line link lion list live load loaf loam loan lock lode loft logo lone long look loom loop lore lorn lose loss lost loud love luck lull lump lung lure lurk lush lust mace made maid mail main make male mall mane many mare mark mash mask mass mast mate math maze mead meal mean meat meet meld melt memo mend menu mere mesh mess mild mile milk mill mime mind mine mint mire miss mist mite moan moat mock mode mold mole molt monk mood moon moor more morn moss most moth move much muck mule mull murk muse mush must mute myth nail name nape navy near neat neck need nest news next nice nick nine node none noon norm nose note noun nude null oath obey odds okay omen omit once only onto opal open opts oral orca over owed oxen pace pack pact page paid pail pain pair pale palm pane pang pare park part pass past path pave pawn peak peal pear peat peck peek peel peer pelt pend perk pest pick pier pike pile pine pink pint pipe pith plan play plea plod plot plow ploy plug plum plus pock poem poet poke pole poll polo pond pony pool pope pore pork port pose post pour pray prep prey prod prop prude prune puck pull pulp pump punk pure push race rack raft rage raid rail rain rake ramp rang rank rant rash rasp rate rave raze read real ream reap rear reed reef reel rein rely rend rent rest rice rich ride rift rill rime rind ring riot rise risk road roam roar robe rock rode role roll roof room root rope rose rosy rout rove ruin rule rump rung ruse rush rust sack safe sage said sail sake sale salt same sand sane sang sank sash save scan scar seal seam sear seat sect seed seek seem seen self sell send sent sept shed shin ship shop shot show shut sick side sift sigh sign silk sill silt sing sink site size skit slab slag slam slap slat slaw slay sled slew slid slim slit slob slop slot slow slug slum slur smog snap snag snare snip snob snot snow snub soak soap soar sock soil sold sole some song soon soot sore sort soul sour span spar spec sped spin spit spot spry spur stab stag star stay stem step stew stir stop stow stub stud stun such suit sulk sump sung sunk sure surf swan swap swat sway swim swum tack tact tail take tale talk tall tame tang tank tape taps tart task taxi teak teal team tear tell tend tent term test text than that them then thin this thud thus tick tide tidy tier tile till tilt time tine tiny tire toad toil told toll tomb tone took tool tops tore torn toss tour town trap tray tree trek trim trio trip trod trot true tube tuck tuft tuna tune turf turn tusk twin type ugly undo unit unto upon urge used user vain vale vane vary vase vast veil vein vent verb very vest veto vial vice view vine visa void volt vote wade wage wail wait wake walk wall wand want ward warm warn warp wart wary wash vast wave wavy waxy weak wean wear weed week well welt went were west what when whim whip whom wick wide wife wild will wilt wily wind wine wing wink wipe wire wise wish wisp with woke wolf womb wood wool word wore work worm worn wove wrap wren wrist writ yarn yawn year yell yelp yoga yolk your zeal zero zest zinc zone zoom abate abbey abhor abide abort about above abuse occur ocean abyss acute adapt admit adopt adult after again agent agile aging agree aided aimer aisle alarm album alert algae alibi alien align alike alive allay alley allot allow alloy aloft alone along aloof alpha altar amaze ample amuse angel anger angle angry anime ankle annex anvil apart apple apply apron arena argue arise armor aroma arose array arrow aside asset atlas attic audio audit avail await awake award aware awful axiom bacon badge badly baker baron basal basic basin basis batch beach beard beast began begin being below bench berry birth black blade blame blank blast blaze bleed blend bless blind blink bliss block blond blood bloom blown board boast bonus boost booth bound brace brain brand brass brave bread break breed brick bride brief bring brink broad broke broom brown brush buddy build built bunch burst buyer cabin cable camel candy cargo carry carve catch cater cause cease chain chair chalk champ chaos charm chart chase cheap check cheek cheer chess chest chick chief child chill china choir chord chose chunk churn civic claim clamp clash clasp class clean clear clerk cliff climb cling clock clone close cloth cloud clown coach coast color comet comic coral count court cover crack craft crane crash crawl crazy cream creed creek crest crime crisp cross crowd crown crude crush curve cycle daily dance debut decal decay decoy decoy delta dense depot depth derby devil diary dirty disco ditch dodge doing donor doubt dough draft drain drake drama drank drape drawn dread dream dress dried drift drill drink drive drone drown drove drugs drunk dryer dying eager eagle early earth eight elder elect elite email ember empty endow enemy enjoy enter entry equal equip erase error essay evade event every exact exalt exam exile exist extra faint fairy faith false fault feast fiber field fifth fifty fight final first flame flash fleet flesh float flock flood floor flora flour fluid flush focus force forge forth forum fossil found frame frank fraud fresh front frost froze fruit fully funny ghost giant given glade glare gleam glide globe gloom glory glove going grace grade grain grand grant grape grasp grass grave great greed green greet grief grill grind gripe groan groom gross group grove grown guard guess guest guide guild guilt guise gulch gully habit happy harsh hasn haste haven heard heart heavy hence hobby homer honey honor horse hotel house human humor hurry hyper ideal image imply incur index indie infer inner input inter intro issue ivory jewel joint joker judge juice jumbo juror juicy kebab knack kneel knelt knife knock known label labor lance large laser latch later laugh layer leach learn lease leave legal lemon level lever light limit linen liver local lodge logic loose lover lower loyal lucky lunar lunch maker manor maple march marry match mayor media mercy merit metal meter might minor minus model money month moral motor mount mouse mouth moved movie music naive nerve never night noble noise north noted novel nurse nylon ocean offer often olive onset opera orbit order organ other ought outer owned oxide padre paint panel panic paper party paste patch pause peach pearl pedal penny phase phone photo piano piece pilot pitch pixel pizza place plain plane plant plate plaza plead pluck plumb plume plump plunge point polar pound power press price pride prime print prior prize probe prone proof proud prove proxy psalm pupil purse queen quest quick quiet quite quota quote radar radio raise rally ranch range rapid ratio reach react ready realm rebel reign relax relay renew reply rider ridge rifle right rigid rival river robot rocky rouge rough round route royal rugby ruler rural sadly saint salad sauce scale scare scene scent scope score scout scrap sense seize serve setup seven shade shaft shake shall shame shape share shark sharp sheer sheet shelf shell shift shine shirt shock shoot shore short shout shown sight silly since sixth sixty sized skate skill skull slant slate slave sleep slice slide slope smart smell smile smoke snake solar solid solve sorry sound south space spare spark speak speed spend spent spike spine spite split spoke spoon sport spray squad stack staff stage stain stake stall stamp stand stare start state stays steal steam steel steep steer stern stick stiff still stock stole stone stood stool store storm story stove strap straw stray strip spoke stuck study stuff style sugar suite sunny super surge swamp swear sweep sweet swept swift swing sword swore swung table taken taste taxes teach teeth tempo theft theme there thick thing think third those three threw throw thumb tiger tight timer tired title today token topic total touch tough tower toxic trace track trade trail train trait trash treat trend trial trick troop truck truly trump trunk trust truth tumor twice twist tying ultra uncle under unify union unite unity until upper upset urban usage usual utter valid value valve vault verse video vigor vinyl viral virus visit vital vivid vocal voice voter wagon waste watch water weary weave wedge weigh weird whale wheat wheel where which while white whole whose widen width wield woman woods world worry worse worst worth would wound wrath write wrote yield young yours youth';
+
+        let AI_WORD_SET = null;
+        let AI_PREFIX_SET = null;
+
+        function buildAIWordSets() {
+            if (AI_WORD_SET) return;
+            AI_WORD_SET = new Set(AI_WORDS_RAW.split(' ').map(w => w.toUpperCase()));
+            AI_PREFIX_SET = new Set();
+            for (const w of AI_WORD_SET) {
+                for (let i = 1; i <= w.length; i++) {
+                    AI_PREFIX_SET.add(w.substring(0, i));
+                }
+            }
+        }
+
+        /* ===== Tutorial board (11x11) ===== */
+        const TUTORIAL_GRID = [
+            ['H','A','T','S','E','N','D','I','T','O','N'],
+            ['O','N','E','R','A','N','G','E','S','T','H'],
+            ['W','O','R','D','S','C','O','R','E','I','S'],
+            ['S','T','R','O','N','G','H','O','L','D','S'],
+            ['P','L','A','Y','L','E','T','T','E','R','S'],
+            ['O','I','N','T','S','C','A','P','T','U','R'],
+            ['I','N','T','O','A','R','E','A','S','N','O'],
+            ['N','E','X','T','T','U','R','N','G','O','W'],
+            ['T','I','L','E','S','P','A','N','E','L','S'],
+            ['S','E','T','U','P','W','O','R','D','S','A'],
+            ['T','H','I','S','I','S','F','U','N','O','K']
+        ];
+
+        /* ===== Tutorial steps ===== */
+        const TUTORIAL_STEPS = [
+            {
+                title: 'Welcome to Territory Words!',
+                desc: 'In this game, you spell words by selecting letters on the grid. The letters you pick form a polygon that captures territory. Let\'s learn how it works!',
+                action: 'next',
+                highlights: []
+            },
+            {
+                title: 'Step 1: Select Your First Letter',
+                desc: 'Click the letter <b>H</b> at the top-left corner of the board.',
+                action: 'click',
+                highlights: [{r:0, c:0}],
+                target: {r:0, c:0}
+            },
+            {
+                title: 'Step 2: Spell HELP',
+                desc: 'Now click <b>E</b> at (row 0, col 4), then <b>L</b> at (row 4, col 4), then <b>P</b> at (row 4, col 0) to spell "HELP". Each letter is exactly distance 4 from the last \u2014 the maximum range!',
+                action: 'click',
+                highlights: [{r:0, c:4}, {r:4, c:4}, {r:4, c:0}],
+                targets: [{r:0, c:4}, {r:4, c:4}, {r:4, c:0}]
+            },
+            {
+                title: 'Step 3: Submit & Capture Territory',
+                desc: 'See the dashed line closing the polygon? These four letters form a large square. Click <b>Submit Word</b> to capture all that territory!',
+                action: 'submit',
+                highlights: []
+            },
+            {
+                title: 'Step 4: Letters Disappear',
+                desc: 'Notice that H, E, L, P have <b>vanished</b> from the board! Used letters are consumed after each word. Plan carefully \u2014 letters are a limited resource.',
+                action: 'next',
+                highlights: []
+            },
+            {
+                title: 'Step 5: Range & Distance',
+                desc: 'Each letter you pick must be within <b>range 4</b> (Manhattan distance) of your previous letter. The grayed-out cells show what\'s out of range. The reachable area forms a <b>diamond</b> shape.',
+                action: 'next',
+                highlights: []
+            },
+            {
+                title: 'Step 6: Strength, Overlap & Scoring',
+                desc: 'Longer words capture at higher <b>strength</b> (3 letters = 1, up to 7+ = 5). If you overlap enemy territory, your strength <b>subtracts</b> theirs. Your score equals the total <b>pixels</b> of your color on the board.',
+                action: 'next',
+                highlights: []
+            },
+            {
+                title: 'You\'re Ready!',
+                desc: 'You now know the basics of Territory Words. Spread your letters wide for big territory, spell longer words for higher strength, and contest your opponent\'s land. Have fun!',
+                action: 'done',
+                highlights: []
+            }
+        ];
+
         /* ===== State ===== */
         let grid = [];
         let player = 'blue';
@@ -349,10 +580,32 @@
         let history = [];
         let soundOn = false;
 
+        // Game mode
+        let gameMode = 'pvp'; // 'pvp' | 'pvc' | 'tutorial'
+
+        // AI state
+        let aiThinking = false;
+
         // Flash animation state
         let flashCvs, flashCtx;
         let flashStart = 0;
         let flashing = false;
+
+        // Particle system
+        let particles = [];
+
+        // Floating score text
+        let floatingTexts = [];
+
+        // Animated score counters
+        let displayedScoreBlue = 0;
+        let displayedScoreRed = 0;
+        let animatingScores = false;
+
+        // Tutorial state
+        let tutorialStep = 0;
+        let tutorialActive = false;
+        let tutorialTargetIndex = 0; // index into current step's targets array
 
         /* ===== Canvas refs ===== */
         let cvs, ctx;
@@ -413,7 +666,7 @@
         }
 
         /* ===== Init ===== */
-        function init() {
+        function initCanvas() {
             cvs = document.getElementById('gameCanvas');
             ctx = cvs.getContext('2d');
 
@@ -430,12 +683,47 @@
             tOwner = new Uint8Array(GRID_PX * GRID_PX);
             tStrength = new Uint8Array(GRID_PX * GRID_PX);
 
-            genGrid();
             cvs.addEventListener('click', onClick);
             cvs.addEventListener('mousemove', onMouseMove);
             cvs.addEventListener('mouseleave', () => { hoverCell = null; render(); });
+        }
+
+        function startGame(mode) {
+            gameMode = mode;
+            resetState();
+
+            if (mode === 'tutorial') {
+                // Use fixed tutorial board
+                grid = TUTORIAL_GRID.map(row => [...row]);
+                tutorialActive = true;
+                tutorialStep = 0;
+                tutorialTargetIndex = 0;
+            } else {
+                genGrid();
+                tutorialActive = false;
+            }
+
+            if (mode === 'pvc') {
+                buildAIWordSets();
+            }
+
+            // Hide menu
+            document.getElementById('menu-screen').classList.add('hidden');
+
+            // Show tutorial overlay if needed
+            if (mode === 'tutorial') {
+                showTutorialStep();
+            }
+
+            renderHistory();
             updateUI();
             render();
+            updateCanvasGlow();
+
+            // In PvC mode, computer (Blue) goes first
+            if (mode === 'pvc') {
+                setTimeout(() => aiTakeTurn(), 600);
+            }
         }
 
         function resetState() {
@@ -445,19 +733,30 @@
             gameOver = false;
             submitting = false;
             networkError = false;
+            aiThinking = false;
             hoverCell = null;
             flashing = false;
+            particles = [];
+            floatingTexts = [];
+            displayedScoreBlue = 0;
+            displayedScoreRed = 0;
             history = [];
+            tutorialActive = false;
+            tutorialStep = 0;
+            tutorialTargetIndex = 0;
             tOwner = new Uint8Array(GRID_PX * GRID_PX);
             tStrength = new Uint8Array(GRID_PX * GRID_PX);
             tCtx.clearRect(0, 0, GRID_PX, GRID_PX);
             flashCtx.clearRect(0, 0, GRID_PX, GRID_PX);
             hideAcceptBtn();
+            document.getElementById('tutorial-overlay').classList.remove('visible');
         }
 
         function newGame() {
             resetState();
             document.getElementById('game-over').classList.remove('visible');
+            // Return to menu
+            document.getElementById('menu-screen').classList.remove('hidden');
             genGrid();
             renderHistory();
             updateUI();
@@ -490,7 +789,7 @@
         function inRange(r, c) {
             if (sel.length === 0) return true;
             const last = sel[sel.length - 1];
-            return Math.max(Math.abs(r - last.r), Math.abs(c - last.c)) <= MAX_RANGE;
+            return (Math.abs(r - last.r) + Math.abs(c - last.c)) <= MAX_RANGE;
         }
 
         function selectionArea() {
@@ -501,6 +800,20 @@
                 area += pts[i].x * pts[j].y - pts[j].x * pts[i].y;
             }
             return Math.abs(area) / 2;
+        }
+
+        /* ===== Canvas glow ===== */
+        function updateCanvasGlow() {
+            if (!cvs) return;
+            if (gameOver) {
+                cvs.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.5)';
+                return;
+            }
+            if (player === 'blue') {
+                cvs.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.5), 0 0 30px rgba(59, 130, 246, 0.2)';
+            } else {
+                cvs.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.5), 0 0 30px rgba(239, 68, 68, 0.2)';
+            }
         }
 
         /* ===== Hover ===== */
@@ -516,7 +829,9 @@
             hoverCell = cell;
 
             // Cursor
-            if (gameOver || submitting || !cell) {
+            if (gameOver || submitting || aiThinking || !cell) {
+                cvs.style.cursor = 'default';
+            } else if (grid[cell.r][cell.c] === '') {
                 cvs.style.cursor = 'default';
             } else if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
                 cvs.style.cursor = 'default';
@@ -537,7 +852,7 @@
 
         /* ===== Click handler ===== */
         function onClick(e) {
-            if (gameOver || submitting) return;
+            if (gameOver || submitting || aiThinking) return;
 
             const rect = cvs.getBoundingClientRect();
             const sx = cvs.width / rect.width;
@@ -546,6 +861,48 @@
             const cy = (e.clientY - rect.top) * sy;
             const cell = canvasToCell(cx, cy);
             if (!cell) return;
+
+            // Tutorial: only allow clicking highlighted target cells
+            if (tutorialActive) {
+                const step = TUTORIAL_STEPS[tutorialStep];
+                if (step.action !== 'click') return;
+
+                // Check if this cell is the current target
+                let targets;
+                if (step.target) {
+                    targets = [step.target];
+                } else if (step.targets) {
+                    targets = step.targets;
+                } else {
+                    return;
+                }
+
+                const currentTarget = targets[tutorialTargetIndex];
+                if (!currentTarget) return;
+
+                if (cell.r !== currentTarget.r || cell.c !== currentTarget.c) {
+                    msg('Click the highlighted cell!');
+                    return;
+                }
+
+                // Valid tutorial click
+                sel.push(cell);
+                playSound('select');
+                tutorialTargetIndex++;
+
+                // Check if all targets for this step are done
+                if (tutorialTargetIndex >= targets.length) {
+                    tutorialTargetIndex = 0;
+                    tutorialStep++;
+                    showTutorialStep();
+                }
+
+                updateUI();
+                render();
+                return;
+            }
+
+            if (grid[cell.r][cell.c] === '') return;
             if (!inRange(cell.r, cell.c)) return;
 
             if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
@@ -562,7 +919,8 @@
 
         /* ===== Button actions ===== */
         function undoSelection() {
-            if (gameOver || submitting) return;
+            if (gameOver || submitting || aiThinking) return;
+            if (tutorialActive) return;
             if (sel.length) {
                 hideAcceptBtn();
                 sel.pop();
@@ -572,7 +930,8 @@
         }
 
         function clearSelections() {
-            if (gameOver || submitting) return;
+            if (gameOver || submitting || aiThinking) return;
+            if (tutorialActive) return;
             hideAcceptBtn();
             sel = [];
             updateUI();
@@ -580,7 +939,8 @@
         }
 
         function passTurn() {
-            if (gameOver || submitting) return;
+            if (gameOver || submitting || aiThinking) return;
+            if (tutorialActive) return;
             hideAcceptBtn();
             addHistory(player, null, 0, 0);
             advanceTurn();
@@ -588,11 +948,23 @@
         }
 
         async function submitWord() {
-            if (gameOver || submitting) return;
+            if (gameOver || submitting || aiThinking) return;
             if (sel.length < 3) { msg('Minimum 3 letters!'); return; }
 
             const word = sel.map(s => grid[s.r][s.c]).join('');
             const strength = Math.min(sel.length - 2, 5);
+
+            // Tutorial: skip API validation
+            if (tutorialActive) {
+                finalizeWord(word, strength);
+                // Advance tutorial
+                const step = TUTORIAL_STEPS[tutorialStep];
+                if (step && step.action === 'submit') {
+                    tutorialStep++;
+                    showTutorialStep();
+                }
+                return;
+            }
 
             // Dictionary API validation
             submitting = true;
@@ -628,11 +1000,18 @@
         }
 
         function acceptAnyway() {
-            if (gameOver || sel.length < 3) return;
+            if (gameOver || sel.length < 3 || aiThinking) return;
+            if (tutorialActive) return;
             hideAcceptBtn();
             const word = sel.map(s => grid[s.r][s.c]).join('');
             const strength = Math.min(sel.length - 2, 5);
             finalizeWord(word, strength);
+        }
+
+        function removeUsedLetters() {
+            for (const s of sel) {
+                grid[s.r][s.c] = '';
+            }
         }
 
         function finalizeWord(word, strength) {
@@ -641,6 +1020,7 @@
                 msg('"' + word + '" accepted \u2014 no territory (collinear).');
                 addHistory(player, word, strength, 0);
                 playSound('accept');
+                removeUsedLetters();
                 advanceTurn();
                 return;
             }
@@ -648,15 +1028,26 @@
             const scoreBefore = countScores();
             applyTerritory(strength);
             startFlash(sel, player === 'blue' ? TEAM.BLUE : TEAM.RED);
-            const scoreAfter = countScores();
 
+            // Spawn particles at polygon centroid
+            const cx = sel.reduce((s, p) => s + cellCenter(p.r, p.c).x, 0) / sel.length;
+            const cy = sel.reduce((s, p) => s + cellCenter(p.r, p.c).y, 0) / sel.length;
+            spawnParticles(cx, cy, player === 'blue' ? TEAM.BLUE : TEAM.RED);
+
+            const scoreAfter = countScores();
             const gained = player === 'blue'
                 ? scoreAfter.blue - scoreBefore.blue
                 : scoreAfter.red - scoreBefore.red;
 
+            // Spawn floating score text
+            if (gained > 0) {
+                spawnFloatingText('+' + gained.toLocaleString() + ' px', cx, cy, player);
+            }
+
             addHistory(player, word, strength, gained);
             msg('"' + word + '" captured! Strength ' + strength);
             playSound('accept');
+            removeUsedLetters();
             advanceTurn();
         }
 
@@ -664,11 +1055,25 @@
             turnsLeft[player]--;
             sel = [];
             player = player === 'blue' ? 'red' : 'blue';
+
+            // Turn pulse animation
+            const ti = document.getElementById('turn-indicator');
+            ti.classList.remove('pulse');
+            void ti.offsetWidth; // reflow to restart animation
+            ti.classList.add('pulse');
+
             updateUI();
             render();
+            updateCanvasGlow();
 
             if (turnsLeft.blue <= 0 && turnsLeft.red <= 0) {
                 endGame();
+                return;
+            }
+
+            // PvC: trigger AI turn when it's Blue's turn
+            if (gameMode === 'pvc' && player === 'blue' && !gameOver) {
+                setTimeout(() => aiTakeTurn(), 600);
             }
         }
 
@@ -786,6 +1191,148 @@
             else flashing = false;
         }
 
+        /* ===== Particle system ===== */
+        function spawnParticles(cx, cy, team) {
+            const col = TEAM_RGB[team];
+            for (let i = 0; i < 30; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 60 + Math.random() * 120;
+                particles.push({
+                    x: cx, y: cy,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1.0,
+                    decay: 0.8 + Math.random() * 0.8,
+                    size: 2 + Math.random() * 3,
+                    r: col.r, g: col.g, b: col.b
+                });
+            }
+            if (!particleAnimating) {
+                particleAnimating = true;
+                lastParticleTime = performance.now();
+                requestAnimationFrame(animateParticles);
+            }
+        }
+
+        let particleAnimating = false;
+        let lastParticleTime = 0;
+
+        function animateParticles(now) {
+            const dt = Math.min((now - lastParticleTime) / 1000, 0.05);
+            lastParticleTime = now;
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+                p.vy += 80 * dt; // gravity
+                p.life -= p.decay * dt;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
+            render();
+
+            // Draw particles on top
+            for (const p of particles) {
+                ctx.globalAlpha = Math.max(0, p.life);
+                ctx.fillStyle = 'rgb(' + p.r + ',' + p.g + ',' + p.b + ')';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+
+            if (particles.length > 0) {
+                requestAnimationFrame(animateParticles);
+            } else {
+                particleAnimating = false;
+            }
+        }
+
+        /* ===== Floating score text ===== */
+        function spawnFloatingText(text, cx, cy, plr) {
+            floatingTexts.push({
+                text,
+                x: cx, y: cy,
+                life: 1.0,
+                color: plr === 'blue' ? '#60a5fa' : '#f87171'
+            });
+            if (!floatAnimating) {
+                floatAnimating = true;
+                lastFloatTime = performance.now();
+                requestAnimationFrame(animateFloatingTexts);
+            }
+        }
+
+        let floatAnimating = false;
+        let lastFloatTime = 0;
+
+        function animateFloatingTexts(now) {
+            const dt = Math.min((now - lastFloatTime) / 1000, 0.05);
+            lastFloatTime = now;
+
+            for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                const ft = floatingTexts[i];
+                ft.y -= 50 * dt;
+                ft.life -= 0.7 * dt;
+                if (ft.life <= 0) floatingTexts.splice(i, 1);
+            }
+
+            render();
+
+            // Draw floating texts
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            for (const ft of floatingTexts) {
+                ctx.globalAlpha = Math.max(0, ft.life);
+                ctx.font = 'bold 18px sans-serif';
+                ctx.fillStyle = ft.color;
+                ctx.fillText(ft.text, ft.x, ft.y);
+            }
+            ctx.globalAlpha = 1;
+
+            if (floatingTexts.length > 0) {
+                requestAnimationFrame(animateFloatingTexts);
+            } else {
+                floatAnimating = false;
+            }
+        }
+
+        /* ===== Animated score counters ===== */
+        function startScoreAnimation() {
+            if (animatingScores) return;
+            animatingScores = true;
+            requestAnimationFrame(animateScoreCounters);
+        }
+
+        function animateScoreCounters() {
+            const scores = countScores();
+            let done = true;
+
+            const step = (from, to) => {
+                if (from === to) return to;
+                done = false;
+                const diff = to - from;
+                const delta = Math.max(1, Math.abs(diff) * 0.15);
+                if (Math.abs(diff) <= delta) return to;
+                return from + (diff > 0 ? delta : -delta);
+            };
+
+            displayedScoreBlue = Math.round(step(displayedScoreBlue, scores.blue));
+            displayedScoreRed = Math.round(step(displayedScoreRed, scores.red));
+
+            document.getElementById('blue-score').textContent =
+                (gameMode === 'pvc' ? 'CPU: ' : 'Blue: ') + displayedScoreBlue.toLocaleString();
+            document.getElementById('red-score').textContent =
+                (gameMode === 'pvc' ? 'You: ' : 'Red: ') + displayedScoreRed.toLocaleString();
+
+            if (!done) {
+                requestAnimationFrame(animateScoreCounters);
+            } else {
+                animatingScores = false;
+            }
+        }
+
         /* ===== Scoring ===== */
         function countScores() {
             let blue = 0, red = 0;
@@ -814,6 +1361,7 @@
             for (let i = 0; i < history.length; i++) {
                 const h = history[i];
                 const dotClass = h.player === 'blue' ? 'blue' : 'red';
+                const label = (gameMode === 'pvc' && h.player === 'blue') ? 'CPU' : '';
                 html += '<div class="history-entry">';
                 html += '<span class="history-dot ' + dotClass + '"></span>';
 
@@ -834,6 +1382,233 @@
             list.scrollTop = list.scrollHeight;
         }
 
+        /* ===== AI System ===== */
+        function aiFindWords() {
+            const found = [];
+            const visited = Array.from({length: GRID}, () => new Array(GRID).fill(false));
+
+            function dfs(path, word) {
+                if (word.length >= 3 && AI_WORD_SET.has(word)) {
+                    found.push({ word, path: path.map(p => ({...p})) });
+                }
+                if (word.length >= 5) return; // max 5 letters
+                const last = path[path.length - 1];
+
+                for (let r = 0; r < GRID; r++) {
+                    for (let c = 0; c < GRID; c++) {
+                        if (visited[r][c]) continue;
+                        if (grid[r][c] === '') continue;
+                        // Manhattan distance check
+                        if ((Math.abs(r - last.r) + Math.abs(c - last.c)) > MAX_RANGE) continue;
+
+                        const nextWord = word + grid[r][c];
+                        if (!AI_PREFIX_SET.has(nextWord)) continue;
+
+                        visited[r][c] = true;
+                        path.push({r, c});
+                        dfs(path, nextWord);
+                        path.pop();
+                        visited[r][c] = false;
+                    }
+                }
+            }
+
+            for (let r = 0; r < GRID; r++) {
+                for (let c = 0; c < GRID; c++) {
+                    if (grid[r][c] === '') continue;
+                    const letter = grid[r][c];
+                    if (!AI_PREFIX_SET.has(letter)) continue;
+                    visited[r][c] = true;
+                    dfs([{r, c}], letter);
+                    visited[r][c] = false;
+                }
+            }
+
+            return found;
+        }
+
+        function aiCalculateArea(path) {
+            if (path.length < 3) return 0;
+            const pts = path.map(s => cellCenter(s.r, s.c));
+            let area = 0;
+            for (let i = 0; i < pts.length; i++) {
+                const j = (i + 1) % pts.length;
+                area += pts[i].x * pts[j].y - pts[j].x * pts[i].y;
+            }
+            return Math.abs(area) / 2;
+        }
+
+        function aiChooseWord(candidates) {
+            // Filter to words with area (non-collinear with 3+ letters)
+            let withArea = candidates.filter(c => c.path.length >= 3 && aiCalculateArea(c.path) > 100);
+
+            // If no area words, try any valid words
+            if (withArea.length === 0) {
+                withArea = candidates.filter(c => c.path.length >= 3);
+            }
+            if (withArea.length === 0) return null;
+
+            // Score each candidate (tuned for lower skill)
+            const scored = withArea.map(c => {
+                const area = aiCalculateArea(c.path);
+                const len = c.path.length;
+
+                // Length preference: strongly favor 4-letter words
+                let lengthBonus = 0;
+                if (len === 4) lengthBonus = 500;
+                else if (len === 3) lengthBonus = 250;
+                else if (len === 5) lengthBonus = 100;
+
+                // Proximity bonus: reward choosing letters closer together
+                let totalDist = 0;
+                for (let i = 1; i < c.path.length; i++) {
+                    totalDist += Math.abs(c.path[i].r - c.path[i-1].r) + Math.abs(c.path[i].c - c.path[i-1].c);
+                }
+                const avgDist = totalDist / (c.path.length - 1);
+                const proximityBonus = (MAX_RANGE - avgDist) * 150;
+
+                // Area bonus: capped low so AI doesn't always maximize spread
+                const areaBonus = Math.min(area * 0.02, 500);
+
+                // Bonus for overlap with enemy territory (reduced)
+                let overlapBonus = 0;
+                const centroidX = c.path.reduce((s, p) => s + p.c, 0) / c.path.length;
+                const centroidY = c.path.reduce((s, p) => s + p.r, 0) / c.path.length;
+                const px = Math.floor(centroidY * CELL + CELL/2);
+                const py = Math.floor(centroidX * CELL + CELL/2);
+                const idx = px * GRID_PX + py;
+                if (idx >= 0 && idx < GRID_PX * GRID_PX) {
+                    if (tOwner[idx] === TEAM.RED) overlapBonus = 150;
+                }
+
+                // High randomness for more variety
+                const score = lengthBonus + proximityBonus + areaBonus + overlapBonus + Math.random() * 600;
+                return { ...c, score };
+            });
+
+            // Sort by score, pick from top 8 candidates with some randomness
+            scored.sort((a, b) => b.score - a.score);
+            const topN = Math.min(8, scored.length);
+            return scored[Math.floor(Math.random() * topN)];
+        }
+
+        async function aiTakeTurn() {
+            if (gameOver || player !== 'blue' || gameMode !== 'pvc') return;
+            aiThinking = true;
+            msg('Computer is thinking...');
+            setButtonsDisabled(true);
+            render();
+
+            // Brief delay for natural feel
+            await new Promise(r => setTimeout(r, 800 + Math.random() * 700));
+
+            // Find words
+            const candidates = aiFindWords();
+            const chosen = aiChooseWord(candidates);
+
+            if (!chosen) {
+                // Pass turn
+                aiThinking = false;
+                setButtonsDisabled(false);
+                addHistory('blue', null, 0, 0);
+                msg('Computer passed.');
+                advanceTurn();
+                return;
+            }
+
+            // Animate letter selection one at a time
+            sel = [];
+            for (let i = 0; i < chosen.path.length; i++) {
+                sel.push(chosen.path[i]);
+                playSound('select');
+                updateUI();
+                render();
+                await new Promise(r => setTimeout(r, 250));
+            }
+
+            const word = chosen.word.toUpperCase();
+            const strength = Math.min(chosen.path.length - 2, 5);
+
+            // Validate against dictionary API (accept on network error)
+            msg('Checking "' + word + '"...');
+            let valid = true;
+            try {
+                const resp = await fetch(API_URL + word.toLowerCase());
+                valid = resp.ok;
+            } catch (e) {
+                // Accept on network error since words come from curated list
+                valid = true;
+            }
+
+            if (!valid) {
+                // Word rejected by API - try to find another or pass
+                sel = [];
+                aiThinking = false;
+                setButtonsDisabled(false);
+                addHistory('blue', null, 0, 0);
+                msg('Computer passed.');
+                advanceTurn();
+                return;
+            }
+
+            // Finalize the word
+            aiThinking = false;
+            setButtonsDisabled(false);
+            finalizeWord(word, strength);
+        }
+
+        /* ===== Tutorial System ===== */
+        function showTutorialStep() {
+            if (tutorialStep >= TUTORIAL_STEPS.length) {
+                // Tutorial complete
+                tutorialActive = false;
+                document.getElementById('tutorial-overlay').classList.remove('visible');
+                newGame();
+                return;
+            }
+
+            const step = TUTORIAL_STEPS[tutorialStep];
+            const overlay = document.getElementById('tutorial-overlay');
+            document.getElementById('tutorial-step-title').textContent = step.title;
+            document.getElementById('tutorial-step-desc').innerHTML = step.desc;
+
+            const nextBtn = document.getElementById('btn-tutorial-next');
+            if (step.action === 'next') {
+                nextBtn.style.display = '';
+                nextBtn.textContent = 'Next';
+            } else if (step.action === 'done') {
+                nextBtn.style.display = '';
+                nextBtn.textContent = 'Return to Menu';
+            } else if (step.action === 'submit') {
+                nextBtn.style.display = 'none';
+            } else {
+                // 'click' - hide next, player must click cells
+                nextBtn.style.display = 'none';
+            }
+
+            overlay.classList.add('visible');
+            tutorialTargetIndex = 0;
+            render();
+        }
+
+        function tutorialNext() {
+            const step = TUTORIAL_STEPS[tutorialStep];
+            if (step.action === 'done') {
+                tutorialActive = false;
+                document.getElementById('tutorial-overlay').classList.remove('visible');
+                newGame();
+                return;
+            }
+            tutorialStep++;
+            showTutorialStep();
+        }
+
+        function tutorialSkip() {
+            tutorialActive = false;
+            document.getElementById('tutorial-overlay').classList.remove('visible');
+            newGame();
+        }
+
         /* ===== Game end ===== */
         function endGame() {
             gameOver = true;
@@ -844,25 +1619,47 @@
             const scoresEl = document.getElementById('final-scores');
             const subtitle = document.getElementById('winner-subtitle');
 
-            scoresEl.innerHTML =
-                '<span style="color:#60a5fa">Blue: ' + scores.blue.toLocaleString() + '</span>' +
-                '  \u2014  ' +
-                '<span style="color:#f87171">Red: ' + scores.red.toLocaleString() + '</span>';
+            if (gameMode === 'pvc') {
+                scoresEl.innerHTML =
+                    '<span style="color:#60a5fa">CPU: ' + scores.blue.toLocaleString() + '</span>' +
+                    '  \u2014  ' +
+                    '<span style="color:#f87171">You: ' + scores.red.toLocaleString() + '</span>';
 
-            if (scores.blue > scores.red) {
-                title.textContent = 'Blue Wins!';
-                title.style.color = '#60a5fa';
-                subtitle.textContent = 'by ' + (scores.blue - scores.red).toLocaleString() + ' pixels';
-            } else if (scores.red > scores.blue) {
-                title.textContent = 'Red Wins!';
-                title.style.color = '#f87171';
-                subtitle.textContent = 'by ' + (scores.red - scores.blue).toLocaleString() + ' pixels';
+                if (scores.red > scores.blue) {
+                    title.textContent = 'You Win!';
+                    title.style.color = '#34d399';
+                    subtitle.textContent = 'by ' + (scores.red - scores.blue).toLocaleString() + ' pixels';
+                } else if (scores.blue > scores.red) {
+                    title.textContent = 'Computer Wins!';
+                    title.style.color = '#60a5fa';
+                    subtitle.textContent = 'by ' + (scores.blue - scores.red).toLocaleString() + ' pixels';
+                } else {
+                    title.textContent = 'Draw!';
+                    title.style.color = '#e2e8f0';
+                    subtitle.textContent = 'Both sides tied exactly';
+                }
             } else {
-                title.textContent = 'Draw!';
-                title.style.color = '#e2e8f0';
-                subtitle.textContent = 'Both players tied exactly';
+                scoresEl.innerHTML =
+                    '<span style="color:#60a5fa">Blue: ' + scores.blue.toLocaleString() + '</span>' +
+                    '  \u2014  ' +
+                    '<span style="color:#f87171">Red: ' + scores.red.toLocaleString() + '</span>';
+
+                if (scores.blue > scores.red) {
+                    title.textContent = 'Blue Wins!';
+                    title.style.color = '#60a5fa';
+                    subtitle.textContent = 'by ' + (scores.blue - scores.red).toLocaleString() + ' pixels';
+                } else if (scores.red > scores.blue) {
+                    title.textContent = 'Red Wins!';
+                    title.style.color = '#f87171';
+                    subtitle.textContent = 'by ' + (scores.red - scores.blue).toLocaleString() + ' pixels';
+                } else {
+                    title.textContent = 'Draw!';
+                    title.style.color = '#e2e8f0';
+                    subtitle.textContent = 'Both players tied exactly';
+                }
             }
 
+            updateCanvasGlow();
             overlay.classList.add('visible');
         }
 
@@ -891,6 +1688,31 @@
                 }
             }
 
+            // 3c. Tutorial highlights
+            if (tutorialActive && tutorialStep < TUTORIAL_STEPS.length) {
+                const step = TUTORIAL_STEPS[tutorialStep];
+                const highlights = step.highlights || [];
+
+                // Also highlight remaining targets
+                let allHighlights = [...highlights];
+                if (step.action === 'click') {
+                    let targets = step.target ? [step.target] : (step.targets || []);
+                    for (let i = tutorialTargetIndex; i < targets.length; i++) {
+                        if (!allHighlights.some(h => h.r === targets[i].r && h.c === targets[i].c)) {
+                            allHighlights.push(targets[i]);
+                        }
+                    }
+                }
+
+                for (const h of allHighlights) {
+                    ctx.strokeStyle = '#34d399';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(PAD + h.c * CELL + 2, PAD + h.r * CELL + 2, CELL - 4, CELL - 4);
+                    ctx.fillStyle = 'rgba(52, 211, 153, 0.12)';
+                    ctx.fillRect(PAD + h.c * CELL + 1, PAD + h.r * CELL + 1, CELL - 2, CELL - 2);
+                }
+            }
+
             // 4. Grid lines
             ctx.strokeStyle = '#c8bea8';
             ctx.lineWidth = 1;
@@ -902,7 +1724,7 @@
             }
 
             // 4b. Hover highlight
-            if (hoverCell && !gameOver && !submitting) {
+            if (hoverCell && !gameOver && !submitting && !aiThinking) {
                 const hs = sel.some(s => s.r === hoverCell.r && s.c === hoverCell.c);
                 if (!hs && inRange(hoverCell.r, hoverCell.c)) {
                     ctx.fillStyle = player === 'blue'
@@ -962,6 +1784,7 @@
             ctx.textBaseline = 'middle';
             for (let r = 0; r < GRID; r++) {
                 for (let c = 0; c < GRID; c++) {
+                    if (grid[r][c] === '') continue;
                     const p = cellCenter(r, c);
                     const isSel = sel.some(s => s.r === r && s.c === c);
                     const oor = hasSelection && !isSel && !inRange(r, c);
@@ -1004,6 +1827,14 @@
             if (gameOver) {
                 ti.textContent = 'Game Over';
                 ti.style.color = '#94a3b8';
+            } else if (gameMode === 'pvc') {
+                if (player === 'blue') {
+                    ti.textContent = aiThinking ? "Computer's Turn" : "Computer's Turn";
+                    ti.style.color = '#60a5fa';
+                } else {
+                    ti.textContent = "Your Turn";
+                    ti.style.color = '#f87171';
+                }
             } else {
                 ti.textContent = player === 'blue' ? "Blue's Turn" : "Red's Turn";
                 ti.style.color = player === 'blue' ? '#60a5fa' : '#f87171';
@@ -1013,11 +1844,8 @@
             document.getElementById('turns-left').textContent =
                 totalLeft + ' turn' + (totalLeft !== 1 ? 's' : '') + ' left';
 
-            const scores = countScores();
-            document.getElementById('blue-score').textContent =
-                'Blue: ' + scores.blue.toLocaleString();
-            document.getElementById('red-score').textContent =
-                'Red: ' + scores.red.toLocaleString();
+            // Animated score counters
+            startScoreAnimation();
 
             const wd = document.getElementById('word-display');
             if (sel.length === 0) {
@@ -1042,7 +1870,12 @@
         }
 
         /* ===== Start ===== */
-        window.addEventListener('DOMContentLoaded', init);
+        window.addEventListener('DOMContentLoaded', () => {
+            initCanvas();
+            genGrid();
+            updateUI();
+            render();
+        });
     </script>
 </body>
 </html>
