@@ -437,6 +437,132 @@
         #btn-tutorial-skip { background: #475569; color: #e2e8f0; }
         #btn-tutorial-skip:hover { background: #64748b; }
 
+        /* ===== Online / Lobby Screens ===== */
+        #online-screen {
+            position: fixed; inset: 0; z-index: 210;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        #online-screen.hidden {
+            opacity: 0; transform: scale(1.05);
+            pointer-events: none;
+        }
+        .online-title {
+            font-size: 36px; font-weight: 900; color: #e2e8f0;
+            margin-bottom: 32px;
+        }
+        .online-sections {
+            display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;
+        }
+        .online-section {
+            background: #1e293b; border-radius: 12px;
+            padding: 28px 32px; min-width: 260px; text-align: center;
+            border: 2px solid #334155;
+        }
+        .online-section h3 {
+            font-size: 18px; font-weight: 700; color: #f59e0b;
+            margin-bottom: 16px;
+        }
+        .online-section p {
+            font-size: 13px; color: #94a3b8; margin-bottom: 16px; line-height: 1.5;
+        }
+        .online-section button {
+            padding: 10px 28px; font-size: 15px; font-weight: 600;
+            background: #f59e0b; color: #0f172a; border-radius: 8px;
+            border: none; cursor: pointer; transition: background 0.2s, transform 0.15s;
+        }
+        .online-section button:hover {
+            background: #fbbf24; transform: translateY(-2px);
+        }
+        .online-code-input {
+            width: 160px; padding: 10px 14px; border-radius: 8px;
+            border: 2px solid #334155; background: #0f172a; color: #e2e8f0;
+            font-size: 20px; font-weight: 700; text-align: center;
+            letter-spacing: 4px; text-transform: uppercase;
+            outline: none; transition: border-color 0.2s;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 12px; display: block; margin-left: auto; margin-right: auto;
+        }
+        .online-code-input:focus { border-color: #f59e0b; }
+        .online-back-btn {
+            margin-top: 28px; padding: 10px 28px; border-radius: 8px;
+            border: 2px solid #334155; background: #1e293b; color: #94a3b8;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .online-back-btn:hover {
+            border-color: #f59e0b; color: #e2e8f0; transform: translateY(-2px);
+        }
+
+        #lobby-screen {
+            position: fixed; inset: 0; z-index: 210;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        #lobby-screen.hidden {
+            opacity: 0; transform: scale(1.05);
+            pointer-events: none;
+        }
+        .lobby-label {
+            font-size: 16px; color: #94a3b8; margin-bottom: 12px;
+        }
+        .lobby-code {
+            font-size: 56px; font-weight: 900; letter-spacing: 12px;
+            color: #f59e0b; font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+        }
+        .lobby-status {
+            font-size: 16px; color: #64748b; margin-bottom: 24px;
+        }
+        .lobby-status .dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #f59e0b; margin-right: 6px;
+            animation: lobby-pulse 1.2s ease-in-out infinite alternate;
+        }
+        @keyframes lobby-pulse {
+            from { opacity: 0.4; } to { opacity: 1; }
+        }
+        .lobby-buttons { display: flex; gap: 12px; }
+        .lobby-buttons button {
+            padding: 10px 24px; font-size: 14px; border-radius: 8px;
+        }
+        .lobby-copy-btn {
+            background: #334155; color: #e2e8f0;
+        }
+        .lobby-copy-btn:hover { background: #475569; }
+        .lobby-cancel-btn {
+            background: #92400e; color: #fff;
+        }
+        .lobby-cancel-btn:hover { background: #78350f; }
+
+        /* Online menu card */
+        .menu-card.online:hover { border-color: #f59e0b; }
+        .menu-card.online .menu-card-title { color: #f59e0b; }
+
+        /* Online indicator */
+        #online-indicator {
+            position: fixed; top: 12px; right: 12px; z-index: 90;
+            background: #1e293b; border-radius: 8px;
+            padding: 8px 14px; font-size: 12px;
+            border: 1px solid #334155;
+            display: none;
+        }
+        #online-indicator .online-role {
+            font-weight: 700; margin-bottom: 2px;
+        }
+        #online-indicator .online-conn {
+            display: flex; align-items: center; gap: 5px; color: #64748b; font-size: 11px;
+        }
+        #online-indicator .conn-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+        }
+        #online-indicator .conn-dot.connected { background: #34d399; }
+        #online-indicator .conn-dot.disconnected { background: #ef4444; }
+
         /* ===== Responsive ===== */
         @media (max-width: 920px) {
             #game-area { flex-direction: column; align-items: center; }
@@ -450,6 +576,9 @@
             body { padding: 10px; }
             #header { padding: 10px 14px; min-width: auto; }
             .score-box { font-size: 15px; min-width: 90px; }
+            .score-label { font-size: 8px; }
+            .score-value { font-size: 14px; }
+            #turns-left { font-size: 10px; }
             #turn-indicator { font-size: 15px; }
             #word-display { font-size: 15px; }
             #controls { gap: 6px; }
@@ -462,8 +591,14 @@
             .deco-bush-left { width: 55px; }
             .deco-bush-right { width: 40px; }
             .options-section { min-width: 280px; padding: 16px 20px; }
+            .online-title { font-size: 28px; }
+            .online-section { min-width: 220px; padding: 20px 18px; }
+            .lobby-code { font-size: 40px; letter-spacing: 8px; }
+            #online-indicator { font-size: 11px; padding: 6px 10px; }
         }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 </head>
 <body>
     <!-- Menu Screen -->
@@ -485,6 +620,11 @@
                 <div class="menu-card-icon">&#128218;</div>
                 <div class="menu-card-title">Tutorial</div>
                 <div class="menu-card-desc">Learn how to play step by step</div>
+            </div>
+            <div class="menu-card online" onclick="showOnlineScreen()">
+                <div class="menu-card-icon">&#127760;</div>
+                <div class="menu-card-title">Online</div>
+                <div class="menu-card-desc">Play against a friend over the internet</div>
             </div>
         </div>
         <button class="menu-options-btn" onclick="openOptions()">Options</button>
@@ -551,6 +691,45 @@
         </div>
 
         <button class="menu-options-btn" onclick="closeOptions()" style="margin-top:32px;">Back to Menu</button>
+    </div>
+
+    <!-- Online Screen -->
+    <div id="online-screen" class="hidden">
+        <div class="online-title">Online Multiplayer</div>
+        <div class="online-sections">
+            <div class="online-section">
+                <h3>Create Game</h3>
+                <p>Start a new game and share the code with a friend.</p>
+                <button onclick="createOnlineGame()">Create Game</button>
+            </div>
+            <div class="online-section">
+                <h3>Join Game</h3>
+                <p>Enter the 6-character code to join an existing game.</p>
+                <input type="text" id="join-code-input" class="online-code-input" maxlength="6" placeholder="ABC123" autocomplete="off">
+                <button onclick="joinOnlineGame()">Join Game</button>
+            </div>
+        </div>
+        <button class="online-back-btn" onclick="hideOnlineScreen()">Back to Menu</button>
+    </div>
+
+    <!-- Lobby Screen -->
+    <div id="lobby-screen" class="hidden">
+        <div class="lobby-label">Share this code with your opponent:</div>
+        <div class="lobby-code" id="lobby-code-display">------</div>
+        <div class="lobby-status" id="lobby-status"><span class="dot"></span> Waiting for opponent...</div>
+        <div class="lobby-buttons">
+            <button class="lobby-copy-btn" onclick="copyGameCode()">Copy Code</button>
+            <button class="lobby-cancel-btn" onclick="cancelLobby()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Online Indicator -->
+    <div id="online-indicator">
+        <div class="online-role" id="online-role-text"></div>
+        <div class="online-conn">
+            <span class="conn-dot connected" id="online-conn-dot"></span>
+            <span id="online-conn-text">Connected</span>
+        </div>
     </div>
 
     <div id="header">
@@ -647,6 +826,34 @@
 
         function formatScorePercent(rawPixels) {
             return (rawPixels / TOTAL_PIXELS * 100).toFixed(1) + '%';
+        }
+
+        /* ===== Firebase Config ===== */
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyC0XYnCxlRgKnr4f4kCwwvu_eTaiJGfmaI",
+            authDomain: "territorywords.firebaseapp.com",
+            databaseURL: "https://territorywords-default-rtdb.firebaseio.com",
+            projectId: "territorywords",
+            storageBucket: "territorywords.firebasestorage.app",
+            messagingSenderId: "679952060871",
+            appId: "1:679952060871:web:2e75cd252aa2be09e109e2",
+            measurementId: "G-QKWSYG60EY"
+        };
+
+        let firebaseApp = null;
+        let firebaseDB = null;
+
+        function initFirebase() {
+            if (firebaseApp) return true;
+            try {
+                firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+                firebaseDB = firebase.database();
+                return true;
+            } catch (e) {
+                console.error('Firebase init failed:', e);
+                msg('Firebase not configured. Check FIREBASE_CONFIG.');
+                return false;
+            }
         }
 
         /* ===== Menu Pixel Art Assets (base64) ===== */
@@ -844,6 +1051,14 @@
         let tutorialActive = false;
         let tutorialTargetIndex = 0; // index into current step's targets array
 
+        // Online multiplayer state
+        let onlineMode = false;
+        let onlineRole = null; // 'host' | 'guest'
+        let onlineGameRef = null;
+        let onlineGameCode = '';
+        let onlineListeners = [];
+        let onlineMoveCount = 0;
+
         /* ===== Canvas refs ===== */
         let cvs, ctx;
         let tCvs, tCtx;
@@ -900,6 +1115,418 @@
             document.getElementById('sound-toggle').textContent =
                 soundOn ? 'Sound: ON' : 'Sound: OFF';
             if (soundOn) playSound('select');
+        }
+
+        /* ===== Online Multiplayer ===== */
+        function generateGameCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+            return code;
+        }
+
+        function showOnlineScreen() {
+            if (!initFirebase()) return;
+            document.getElementById('online-screen').classList.remove('hidden');
+            document.getElementById('join-code-input').value = '';
+        }
+
+        function hideOnlineScreen() {
+            document.getElementById('online-screen').classList.add('hidden');
+        }
+
+        function isMyTurn() {
+            if (!onlineMode) return true;
+            const myColor = onlineRole === 'host' ? 'blue' : 'red';
+            return player === myColor;
+        }
+
+        async function createOnlineGame() {
+            if (!initFirebase()) return;
+            const code = generateGameCode();
+            onlineGameCode = code;
+            onlineRole = 'host';
+
+            // Read current options
+            const turnsInput = document.getElementById('opt-turns');
+            const turnsVal = parseInt(turnsInput.value, 10);
+            const gameTurns = (isNaN(turnsVal) || turnsVal < 1 || turnsVal > 20) ? 8 : turnsVal;
+
+            onlineGameRef = firebaseDB.ref('games/' + code);
+
+            const gameData = {
+                status: 'waiting',
+                host: 'connected',
+                guest: null,
+                boardSize: boardSize,
+                turnsEach: gameTurns,
+                timerEnabled: timerEnabled,
+                grid: null,
+                currentPlayer: 'blue',
+                turnsLeft: { blue: gameTurns, red: gameTurns },
+                moveCount: 0,
+                lastMove: null,
+                createdAt: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            try {
+                await onlineGameRef.set(gameData);
+            } catch (e) {
+                console.error('Failed to create game:', e);
+                msg('Failed to create game. Check Firebase config.');
+                onlineGameRef = null;
+                onlineRole = null;
+                return;
+            }
+
+            // Set up disconnect handler
+            onlineGameRef.child('host').onDisconnect().set('disconnected');
+
+            // Hide online screen, show lobby
+            hideOnlineScreen();
+            document.getElementById('lobby-code-display').textContent = code;
+            document.getElementById('lobby-status').innerHTML = '<span class="dot"></span> Waiting for opponent...';
+            document.getElementById('lobby-screen').classList.remove('hidden');
+
+            // Listen for guest joining
+            const guestRef = onlineGameRef.child('guest');
+            const guestListener = guestRef.on('value', (snap) => {
+                if (snap.val() === 'connected') {
+                    document.getElementById('lobby-status').innerHTML = '<span class="dot" style="background:#34d399"></span> Opponent joined! Starting...';
+                    setTimeout(() => startOnlineGame(), 800);
+                }
+            });
+            onlineListeners.push({ ref: guestRef, event: 'value', callback: guestListener });
+        }
+
+        async function joinOnlineGame() {
+            if (!initFirebase()) return;
+            const input = document.getElementById('join-code-input');
+            const code = input.value.toUpperCase().trim();
+            if (code.length !== 6) {
+                msg('Enter a 6-character game code.');
+                return;
+            }
+
+            const gameRef = firebaseDB.ref('games/' + code);
+            let snap;
+            try {
+                snap = await gameRef.once('value');
+            } catch (e) {
+                msg('Failed to connect. Check Firebase config.');
+                return;
+            }
+
+            if (!snap.exists()) {
+                msg('Game not found. Check the code.');
+                return;
+            }
+
+            const data = snap.val();
+            if (data.status !== 'waiting') {
+                msg('Game already started or finished.');
+                return;
+            }
+            if (data.guest === 'connected') {
+                msg('Game is full.');
+                return;
+            }
+
+            onlineGameCode = code;
+            onlineRole = 'guest';
+            onlineGameRef = gameRef;
+
+            // Set guest as connected
+            await onlineGameRef.child('guest').set('connected');
+            onlineGameRef.child('guest').onDisconnect().set('disconnected');
+
+            // Hide online screen, show brief lobby
+            hideOnlineScreen();
+            document.getElementById('lobby-code-display').textContent = code;
+            document.getElementById('lobby-status').innerHTML = '<span class="dot" style="background:#34d399"></span> Connected! Starting...';
+            document.getElementById('lobby-screen').classList.remove('hidden');
+
+            // Listen for game to start (host sets grid)
+            const gridRef = onlineGameRef.child('grid');
+            const gridListener = gridRef.on('value', (snap) => {
+                if (snap.val()) {
+                    startOnlineGame();
+                }
+            });
+            onlineListeners.push({ ref: gridRef, event: 'value', callback: gridListener });
+        }
+
+        let onlineGameStarted = false;
+        async function startOnlineGame() {
+            if (onlineGameStarted) return;
+            onlineGameStarted = true;
+            // Remove lobby listeners
+            for (const l of onlineListeners) {
+                l.ref.off(l.event, l.callback);
+            }
+            onlineListeners = [];
+
+            // Hide lobby and online screens
+            document.getElementById('lobby-screen').classList.add('hidden');
+            document.getElementById('online-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.add('hidden');
+
+            onlineMode = true;
+            gameMode = 'online';
+            onlineMoveCount = 0;
+
+            // Load settings from Firebase
+            const snap = await onlineGameRef.once('value');
+            const data = snap.val();
+
+            const remoteBoardSize = data.boardSize || 11;
+            TURNS_EACH = data.turnsEach || 8;
+            timerEnabled = data.timerEnabled || false;
+
+            recalculateGridSize(remoteBoardSize);
+            resizeCanvases();
+            resetState();
+
+            if (onlineRole === 'host') {
+                // Host generates grid and pushes it
+                genGrid();
+                const gridData = grid.map(row => [...row]);
+                await onlineGameRef.child('grid').set(gridData);
+                await onlineGameRef.update({ status: 'playing' });
+            } else {
+                // Guest reads grid from Firebase
+                const gridSnap = await onlineGameRef.child('grid').once('value');
+                grid = gridSnap.val().map(row => [...row]);
+            }
+
+            buildValidWordSet();
+            renderHistory();
+            updateUI();
+            render();
+            updateCanvasGlow();
+            startTurnTimer();
+
+            // Show online indicator
+            const indicator = document.getElementById('online-indicator');
+            indicator.style.display = '';
+            const roleText = document.getElementById('online-role-text');
+            if (onlineRole === 'host') {
+                roleText.textContent = 'You are Blue (Host)';
+                roleText.style.color = '#60a5fa';
+            } else {
+                roleText.textContent = 'You are Red (Guest)';
+                roleText.style.color = '#f87171';
+            }
+
+            // Set up move listener and presence
+            setupMoveListener();
+            setupPresence();
+        }
+
+        function setupMoveListener() {
+            const mcRef = onlineGameRef.child('moveCount');
+            const mcListener = mcRef.on('value', async (snap) => {
+                const newCount = snap.val();
+                if (newCount === null || newCount <= onlineMoveCount) return;
+                onlineMoveCount = newCount;
+
+                // Read the last move
+                const moveSnap = await onlineGameRef.child('lastMove').once('value');
+                const move = moveSnap.val();
+                if (!move) return;
+
+                const myColor = onlineRole === 'host' ? 'blue' : 'red';
+                // Skip if this is my own move
+                if (move.player === myColor) return;
+
+                processOpponentMove(move);
+            });
+            onlineListeners.push({ ref: mcRef, event: 'value', callback: mcListener });
+        }
+
+        function processOpponentMove(move) {
+            if (move.type === 'pass') {
+                addHistory(move.player, null, 0, 0);
+                msg('Opponent passed.');
+                // Sync grid if provided
+                if (move.grid) {
+                    grid = move.grid.map(row => [...row]);
+                }
+                advanceTurn();
+                return;
+            }
+
+            // Word move
+            sel = move.cells;
+            player = move.player;
+
+            if (selectionArea() < 1) {
+                // Collinear
+                addHistory(move.player, move.word, move.strength, 0);
+                msg('Opponent played "' + move.word + '" (collinear).');
+            } else {
+                const scoreBefore = countScores();
+                applyTerritory(move.strength);
+                startFlash(sel, move.player === 'blue' ? TEAM.BLUE : TEAM.RED);
+
+                const cx = sel.reduce((s, p) => s + cellCenter(p.r, p.c).x, 0) / sel.length;
+                const cy = sel.reduce((s, p) => s + cellCenter(p.r, p.c).y, 0) / sel.length;
+                spawnParticles(cx, cy, move.player === 'blue' ? TEAM.BLUE : TEAM.RED);
+
+                const scoreAfter = countScores();
+                const gained = move.player === 'blue'
+                    ? scoreAfter.blue - scoreBefore.blue
+                    : scoreAfter.red - scoreBefore.red;
+
+                if (gained > 0) {
+                    spawnFloatingText('+' + formatScorePercent(gained), cx, cy, move.player);
+                }
+
+                addHistory(move.player, move.word, move.strength, gained);
+                msg('Opponent played "' + move.word + '"!');
+                playSound('accept');
+            }
+
+            // Overwrite grid with synced version
+            if (move.grid) {
+                grid = move.grid.map(row => [...row]);
+            }
+
+            sel = [];
+            advanceTurn();
+        }
+
+        async function broadcastMove(word, cells, strength, type) {
+            if (!onlineMode || !onlineGameRef) return;
+            const myColor = onlineRole === 'host' ? 'blue' : 'red';
+            const gridData = grid.map(row => [...row]);
+
+            const moveData = {
+                player: myColor,
+                type: type,
+                word: word || '',
+                cells: cells || [],
+                strength: strength || 0,
+                grid: gridData,
+                moveNum: onlineMoveCount + 1
+            };
+
+            try {
+                await onlineGameRef.update({
+                    lastMove: moveData,
+                    moveCount: onlineMoveCount + 1
+                });
+                onlineMoveCount++;
+            } catch (e) {
+                console.error('Failed to broadcast move:', e);
+                msg('Failed to sync move. Connection issue.');
+            }
+        }
+
+        function setupPresence() {
+            const myField = onlineRole === 'host' ? 'host' : 'guest';
+            const opponentField = onlineRole === 'host' ? 'guest' : 'host';
+
+            // Watch opponent's presence
+            const oppRef = onlineGameRef.child(opponentField);
+            const oppListener = oppRef.on('value', (snap) => {
+                const val = snap.val();
+                const dot = document.getElementById('online-conn-dot');
+                const text = document.getElementById('online-conn-text');
+                if (val === 'disconnected') {
+                    dot.className = 'conn-dot disconnected';
+                    text.textContent = 'Opponent disconnected';
+                    handleOpponentDisconnect();
+                } else if (val === 'connected') {
+                    dot.className = 'conn-dot connected';
+                    text.textContent = 'Connected';
+                }
+            });
+            onlineListeners.push({ ref: oppRef, event: 'value', callback: oppListener });
+        }
+
+        function handleOpponentDisconnect() {
+            if (gameOver) return;
+            msg('Opponent disconnected!');
+            gameOver = true;
+            stopTurnTimer();
+
+            const overlay = document.getElementById('game-over');
+            const title = document.getElementById('winner-title');
+            const scoresEl = document.getElementById('final-scores');
+            const subtitle = document.getElementById('winner-subtitle');
+
+            title.textContent = 'Opponent Disconnected';
+            title.style.color = '#f59e0b';
+            const scores = countScores();
+            scoresEl.innerHTML =
+                '<span style="color:#60a5fa">Blue: ' + formatScorePercent(scores.blue) + '</span>' +
+                '  \u2014  ' +
+                '<span style="color:#f87171">Red: ' + formatScorePercent(scores.red) + '</span>';
+            subtitle.textContent = 'The game has ended.';
+
+            updateCanvasGlow();
+            overlay.classList.add('visible');
+
+            // Update Firebase status
+            if (onlineGameRef) {
+                onlineGameRef.child('status').set('finished').catch(() => {});
+            }
+        }
+
+        function cleanupOnlineGame() {
+            // Remove all Firebase listeners
+            for (const l of onlineListeners) {
+                l.ref.off(l.event, l.callback);
+            }
+            onlineListeners = [];
+
+            // Cancel onDisconnect handlers
+            if (onlineGameRef) {
+                if (onlineRole === 'host') {
+                    onlineGameRef.child('host').onDisconnect().cancel().catch(() => {});
+                } else if (onlineRole === 'guest') {
+                    onlineGameRef.child('guest').onDisconnect().cancel().catch(() => {});
+                }
+            }
+
+            // Reset online state
+            onlineMode = false;
+            onlineRole = null;
+            onlineGameRef = null;
+            onlineGameCode = '';
+            onlineMoveCount = 0;
+            onlineGameStarted = false;
+
+            // Hide indicator
+            document.getElementById('online-indicator').style.display = 'none';
+        }
+
+        async function cancelLobby() {
+            // Remove game from Firebase if host
+            if (onlineGameRef && onlineRole === 'host') {
+                try {
+                    onlineGameRef.child('host').onDisconnect().cancel();
+                    await onlineGameRef.remove();
+                } catch (e) { /* ignore */ }
+            }
+            if (onlineGameRef && onlineRole === 'guest') {
+                try {
+                    onlineGameRef.child('guest').onDisconnect().cancel();
+                    await onlineGameRef.child('guest').set(null);
+                } catch (e) { /* ignore */ }
+            }
+            cleanupOnlineGame();
+            document.getElementById('lobby-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+        }
+
+        function copyGameCode() {
+            navigator.clipboard.writeText(onlineGameCode).then(() => {
+                msg('Code copied!');
+            }).catch(() => {
+                msg('Copy failed. Code: ' + onlineGameCode);
+            });
         }
 
         /* ===== Options Menu ===== */
@@ -979,6 +1606,7 @@
 
             turnTimerInterval = setInterval(() => {
                 if (aiThinking || submitting || gameOver) return; // pause during AI/submission
+                if (onlineMode && !isMyTurn()) return; // only tick on my turn
                 turnTimerRemaining--;
                 updateTimerDisplay();
 
@@ -988,6 +1616,7 @@
                     sel = [];
                     hideAcceptBtn();
                     addHistory(player, null, 0, 0);
+                    if (onlineMode) broadcastMove(null, null, 0, 'pass');
                     advanceTurn();
                 }
             }, 1000);
@@ -1129,6 +1758,7 @@
         }
 
         function newGame() {
+            if (onlineMode) cleanupOnlineGame();
             resetState();
             document.getElementById('game-over').classList.remove('visible');
             // Return to menu
@@ -1205,7 +1835,7 @@
             hoverCell = cell;
 
             // Cursor
-            if (gameOver || submitting || aiThinking || !cell) {
+            if (gameOver || submitting || aiThinking || !cell || (onlineMode && !isMyTurn())) {
                 cvs.style.cursor = 'default';
             } else if (grid[cell.r][cell.c] === '') {
                 cvs.style.cursor = 'default';
@@ -1229,6 +1859,7 @@
         /* ===== Click handler ===== */
         function onClick(e) {
             if (gameOver || submitting || aiThinking) return;
+            if (onlineMode && !isMyTurn()) return;
 
             const rect = cvs.getBoundingClientRect();
             const sx = cvs.width / rect.width;
@@ -1297,6 +1928,7 @@
         function undoSelection() {
             if (gameOver || submitting || aiThinking) return;
             if (tutorialActive) return;
+            if (onlineMode && !isMyTurn()) return;
             if (sel.length) {
                 hideAcceptBtn();
                 sel.pop();
@@ -1308,6 +1940,7 @@
         function clearSelections() {
             if (gameOver || submitting || aiThinking) return;
             if (tutorialActive) return;
+            if (onlineMode && !isMyTurn()) return;
             hideAcceptBtn();
             sel = [];
             updateUI();
@@ -1317,8 +1950,10 @@
         function passTurn() {
             if (gameOver || submitting || aiThinking) return;
             if (tutorialActive) return;
+            if (onlineMode && !isMyTurn()) return;
             hideAcceptBtn();
             addHistory(player, null, 0, 0);
+            if (onlineMode) broadcastMove(null, null, 0, 'pass');
             advanceTurn();
             msg('Turn passed.');
         }
@@ -1354,6 +1989,7 @@
 
         async function submitWord() {
             if (gameOver || submitting || aiThinking) return;
+            if (onlineMode && !isMyTurn()) return;
             if (sel.length < 3) { msg('Minimum 3 letters!'); return; }
 
             const word = sel.map(s => grid[s.r][s.c]).join('');
@@ -1402,6 +2038,7 @@
         function acceptAnyway() {
             if (gameOver || sel.length < 3 || aiThinking) return;
             if (tutorialActive) return;
+            if (onlineMode && !isMyTurn()) return;
             hideAcceptBtn();
             const word = sel.map(s => grid[s.r][s.c]).join('');
             const strength = Math.min(sel.length - 2, 5);
@@ -1421,6 +2058,7 @@
                 addHistory(player, word, strength, 0);
                 playSound('accept');
                 removeUsedLetters();
+                if (onlineMode && isMyTurn()) broadcastMove(word, sel.map(s => ({r:s.r, c:s.c})), strength, 'word');
                 advanceTurn();
                 return;
             }
@@ -1448,6 +2086,7 @@
             msg('"' + word + '" captured! Strength ' + strength);
             playSound('accept');
             removeUsedLetters();
+            if (onlineMode && isMyTurn()) broadcastMove(word, sel.map(s => ({r:s.r, c:s.c})), strength, 'word');
             advanceTurn();
         }
 
@@ -1475,7 +2114,7 @@
             startTurnTimer();
 
             // PvC: trigger AI turn when it's Blue's turn
-            if (gameMode === 'pvc' && player === 'blue' && !gameOver) {
+            if (gameMode === 'pvc' && !onlineMode && player === 'blue' && !gameOver) {
                 setTimeout(() => aiTakeTurn(), 600);
             }
         }
@@ -2056,7 +2695,35 @@
             const scoresEl = document.getElementById('final-scores');
             const subtitle = document.getElementById('winner-subtitle');
 
-            if (gameMode === 'pvc') {
+            if (onlineMode) {
+                const myColor = onlineRole === 'host' ? 'blue' : 'red';
+                const myScore = myColor === 'blue' ? scores.blue : scores.red;
+                const oppScore = myColor === 'blue' ? scores.red : scores.blue;
+
+                scoresEl.innerHTML =
+                    '<span style="color:#60a5fa">Blue: ' + formatScorePercent(scores.blue) + '</span>' +
+                    '  \u2014  ' +
+                    '<span style="color:#f87171">Red: ' + formatScorePercent(scores.red) + '</span>';
+
+                if (myScore > oppScore) {
+                    title.textContent = 'You Win!';
+                    title.style.color = '#34d399';
+                    subtitle.textContent = 'by ' + formatScorePercent(myScore - oppScore) + ' territory';
+                } else if (oppScore > myScore) {
+                    title.textContent = 'You Lose!';
+                    title.style.color = '#f87171';
+                    subtitle.textContent = 'by ' + formatScorePercent(oppScore - myScore) + ' territory';
+                } else {
+                    title.textContent = 'Draw!';
+                    title.style.color = '#e2e8f0';
+                    subtitle.textContent = 'A perfect tie!';
+                }
+
+                // Update Firebase status
+                if (onlineGameRef) {
+                    onlineGameRef.child('status').set('finished').catch(() => {});
+                }
+            } else if (gameMode === 'pvc') {
                 scoresEl.innerHTML =
                     '<span style="color:#60a5fa">CPU: ' + formatScorePercent(scores.blue) + '</span>' +
                     '  \u2014  ' +
@@ -2161,7 +2828,7 @@
             }
 
             // 4b. Hover highlight
-            if (hoverCell && !gameOver && !submitting && !aiThinking) {
+            if (hoverCell && !gameOver && !submitting && !aiThinking && !(onlineMode && !isMyTurn())) {
                 const hs = sel.some(s => s.r === hoverCell.r && s.c === hoverCell.c);
                 if (!hs && inRange(hoverCell.r, hoverCell.c)) {
                     ctx.fillStyle = player === 'blue'
@@ -2264,6 +2931,14 @@
             if (gameOver) {
                 ti.textContent = 'Game Over';
                 ti.style.color = '#94a3b8';
+            } else if (onlineMode) {
+                if (isMyTurn()) {
+                    ti.textContent = "Your Turn";
+                    ti.style.color = onlineRole === 'host' ? '#60a5fa' : '#f87171';
+                } else {
+                    ti.textContent = "Opponent's Turn";
+                    ti.style.color = onlineRole === 'host' ? '#f87171' : '#60a5fa';
+                }
             } else if (gameMode === 'pvc') {
                 if (player === 'blue') {
                     ti.textContent = aiThinking ? "Computer's Turn" : "Computer's Turn";
