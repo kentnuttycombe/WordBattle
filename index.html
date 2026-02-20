@@ -21,11 +21,43 @@
         /* ===== Menu Screen ===== */
         #menu-screen {
             position: fixed; inset: 0; z-index: 200;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background: linear-gradient(180deg, #0a1628 0%, #0f2940 30%, #134b5f 60%, #1a5c3a 85%, #0f3d1f 100%);
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             transition: opacity 0.6s ease, transform 0.6s ease;
+            overflow: hidden;
         }
+        .menu-decorations {
+            position: absolute; inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .menu-ground {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 60px;
+            background: linear-gradient(180deg, #2d5a1e 0%, #1a3d12 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .menu-title, .menu-subtitle, .menu-cards, .menu-options-btn {
+            position: relative; z-index: 1;
+        }
+        .deco {
+            position: absolute;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        .deco-palm-left { left: 2%; bottom: 20px; width: 140px; opacity: 0.95; }
+        .deco-palm-right { right: 3%; bottom: 30px; width: 120px; opacity: 0.95; transform: scaleX(-1); }
+        .deco-palm-bg { left: 15%; bottom: 40px; width: 100px; opacity: 0.3; }
+        .deco-bush-left { left: 8%; bottom: 15px; width: 80px; }
+        .deco-bush-right { right: 10%; bottom: 15px; width: 55px; }
+        .deco-grass-1 { left: 20%; bottom: 10px; width: 60px; opacity: 0.8; }
+        .deco-grass-2 { right: 22%; bottom: 8px; width: 40px; opacity: 0.7; }
+        .deco-grass-3 { left: 45%; bottom: 12px; width: 50px; opacity: 0.6; }
+        .deco-flower-red { left: 12%; bottom: 35px; width: 20px; }
+        .deco-flower-purple { right: 15%; bottom: 40px; width: 18px; }
+        .deco-flower-yellow { left: 30%; bottom: 28px; width: 16px; }
         #menu-screen.hidden {
             opacity: 0; transform: scale(1.05);
             pointer-events: none;
@@ -73,6 +105,76 @@
         .menu-card.pvc .menu-card-title { color: #60a5fa; }
         .menu-card.tutorial .menu-card-title { color: #34d399; }
 
+        /* ===== Options Screen ===== */
+        #options-screen {
+            position: fixed; inset: 0; z-index: 210;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        #options-screen.hidden {
+            opacity: 0; transform: scale(1.05);
+            pointer-events: none;
+        }
+        .options-title {
+            font-size: 36px; font-weight: 900; color: #e2e8f0;
+            margin-bottom: 32px;
+        }
+        .options-section {
+            background: #1e293b; border-radius: 12px;
+            padding: 20px 28px; margin-bottom: 16px;
+            min-width: 340px; max-width: 420px;
+        }
+        .options-section-title { font-size: 16px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+        .options-section-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; line-height: 1.4; }
+        .options-hint { font-size: 12px; color: #94a3b8; margin-top: 8px; font-style: italic; }
+        .options-buttons { display: flex; gap: 8px; }
+        .options-buttons-5 .opt-btn { padding: 10px 8px; font-size: 13px; }
+        .opt-btn {
+            flex: 1; padding: 10px 16px; border-radius: 8px;
+            border: 2px solid #334155; background: #0f172a; color: #94a3b8;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .opt-btn:hover { border-color: #60a5fa; color: #e2e8f0; }
+        .opt-btn.opt-active { border-color: #60a5fa; background: #1e3a5f; color: #60a5fa; }
+        .options-turns-row { display: flex; align-items: center; }
+        .opt-turns-input {
+            width: 64px; padding: 10px 12px; border-radius: 8px;
+            border: 2px solid #334155; background: #0f172a; color: #e2e8f0;
+            font-size: 16px; font-weight: 600; text-align: center;
+            outline: none; transition: border-color 0.2s;
+            -moz-appearance: textfield;
+        }
+        .opt-turns-input::-webkit-outer-spin-button,
+        .opt-turns-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .opt-turns-input:focus { border-color: #60a5fa; }
+        .opt-turns-input.input-error { border-color: #ef4444; }
+        .turns-error { color: #ef4444; font-weight: 600; }
+        .menu-options-btn {
+            margin-top: 20px; padding: 12px 32px;
+            border-radius: 10px; border: 2px solid #334155;
+            background: #1e293b; color: #94a3b8;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: all 0.25s;
+        }
+        .menu-options-btn:hover { border-color: #a78bfa; color: #e2e8f0; transform: translateY(-2px); }
+
+        /* ===== Turn Timer ===== */
+        #turn-timer {
+            font-size: 18px; font-weight: 700; color: #fbbf24;
+            margin-top: 2px; transition: color 0.3s;
+        }
+        #turn-timer.timer-urgent {
+            color: #ef4444;
+            animation: timer-pulse 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes timer-pulse {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0.7; transform: scale(1.15); }
+        }
+
         /* ===== Header ===== */
         #header {
             display: flex;
@@ -86,7 +188,10 @@
             max-width: 900px;
         }
 
-        .score-box { font-size: 19px; font-weight: 700; min-width: 130px; }
+        .score-box { font-size: 19px; font-weight: 700; min-width: 130px; transition: transform 0.3s ease, font-weight 0.3s ease; }
+        .score-box.score-animating { transform: scale(1.3); font-weight: 900; }
+        .score-label { font-size: 10px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 1px; }
+        .score-value { font-size: 19px; }
         #blue-score { color: #60a5fa; text-align: left; }
         #red-score  { color: #f87171; text-align: right; }
         #turn-info { text-align: center; flex: 1; }
@@ -106,6 +211,8 @@
         }
 
         #turns-left { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+        .turns-blue { color: #60a5fa; }
+        .turns-red { color: #f87171; }
 
         #sound-toggle {
             padding: 6px 12px; font-size: 12px; font-weight: 600;
@@ -349,6 +456,12 @@
             button { padding: 7px 14px; font-size: 13px; }
             .menu-title { font-size: 36px; }
             .menu-card { width: 180px; padding: 20px 16px; }
+            .deco-palm-left { width: 90px; }
+            .deco-palm-right { width: 80px; }
+            .deco-palm-bg { width: 70px; }
+            .deco-bush-left { width: 55px; }
+            .deco-bush-right { width: 40px; }
+            .options-section { min-width: 280px; padding: 16px 20px; }
         }
     </style>
 </head>
@@ -374,16 +487,87 @@
                 <div class="menu-card-desc">Learn how to play step by step</div>
             </div>
         </div>
+        <button class="menu-options-btn" onclick="openOptions()">Options</button>
+        <div class="menu-decorations">
+            <img class="deco deco-palm-left" alt="">
+            <img class="deco deco-palm-right" alt="">
+            <img class="deco deco-palm-bg" alt="">
+            <img class="deco deco-bush-left" alt="">
+            <img class="deco deco-bush-right" alt="">
+            <img class="deco deco-grass-1" alt="">
+            <img class="deco deco-grass-2" alt="">
+            <img class="deco deco-grass-3" alt="">
+            <img class="deco deco-flower-red" alt="">
+            <img class="deco deco-flower-purple" alt="">
+            <img class="deco deco-flower-yellow" alt="">
+        </div>
+        <div class="menu-ground"></div>
+    </div>
+
+    <!-- Options Screen -->
+    <div id="options-screen" class="hidden">
+        <div class="options-title">Options</div>
+
+        <div class="options-section">
+            <div class="options-section-title">Computer Difficulty</div>
+            <div class="options-section-desc">Affects AI word selection and territory strength in Player vs Computer mode.</div>
+            <div class="options-buttons">
+                <button class="opt-btn" onclick="setDifficulty('easy')" id="opt-easy">Easy</button>
+                <button class="opt-btn opt-active" onclick="setDifficulty('medium')" id="opt-medium">Medium</button>
+                <button class="opt-btn" onclick="setDifficulty('expert')" id="opt-expert">Expert</button>
+            </div>
+            <div class="options-hint" id="difficulty-hint">Default balanced AI.</div>
+        </div>
+
+        <div class="options-section">
+            <div class="options-section-title">Turn Timer</div>
+            <div class="options-section-desc">Adds a 20-second countdown to each player's turn. Auto-passes on expiry.</div>
+            <div class="options-buttons">
+                <button class="opt-btn opt-active" onclick="setTimerOption(false)" id="opt-timer-off">Off</button>
+                <button class="opt-btn" onclick="setTimerOption(true)" id="opt-timer-on">On (20s)</button>
+            </div>
+        </div>
+
+        <div class="options-section">
+            <div class="options-section-title">Board Size</div>
+            <div class="options-section-desc">Changes the grid dimensions. Larger boards mean more territory to fight over.</div>
+            <div class="options-buttons options-buttons-5">
+                <button class="opt-btn" onclick="setBoardSize(9)" id="opt-size-9">9&times;9</button>
+                <button class="opt-btn" onclick="setBoardSize(10)" id="opt-size-10">10&times;10</button>
+                <button class="opt-btn opt-active" onclick="setBoardSize(11)" id="opt-size-11">11&times;11</button>
+                <button class="opt-btn" onclick="setBoardSize(12)" id="opt-size-12">12&times;12</button>
+                <button class="opt-btn" onclick="setBoardSize(13)" id="opt-size-13">13&times;13</button>
+            </div>
+            <div class="options-hint" id="size-hint">Default board size.</div>
+        </div>
+
+        <div class="options-section">
+            <div class="options-section-title">Turns Per Player</div>
+            <div class="options-section-desc">Number of turns each player takes before the game ends.</div>
+            <div class="options-turns-row">
+                <input type="number" id="opt-turns" class="opt-turns-input" value="8" min="1" max="20" oninput="setTurnsOption()">
+                <span class="options-hint" id="turns-hint" style="margin-top:0; margin-left:12px;"></span>
+            </div>
+        </div>
+
+        <button class="menu-options-btn" onclick="closeOptions()" style="margin-top:32px;">Back to Menu</button>
     </div>
 
     <div id="header">
-        <div id="blue-score" class="score-box">Blue: 0</div>
+        <div id="blue-score" class="score-box">
+            <div class="score-label">Territory</div>
+            <div class="score-value" id="blue-score-value">Blue: 0.0%</div>
+        </div>
         <div id="turn-info">
             <div id="turn-indicator">Blue's Turn</div>
-            <div id="turns-left">16 turns left</div>
+            <div id="turns-left"><span class="turns-blue">Blue: 8</span> | <span class="turns-red">Red: 8</span></div>
+            <div id="turn-timer" style="display:none;"></div>
         </div>
         <div style="display:flex;align-items:center">
-            <div id="red-score" class="score-box">Red: 0</div>
+            <div id="red-score" class="score-box">
+                <div class="score-label">Territory</div>
+                <div class="score-value" id="red-score-value">Red: 0.0%</div>
+            </div>
             <button id="sound-toggle" onclick="toggleSound()">Sound: OFF</button>
         </div>
     </div>
@@ -431,13 +615,13 @@
 
     <script>
         /* ===== Constants ===== */
-        const GRID = 11;
+        let GRID = 11;
         const CELL = 50;
-        const GRID_PX = GRID * CELL;
+        let GRID_PX = GRID * CELL;
         const PAD = 25;
-        const CW = GRID_PX + PAD * 2;
-        const CH = CW;
-        const TURNS_EACH = 8;
+        let CW = GRID_PX + PAD * 2;
+        let CH = CW;
+        let TURNS_EACH = 8;
         const MAX_RANGE = 4;
         const FLASH_MS = 400;
 
@@ -447,9 +631,37 @@
             [TEAM.RED]:     { r: 239, g: 68,  b: 68  },
             [TEAM.NEUTRAL]: { r: 168, g: 85,  b: 247 }
         };
-        const STR_ALPHA = [0, 31, 61, 92, 122, 153];
+        const STR_ALPHA = [0, 20, 45, 85, 140, 195];
         const NEUTRAL_ALPHA = 40;
         const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
+        const API_URL_FALLBACK = 'https://api.datamuse.com/words?sp=';
+        let TOTAL_PIXELS = GRID_PX * GRID_PX;
+
+        function recalculateGridSize(size) {
+            GRID = size;
+            GRID_PX = GRID * CELL;
+            CW = GRID_PX + PAD * 2;
+            CH = CW;
+            TOTAL_PIXELS = GRID_PX * GRID_PX;
+        }
+
+        function formatScorePercent(rawPixels) {
+            return (rawPixels / TOTAL_PIXELS * 100).toFixed(1) + '%';
+        }
+
+        /* ===== Menu Pixel Art Assets (base64) ===== */
+        const MENU_ASSETS = {
+            palmTall: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF8AAACCCAMAAAAXMuQ2AAADAFBMVEVHcEyTVTmSVTgdiHTZfVOrY0Iqza4agW0dm4SlYkGXVzmSVTiTVjnmhViRVDiVVjmTVTmZWDqrYkEagW8kuJzuilvriFrvilySVjiQUzetZES7a0i4a0cip44emIEaf2wmvqIox6oZgGwfm4Mlt5wozK3YfVPfgVUZfmu5a0cZfmsfmoMoxacs2LgmvKAagW6TVTntiVuTVTmTVTi7bEiSVDjcgFTXfFObWjwZfmwfm4SlXz8hooogoYm6a0eETTO4a0cgoIe2aUUaf2sYd2Us2bkagW0pyqwr1LUafmsipo0ag28bhnEZf2wmup4owaW8bUjph1nnhVmTVTmSVTjfgVYci3fegFaoYUEfl4Eipo2hXT66bEggnoYhooq/bklFe2SiXj+6a0i6a0i7bEi6a0i0aEUs2Lkaf2wr0bJNnoCASjF5Ri8pyKoZe2kafGopyKskr5Yhn4ibWjwnv6Mnv6IkrpSTVTnvilwt3Lvtilst2rrtiVst3bySVTgpy63uilyRVDgZfGrfgVa7bEiSVDgaf2wgnYYagG0t27ohookelX8nwqUs2bmQUzeNUjYgoIgfmoMfm4QYeWfegFUafmsdkXyZWDodjnkq0bIhpIsip46bWTsek30s2roValofmIEhpYwks5ioYUAnvqKeWzzDcUuhXT4qzq8r07MjrJInwaQmvJ/ohVmyZ0S2akYiqI8oxKcpyqwahHAmup7hglaXVzqsZELQeFC+bkkq0LEXc2IZe2gr17cagm7riFrqh1qkXz+vZUMltZoTYVPriFrTelHGc0wcinUYd2Uiq5EoyKrJdE25a0eqY0GmYEAr1bUXcF8jrpMbhnIciHQluJwcjHfmhVgVZ1cksJYox6nZfVOUVjnWfFKBSzHAb0mJTzSjXj4cjXgUZFVqcld0ZktTZ1BNWkZAfGQ+bFc1xqdli21Fp4pSkHRlcFVGjXJrUDg6vZ8Kjb7kAAAAenRSTlMAs8AUsx5hYwoKXCipv4+B5U8yKDJlrH5DbRQ8uygegmOnOShXTFLYknq3dUbls3f5ldt3KNF3vZ/blcxVPNvvVMyVpG3HUIGL+flG+bMUbVnvvUbb7+/55dupi8ez26nv+eV372OfY0bl7++VlceB7+XRgZ/5s9vl77sA4e4AAAnzSURBVGjetZgHdFrXGcdxVcdS28SpZ2vX8UzsuImTtGmaNG3jNGmzTk6S7r333gNZVsEg4MFjCCQzJIT8GBIgEEvTEsIaPhKgPW1h2dYIkmzJaZLu9d33AEHtpu459/4fHOkc7vt93/2++333vsfjXa/8p0Ya4+ZKOklRDEipNCnH4pON5kn1sWy5py0Gi0Gp1FFllFarpZMf4t2Udt3rmjYnaW1ZGaO0WCzwNY2baJvNOp3DVzgsU6YpZKCMKaPAQpL+wM3gbxlRxa0ID3ST6ZrJZIpGZZGGyngy3pHDDzY0jE9EoyaDgdEhA5Q2+bX9/4ue/1F3j9lMaxmL6Vp0HBRpkMv0sdjceICyuhTZBtQycTgckTc0TERNaBpMmZamP/jG+C3u0Ji1Epw3GKLjDRFAAyPWPjo6usjokv05fEWsvT0WKw+LI5GJqAFNA+Xh8bw3cP7pjsa6gNmqVSqnpiaounggHjCbzVYrExsdDU+UqXL41Qa5fIKhKyut5kAgoDRZLIyOounkf53Clu+7euLmQCVdZjFci9JudYeak2v8/Ctnz55iJqtz+PEGk87aKHS5XG1trtAYxIiBNNDWL90Y/5Q6MT1mNid1iG7yjlRXKxQK+B5PiE8h/iKTu4Cq6yJRJW1u7G+raKuoqHA5KCWagTUZeHbXjRLb4bCNxQNJhjGYohOODkRXHFMo1N7yU6fOg4HzuoBbkaVqh3jcUlZZZ/O4KlgJx5QWJSQZAvbu6/h71cHpsbiZZpQGg4lKIE8V6FJPzy1y/LPlVmH18TVVu8QNBioZmLY5hEB3uyvaHLSFYahKc7zyP2vtFnXCS97TOsZwzTTmPp7O5EhybhT4bIDOJoPqLP7x/nDEBP5P23oag22cBZfNYCnTWgM0k7uM7lC7HJNjgWQZpWTonrVlMsLMjab4YEDnqciagNpRLosy2gAyMOkRullVBLVlMCeaejwn+PdWOLyTcbMWtRLH7zPqMLQj/uIiCtArZ8cdoawJVNvmYnIDZWX5jY6Qi5MwQNFWmqKyU/DDEY/Xa4tXmgPWQKUrg1ebw+1QW4vto+2jEKbFmCo4ksWny8Ph8DjF8ie9jmAoFBKC+pU6WgsdY0sGfycE39vY86wNMhwPZPAK2xSU6Fz7obBMD38gTI6gay1A6uRu4IvFDZStB03AEwwJWQOTP4vqdBRF5WWCH3I4Gr0HJienp8eonjT+mMOkj7XHnuRtLi8vF8fa515//R/BrABVf5WXf0gv1ovFEaYO+BkDob2HwwYI9PPp4Lc5vN7JLUe83jpGLs6Ev98iC5c/iUaEwxCJWOzlS1f/lXCvBeiL8FPeYTGS3kR7HR5VgvVfKLxntxiVMpeCpys84P7+Aw6vGQbKO1L4Cl1E/PN8dgT0ODBR/s+Vlb8nhGsT4Nr9PnGYNRGd9gSDKQOJ/Pv0SujXqI7v6Qh6HC/tz/d46mR6mUyXzi01oX8iFcBn0P3h8ldLZ1f+GspkuHo392ueGMVIL5NrVcEEMgCfI7wXZRaa/hVEx90f9Pw2n/dxlW1cJpPJU+Gvjptk96Xz/4heD4Twa6Wlpa/2u9J894b06n5EpgfPZLKJnkSiH3IABu7k7UMGnuftTag8v8nn7Ql6x+WgBi48x2wm+ccy6+sJGWvgNY1GU/o3YVqqfZkBh2WcIlQixE1AmMfbJ1cmk7wjKtVeGPFSI8JH5J/jytBliWxeK49DcCsY+JNIoxGt/FmVUuMdayN2y+Ry+Mj10Z+GPFNIL8C6lCsreUeCv0QDfjcuj4Ce28UVYciUhee9AHeChT8282dmBH9RqTysvNkdYIOc0w94v/AgUAQFN+8ZC2/LAfb35zYg5fPyb+GUn31zHvvjhm80g2Zm/wD60Z49ew7kdLDN3BgI6n72H9a//Bd5/4+qjM1G48zLoJ/wSKimClSD+D8mwv9mDch56erVq48R4T+K8F2zwL9KhP9wV5dzdVh0CfRWEvyNXatdXXYj4r+TBP/osH3Y3j20AnobCf5OO6jbNzs7u0IkwQVDQ0MtPgkf2tAskQS3DLW0+E47BXxNKZEEd4P8l4eajc0zbyHB/153t2+w1m+sqjISSfC7un0+SV9tDTSK20nwP+Lz+SV9rTVOKGQS/Lv9fv/pgYvzXU6nk0SCj/r9g8D3za86nSQSvMk/OHj5yoUF+/xqF5EE+/0S4PcN2VdXv0yCPzgoqW1d7m2xQ58jxb+yvNwyNN81XUCA/2HW/6XuoeGu4beTKDDEP3luEAI0/AUSBTa4APz62u6hrvlHCfC/xfFbEZ9Egr8rAX5J/cXulvl5O4EEr+f4Tb4W+7ydQIJ3SBb6eps6l6qMcJQjsMfv5PjLAj5cBDrQ3ZLTiN/LR3oHfv5XOP6AAPE3Eahfjr/A+r8eP1/C8f0sH//6LED8i02dLSyfwP4ikVweAL6TEP87LH+ps4oQ/9sStH0t1bP4+wm0Z2gPV5bPNbH820ksH7Z9XkT4mTcR4pfUX2HLCz9/fWr517LxwX9AOZriS1j+bQS6G1dePpa/Ef/yWVhgl/8wy8ff/r9++nItLP8zNSwf//ZVW1vb1wr8ZjLtf8fAwMCV3pPnllg8H/sBfWdra2vvhab6ZT6Z9v/QBVDJUmp3xN/ePl9SUtK0VH9mgBD/4DlQfWfxAiF+J6vi4kEy/ILiM2eKkbjd8dO4+Q+y8KKiYm53fA9u/tYiTsVVAiLt/4EUv5Pt/vx1uPm3pvhNAtZ/7O35XIp/ER1uCbT/FL6oFeEF/Pfi3hzT/FoBGyDcp/O70nwJX4r8x93+t6f5Ps7/TYSWT9GwQIos4G7/n0zza6RSKYHTeRpfPCOQSmEKuDfHNP+cQCoS8QW4+TuLiuECLYukIogQbv7WVPcs6hWBpILPYOZvQ/6jTx/LF+E+nR9Md/8FEWvgfZj5xWn5NSINGMDc/gtS9KLiIQ1IJMJ8On8w43+NhtVtJJYPklFTWlqq0WA+nW8/kVYNn/UfM39bhu9sFiE+5vjfWsjRCxFfBCsI8/r57IlCEDLA8kW466uo8AS6kP9GKWsAL7+Q9R9mUOg08qXY+QUnWDaawjD4jy68h4fCwrT/dqMA7QCiHVhf/BRmNNwMm5dUKsL6eHfXGt9u5ANeKsJ6/tmezYfTA8wA6+P1A2v8Fnj6Bf+lWBvctiw++A8nOOk6vO0hiw+nQxDWDexTOXzWf6wNovB6/wWE+N3AR2/PcT6fFmTxfSwfVECgPSB+Vcp/jAfoT+TwZ/i43/9svd5/rA9I22/k/0Yi5VvoT/FFDxMp3wwf5/vbgzl8Do/zBceJG/Hvx8evz1J3c4qPsYDfX7KmoTQeY/wfyuIPp/kYX0CsvxEf5/vPkpMZreIPf04CnPjDD+eTN2f063Wcbu79yb8BJAS4bUvEGBAAAAAASUVORK5CYII=',
+            palmBend: 'data:image/png;base64,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',
+            palmSmall: 'data:image/png;base64,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',
+            bushLarge: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAWCAMAAAB5RQVIAAACLlBMVEVHcEwhn4caf20cjHYej3sci3gdjXggh3gdingfl4EbhHAciXUgnocdj3ohoooipIwcinYpyq0ltpsbg3AltpsciXUnvaEejnkhoIggoIoci3Yci3cr1bYekn0ci3cowqYflX8djXgowaUfl4IgmYMgnIUgm4QgmIIek34djHgci3gci3gbg3AnvaIr1LUjr5UflX8af2welH4agW4s2LkpyqwnvaEou58kr5MagG0nvaIZe2kqzrAr0LAafmsbhXIchnMciHMhn4gcinYbhHIjsJYchXIipY0pza8s2Lcou58t370u4sAbhXIt374ipo0biHUiqo8kspgu48IdjngpyqwmuZ0ekn0iqo8qzrAjq5Emu58mv6MipYwkr5YoxKcck3ws17cu48Eltpsr0bIiqpEbhnMdjHgr07QjrJMr1bUnwqUv4sAt2bkciXUhooociXUci3cs2Lgs2bkjqZEhooor0bEiqI8ls5ggp48cinYciHQnvKEch3Mpza8ktZshoIkhpY0jq5IafmwktJkmt5wjrpQchHEr07MbgW4bh3MZfmwjrJMipIwjq5EdlX8jqZAbhHEoxKckspcpzK8fl4EksJcgnYcelH4oxKcagW4elX8r0rMqzq8oxKcqyq0djHgag3Agm4Qq0LEjq5IciXUq0bIox6kgoIgbg28gnIUbhHEbgW8gnocag3Apxagfl4EgnocbhHEaf20fl4EfmYIfmYIaf20gnIUagG0q0LEksJYelX8bhHEgoIgagG0qz7Emup4ox6kpy60luJ0muZ4mvKAbh3MdjnkjrpQmvaEciHQjqpEoxKciqI8pyasagW4dj3oluZ4pzK4ksZYqzq8ktJobg3AbhnIbhXInwqUnwaUmu58r07Qks5kagm8jrZMiqpEfmoMgn4gjr5UcinYnv6Ihoooipo4hpYwafmsfm4QpzK4u4sAdkHokspgmup8djXgltZsr0bIs27ogoYkkrpQmuZ0t3LscjHcmu6AbhnMqza4ZfGonwKMr1rYpyKodjHgnv6MbiHQfl4Abg28gnYUipo0qz7AnvqIfmYIeloAdknwqzrAdkXsoxqkbhXEek30ag3AbhHAgnoYu48Elt5wpyqws17gciXUltZos17cltpskr5Qr1LQnwaQt3r0dj3kmvaIZfmwZeGYr0rIjrJIr0rMs2roiqJAoxKgq0bIhoInYaPjIAAAAjXRSTlMACkYoFCg8HgpPxzLli21anx6zqRSzs9uzs7Oz2xQei6mLUGMe74FZ72SpPGSzn8dk7/kUlVmVbUaf21nHbZ9jZIyV5Xfvs1rRWWPRFKmVgTy9s8fl0dGzqe88bql3s1pZvR7v7+VaqeVQKJ9jvUY8szKVMsezs+/b79G929GVPJ9js4F35Uazd72z2+/vySGdAAACbklEQVQoz42TZVBbURBGlyDB3am7u7u7u7u7e0vd8+LuCQSSACFAcBjcGjRAi3vdnfrjFaZ0mrbZP2fvN2f2x85egD/LKkRhBYaVNamDgaYRJ6CzgapZQI6JgeraHBJGc8s2lv9RPercMA5JeNj+r5LFh7x1AG6kmJP70der50/+MXBZsWAfkBrOSyQHwSGXQNBv2dnbL4ANoTwnfF2D8a3Y07BHx1g4ZaSFHtXkqTbFZFMEcvzCfSlcji6FQ7W6UsFkI31jh9Gy54P4i/AcquLJ4canvuYrBWatjXYdbcyxphNTNXvOkrCYEyG3AUriL0WIw0nK36fZMgYNxhoajS0pygyroVwBuBF/NqqSSJwLY226tf3lDkxywtiV5Zv8jhlTGHcG4Doxno8gfrPGyRh9Wo0doM4EmDl+aD/fRzy5RKShHAHASYvL1YjfmKyg1z8lYwtcE+TI9GlvEiYMJ/inhqcFMyl7AQ5TImmVL/2eRfFXYOZEjrVpE2fEitPvTIXRVBkrg8nXlawBwCt82BVCdjI/db2zM8AqjgAzYRQ3kp5uCyMYj+nKpGh64Dw0kxayiI0EqkhoukURgNsaKHLA1O6Jb4kFAL2pMv/38rthoZPQLKSqqErsLwsUAv6eQvs5fXXzgSZyEQZAF2pZcB6PTCS7oFlcfRQ3ujo3fzPAbo0m27d5BXgf7ose6H2mET5x1KX15B3oT6BU1GoflFWrlgLsZLOCVrasyyeF1x/Fx+CCEqSxhpwB4B33XUSqJHwr3wiwS5UVtLhF7eXYtyeK7QeOebq7O7ocBbh60/OixzUvL9dtaO66fJEdih+0S/b4IHCbyAAAAABJRU5ErkJggg==',
+            bushSmall: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAWCAMAAAALimf+AAACMVBMVEVHcEwt3Lwdi3cci3cov58gl38u4L4gh3gcjXggm4MdiXYcinUcjHcci3cgn4Yqz7AjqpIdjXgcjHcekHoci3gdjHgeknwdinYcjnkdj3kci3cu3r0dinYcinYt3bwei3gow6YdiHUdi3cjrpMgm4QluJwou58hooofmoMoxKcksJYoxqkdjXgip48nwqYkr5cqzK4nwaUnwKQnwqYnvqIgj3gnv6IfmIEciXUciHQt27sr1LQciXUci3cciHQci3YcjHcfmYIcinUv5cMfmoMcinYu5MIch3MbhnIdjnkhpIwgnIUu48Ejq5IdkHsiqI8kspgpyqwu4sEgnocgm4QjrJIelX8hoYkfmIEhooofmIIu4sAhpYwpy60oxKcs2Lgu4b8bh3Mv5sQu48IgnoYgn4cciXQjq5Elt5wow6Ynv6IjrZQip44dj3kjr5Ukr5UoxagpyKot374u4cAoxqgbhnMhoYoek34ltpsipo0fm4QhpIsfl4EjqZAiqZAgoIkdj3ou4L4jqZEu5cMek30gnIQekn0fmYMgoIgdknwkspciq5Eeln8ipo4floAhoIgdjHgip48ipYwho4sdjnomup4qz7As2rkt3r0luJ0jrpQlup4oxqkluZ0ekHsmu58r1bUox6kmup8eknwks5ks17gnwaQksJYt3bwhoIkr0rMksZYekXwjrZMt3b0dkXsgn4gch3Qks5gu4L8nv6Mpx6kls5gktJkltJknw6Yt27viWQp/AAAAPHRSTlMAs2Q8CgpGCigURqmB2yjbMh7vZBSpeFCzPJ9G5cepKO9G5e8o7xTv73fb76l3RhSL7+/l7wrv7zyfPJ/EdMdhAAABrklEQVQoz2NgYOByLAuzgQALBgaroCC3ZDdnZ+ekJDYGEOC2c7Kzs0uzsbOxYWDZlVAc5JPsBpRnBEsysKfZ2Li729ltdE+0tC7aXJwQHeTj49bIApFlULRxT/QAgsTS0sD4dTMSiqKjfZqlGWBAZ71fg6fnFM9cvw2x0xbEL42fvkIOLslguil/Vqivb2j28oC4zIWBgbGxq9QQsgy6+Wt9a+ua0rMDsrIy4+YUFGpCxOW1tA2NzEy2+frnVPb6py+ZmTF32eqoVA11ZVUFfqC8QWDh1oIt/jkx1ZMnTQzIWDQ70sbJxsnJ3lYKrF2vpGRnXF5MZH14pFfo/Kl+QH87Obnai0Nt1TfesT0gfGVwSnC/V7grMGSAnlfigDuK1dwxwjvFO8Q7tavH3snextVGhh3JzZxhaxaHtLq4BFf42dra29vaizAgA5V5E8IcHR2r8uxtgcCegwEVSNo61DhGufi72gJ1MjOgA2EHz74Il24HoFYmBkwg5toW5eLl4ODAw4ANSOQ6hrQ7OIgyYAeyEd6d9rw4JBlYvTpahNhxyTJwxpQLMuAGAnwoXADMkHgbRLTjLAAAAABJRU5ErkJggg==',
+            grassLarge: 'data:image/png;base64,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',
+            grassSmall: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAMAAABd273TAAAC31BMVEVHcEwr07Qr1bYgn4cci3ccjnkci3YdjHglvaAcjHkciHQek30cinUchXEgh3gci3Yci3cluZscjXgot5sciXUcinUag3AdjHgci3Yw6ccqz7Av5cQv6MUt370v4cAmu58bhXIoxacs1rYoxaggoIgox6oluZ0gn4cciXUpyKoqza8di3cdkXss17gq0bEr1bUiqpIpzK4t2rks17cr1bUs2Lgr07Qekn0ltpor1LUnvKAeknst2roow6cdjXgltpoltZonwqUip44ks5khn4ghooonwKMr0rMnv6IhpIwov58bhnIipIwgoIgr1LQr1LYr1LUowqUmu58r1bUkq48ciXUmuZ0jrpQnvqMipY0oxKcnwqUr07Mch3MmvKApxqks2roqzK0bh3QbhnIbhXEbhnIls5oqzK4mvKAnvqMmvaEfmIEZemgks5cltZoZemgbhnIYeWcltJkcg3EjqpEfmoMbhnMbhHEciHQbhXEox6kbgW4cinUdjnoiqI8flH8pyawdinYciXUjq5IjrJIfl4Emt5wmup8ksJYmuZ4ksZcltZslt5sci3Ynv6IoxagbhXInv6Mow6Yci3cs2robg3AmvqIcinYbhXEagW4s2Lcr0rIfmoMq0bIelH4mvKAbhnIagm8px6okr5Upy60ciXUpyqwluJ0jrpQt3r0oxacgm4Qr1LUfl4Abh3MjrZMox6kr1bUr07MnwKQlup4luJwcjHcipY0ho4sdjnkox6oksZciqZAoxKcipo0s2bkr07QdkXsfl4EltpsnwqUhpY0ag3Ar1rYoyKoagm4gnocpyasek3wjrJMq0LEip44pyawdjHgqz7Emup8iqI8v5cMu48EfmIIt3bwoxqgflX8r1bYt3Lsipo4nwaUaf20gnYUmvaEcjXgiqJAjrZQnw6YbhHAls5kt3b0owqYfmIEagW8ktJkoxqkjrpUmu58eloAaf2whooogn4gqza58b5FzAAAAjXRSTlMAs58eKChtHigUn9FaRgrbUB48CjLRgamz71Db74xj25+pPHdG0VAKgZW9i4uLvb0yblmBlW2fvfmpn1oybUbH76mB5VC9gYv57xTl+dFjgW1Gx9sUi+9QlWT5+fm9lZWfWoHb0YtGY/la0e9jKDyV0YHls3dQT8f5Y7Ozd6mzPEZk25Wzs5WBs7PHs+W8F5F5AAACIklEQVQoz32QVVdbURCFNxKSAIUCReru7u7u7u7urtT93hu35saI4VBci5RCkQKBekvdXX5AT1LKQ9ci8zJn7/WtPWcG+FseMYJWcFrR99UdnQItGVE7p0DruIjhToG2D0WjAc7aQG49QAcmYg58dLfW1JfgJkpYivUCwer4ZfOIbN6scZP/iJoEGusEy7HSvARoc+9u01p/vqcnH8NcO2OS8IWbThAE7qtYf/R8EN6iFmjwMs0LGCIbNVaWtPit1B2YljkGUZJw3r/oBbSQAzyKzE9npuulxBj/dHKASvKkbvYiWjgBGKiJzXqjfjZ1CjAuO2WDRDK3DlgopEcCQyMzSpg0aUEicVJTtxS+XwXwJnbv1gng07SQuHnWOEZw+91m8tyqthTe2Ag/g0FDeRM9SKsl1/MqK8qS6vfYM3cpwoy2HVhR85zytev2LDsb2Pnxw02lcj/QaO8nZYbZth2bEnOphnagC3ttBrA7+otMYd8SB3WKsCKjHy8pRS52/HIAy84CtuUxIrbiJDi+gYcUMVXGgH2vi+VdHUC/nOszycFy0z9rcu6EisXexwqyv/7GmczSZA8H0Dc+ypWMNonCfvz8Vio/hcPl+RYDzlZTySMcQH/V48EAV1xiVZqK5RRwoNxSZcPlaqrS3QH0Ual6kEZVlCn1302nAf9fWpkZV63iSh8H0MvFpTdpwUdOHA06HkIW45+7cukCzl8MCSb2H1ymxla4UT1PAAAAAElFTkSuQmCC',
+            flowerRed: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAbCAMAAAB7jU7LAAABaFBMVEVHcEzdSU8lup8dk3wgp48gj3/QRUodi3gci3gdi3cmup8iqI8ltZrLQ0mqOD0cjHjfSlDlS1LeSU8ltZvfSlAnwKQlt5wkspgnv6InvqIip4/URkwmvJ8iqZAmvKAkspglt5snvqHYR00kr5UjrpMkr5WPMDQdj3kjrpWRMDQgm4SRMDSSMDSRMDMmt5wekn0djnoek30ekHsdjnkel4AcjXiRMDSTMDSRMDSSMDMmvKAfmYIhn4gou58t3b3eSU+SMDSRMDTdSU8djHgcjHcci3cnv6MmvaHfSk8mup7mTFKQMDQlt5wci3YmvKAnwKPcSE4djXjcSU8ciXUmu58muZ4ltJqkNjojqpEcinYnvqInv6IdjnnbSE6pODysOT0ho4sltpunNzsmup/dSU4ekn0ltZvWTVKuOT6MNTfFWFmfNDmLRUSQLzOeNDgltJkksJYcinUhoYoiqZChNTkeloAdjnogmoSdtSnAAAAAP3RSTlMAlR4yCgrbsxSzs1l3UB48KL13PE+fvfmLgR6pd9tj28c8723vlRT5s9soPGOf74uBUO+p0SiBT71G70blFHdWXcu9AAAA/0lEQVQY003O1XLDMBAF0C06KTMzQ8qMAlNMYS4zM/1+JcsZ+75IZ3auVgAALR2tpml+Y7y1wwRtCKFo9J5gjDmbEPcZ4zYnUEQROmXcdFnLx5cEk3mXFYmTRCpPRBWgkaauaZ6QWUHg3acXsuBxDCH6alkRj/307vH5wZqCcoYyuUnwM5C9nQmwN2MPBtijGxcBdh7psQDr4ppe47NLK8WqfI7ENaOendWCw1eG3dAMUNnexzmRzZ0fJ7vZbXR8DmCxcJNOf3zxSWga4C3pqEXHdovLS/DuKKpa3BUPrYYKiqwqv4eCK2ufiiLLfwfe2vUfmWW//IuNsCSFpT34ByWBMrnNVnqRAAAAAElFTkSuQmCC',
+            flowerPurple: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAWCAMAAADHE10VAAABWVBMVEVHcEx4aL8gp48ltZqYg/SeiP2Yg/Mdi3gci3gdi3eTfuyUf+yQfOccjHh6aMIgj3wltZpnWaUjsJVoWaYluJ0mvJ94ld5oWKOdh/yTf+ydh/sjrJIip48jq5JmV6MnvqJOeJ5mWKQmuJ0nw6doWqZnWaZnWaYksplnWaYltJlnWKUdjnkdkXsksZYek30ekXsdj3sdjHgksZcgm4QksJYfl4EcjXgmu58fmYIt3Lwou58hn4idiPydh/xnWaUdjHgci3eeiP1nWKQcjHech/tmWKRnWaZ4Z8BmV6McinUci3YltpscinaYg/ObhvohoIkksZYdjXgkr5UltZoluZ57asUmvaEmup4lt5ydiP1wYbQkspd0ZLtmWKN0ZLpzY7h2Zr5Zo8ZuXrAciXVEjqMluJ0ks5gluZ0ekn1lV6JmV6IiqpEjqZAdjnkgn4ciqI8eloAdjnofmoQ0r0deAAAAPHRSTlMACgoevXf5sxSzZNtQPB4UPMf5PG2BxxRG24upHuWLlduBszxj5alt273R+e/vUKmLgfko0dEo70Z3FOXovt1dAAAA7UlEQVQY003OZVvDMBAH8D8M6IYzXIez4a5JmiZtp9jYhru7fP8XJG2Re3P3e+45AYDqmk176/Di6TE+roRai1BKioK5I5plFiEWSTrMHdVElRJJMsaGPVYQSuiJEG67x0qqZs8EY55Qr2Sdp0STT6jN9OjUGQjYadv2VcppDtjR1XZ509+H32gpHHf/Ca372d5/jJUO8jqX+xy83dtpqANCjT2aifu7bb4bVdXQ2AKw+PxwnU6/6054Aph6zfBcJusNzs1inkvOcyv+osnwizS5/FzzOT3zJqVpfq0HZ5c+TBUbP18sRwwjYqziGzZtKgsA7VZaAAAAAElFTkSuQmCC',
+            flowerYellow: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAARCAMAAADaFm2tAAABC1BMVEVHcEz7rkYgp4/moED8sEfChzb0q0Qdi3gci3gdi3clup/DhzgltZoelH4cjXgip48djXknvqH7r0YcjHcdjnkgn4gekXukcy7xqEMdjXgks5odj3ols5kgm4Qnu58kspgjq5EelX+kcy6icS4+hmYkspekci6kdC+ici0mt5shn4gou58t3LsfmYL7r0b6rkYdjHijci4ci3f8sEekcy4cjHekci6jcS4cinX5rkYci3a5gTQcinazfTKhcC3EiDfCiDa/hTWjci35rUa8gzQgnYYek34dkHv4rUX1qkQiqZAipY0djnkkspgciXWodi+dbiwks5kiqI8djXiccS+icC2icS0djnogmoQEcLfrAAAALnRSTlMAlQpQdzLvsxSzHhQ80SgeUDz5ge/vqdu9+W2LgSizbcfvgalQ+eU8Y+/lFHdG5mivqgAAAMVJREFUCNctzedWAjEQhuFP2gKiIlJtKAoqYDbJZgtsARXEQhMQuf8rMdklv+aZOecNACQI0XV9wJgQUkgahBjG8FWIiiIkCXlhltUImVIc2Zb1EPJAf+sRl9ksFOIyRVzbbkU8VGn/d3sXEQVpPwgegZhitffxuVhu7oFs7kQt6rOvW2fdlNPp+RVw+T2ZO85KXdI14Hra517/JyydXeCGm5x7T1G5mC5Rys2/bsR8eWyalO46+4+P3ql87b1wnNG0jPaMf9IeG+xZ0b+UAAAAAElFTkSuQmCC'
+        };
 
         // Weighted letter bag (English frequency approximation)
         const LETTER_BAG =
@@ -494,6 +706,19 @@
                 for (let i = 1; i <= w.length; i++) {
                     AI_PREFIX_SET.add(w.substring(0, i));
                 }
+            }
+        }
+
+        /* ===== Extra valid words (common words missing from AI list) ===== */
+        const EXTRA_VALID_WORDS_RAW = 'their these could would which where every being after other first about should there under great still never right think house world place found might while small water since light night again large group often until along white young those point might state three given start early begin order might under thing write whole shall women later heart story watch below leave close going build carry plant might bring paper might learn above cross serve study cover words might might table north south might human power field party class light water might music offer drive stand image money might hotel lives space force known black moral might mouth final write point taken whose sound basis exist union could extra valid queen';
+        let VALID_WORD_SET = null;
+
+        function buildValidWordSet() {
+            if (VALID_WORD_SET) return;
+            buildAIWordSets();
+            VALID_WORD_SET = new Set(AI_WORD_SET);
+            for (const w of EXTRA_VALID_WORDS_RAW.split(' ')) {
+                VALID_WORD_SET.add(w.toUpperCase());
             }
         }
 
@@ -583,6 +808,13 @@
         // Game mode
         let gameMode = 'pvp'; // 'pvp' | 'pvc' | 'tutorial'
 
+        // Options state
+        let aiDifficulty = 'medium'; // 'easy' | 'medium' | 'expert'
+        let timerEnabled = false;
+        let boardSize = 11; // 9, 10, 11, 12, 13
+        let turnTimerRemaining = 0;
+        let turnTimerInterval = null;
+
         // AI state
         let aiThinking = false;
 
@@ -601,6 +833,11 @@
         let displayedScoreBlue = 0;
         let displayedScoreRed = 0;
         let animatingScores = false;
+        let scoreAnimStartTime = 0;
+        let scoreAnimStartBlue = 0;
+        let scoreAnimStartRed = 0;
+        let scoreAnimTargetBlue = 0;
+        let scoreAnimTargetRed = 0;
 
         // Tutorial state
         let tutorialStep = 0;
@@ -665,31 +902,163 @@
             if (soundOn) playSound('select');
         }
 
+        /* ===== Options Menu ===== */
+        function openOptions() {
+            document.getElementById('options-screen').classList.remove('hidden');
+        }
+
+        function closeOptions() {
+            document.getElementById('options-screen').classList.add('hidden');
+        }
+
+        function setDifficulty(level) {
+            aiDifficulty = level;
+            document.getElementById('opt-easy').classList.toggle('opt-active', level === 'easy');
+            document.getElementById('opt-medium').classList.toggle('opt-active', level === 'medium');
+            document.getElementById('opt-expert').classList.toggle('opt-active', level === 'expert');
+            const hints = {
+                easy: 'AI picks weaker words and sometimes reduces strength.',
+                medium: 'Default balanced AI.',
+                expert: 'AI picks optimal words and sometimes boosts strength.'
+            };
+            document.getElementById('difficulty-hint').textContent = hints[level];
+        }
+
+        function setTimerOption(enabled) {
+            timerEnabled = enabled;
+            document.getElementById('opt-timer-off').classList.toggle('opt-active', !enabled);
+            document.getElementById('opt-timer-on').classList.toggle('opt-active', enabled);
+        }
+
+        function setTurnsOption() {
+            const input = document.getElementById('opt-turns');
+            const hint = document.getElementById('turns-hint');
+            const val = parseInt(input.value, 10);
+
+            if (isNaN(val) || val < 1) {
+                hint.textContent = '';
+                hint.className = 'options-hint';
+                input.classList.remove('input-error');
+                return;
+            }
+
+            if (val > 20) {
+                hint.textContent = 'Too Many Turns (Select 1-20)';
+                hint.className = 'options-hint turns-error';
+                input.classList.add('input-error');
+                return;
+            }
+
+            input.classList.remove('input-error');
+            hint.textContent = '';
+            hint.className = 'options-hint';
+            TURNS_EACH = val;
+        }
+
+        function setBoardSize(size) {
+            boardSize = size;
+            [9, 10, 11, 12, 13].forEach(s => {
+                document.getElementById('opt-size-' + s).classList.toggle('opt-active', s === size);
+            });
+            const labels = { 9: 'Smallest — tighter fights.', 10: 'Small board.', 11: 'Default board size.', 12: 'Large board — more room to maneuver.', 13: 'Largest — wide open battles.' };
+            document.getElementById('size-hint').textContent = labels[size];
+        }
+
+        /* ===== Turn Timer ===== */
+        function startTurnTimer() {
+            stopTurnTimer();
+            if (!timerEnabled) {
+                document.getElementById('turn-timer').style.display = 'none';
+                return;
+            }
+            turnTimerRemaining = 20;
+            const timerEl = document.getElementById('turn-timer');
+            timerEl.style.display = '';
+            timerEl.textContent = '20s';
+            timerEl.classList.remove('timer-urgent');
+
+            turnTimerInterval = setInterval(() => {
+                if (aiThinking || submitting || gameOver) return; // pause during AI/submission
+                turnTimerRemaining--;
+                updateTimerDisplay();
+
+                if (turnTimerRemaining <= 0) {
+                    stopTurnTimer();
+                    msg("Time's up!");
+                    sel = [];
+                    hideAcceptBtn();
+                    addHistory(player, null, 0, 0);
+                    advanceTurn();
+                }
+            }, 1000);
+        }
+
+        function stopTurnTimer() {
+            if (turnTimerInterval) {
+                clearInterval(turnTimerInterval);
+                turnTimerInterval = null;
+            }
+            document.getElementById('turn-timer').style.display = 'none';
+        }
+
+        function updateTimerDisplay() {
+            const timerEl = document.getElementById('turn-timer');
+            timerEl.textContent = turnTimerRemaining + 's';
+            if (turnTimerRemaining <= 5) {
+                timerEl.classList.add('timer-urgent');
+            } else {
+                timerEl.classList.remove('timer-urgent');
+            }
+        }
+
         /* ===== Init ===== */
         function initCanvas() {
             cvs = document.getElementById('gameCanvas');
             ctx = cvs.getContext('2d');
 
             tCvs = document.createElement('canvas');
-            tCvs.width = GRID_PX;
-            tCvs.height = GRID_PX;
             tCtx = tCvs.getContext('2d');
 
             flashCvs = document.createElement('canvas');
-            flashCvs.width = GRID_PX;
-            flashCvs.height = GRID_PX;
             flashCtx = flashCvs.getContext('2d');
 
-            tOwner = new Uint8Array(GRID_PX * GRID_PX);
-            tStrength = new Uint8Array(GRID_PX * GRID_PX);
+            resizeCanvases();
 
             cvs.addEventListener('click', onClick);
             cvs.addEventListener('mousemove', onMouseMove);
             cvs.addEventListener('mouseleave', () => { hoverCell = null; render(); });
         }
 
+        function resizeCanvases() {
+            cvs.width = CW;
+            cvs.height = CH;
+            tCvs.width = GRID_PX;
+            tCvs.height = GRID_PX;
+            flashCvs.width = GRID_PX;
+            flashCvs.height = GRID_PX;
+            tOwner = new Uint8Array(GRID_PX * GRID_PX);
+            tStrength = new Uint8Array(GRID_PX * GRID_PX);
+        }
+
         function startGame(mode) {
+            // Validate turns input before starting
+            const turnsInput = document.getElementById('opt-turns');
+            const turnsVal = parseInt(turnsInput.value, 10);
+            if (isNaN(turnsVal) || turnsVal < 1 || turnsVal > 20) {
+                TURNS_EACH = 8; // fallback to default
+            } else {
+                TURNS_EACH = turnsVal;
+            }
+
             gameMode = mode;
+
+            // Apply board size (tutorial always uses 11x11)
+            if (mode === 'tutorial') {
+                recalculateGridSize(11);
+            } else {
+                recalculateGridSize(boardSize);
+            }
+            resizeCanvases();
             resetState();
 
             if (mode === 'tutorial') {
@@ -703,6 +1072,7 @@
                 tutorialActive = false;
             }
 
+            buildValidWordSet();
             if (mode === 'pvc') {
                 buildAIWordSets();
             }
@@ -720,6 +1090,9 @@
             render();
             updateCanvasGlow();
 
+            // Start turn timer if enabled
+            startTurnTimer();
+
             // In PvC mode, computer (Blue) goes first
             if (mode === 'pvc') {
                 setTimeout(() => aiTakeTurn(), 600);
@@ -727,6 +1100,7 @@
         }
 
         function resetState() {
+            stopTurnTimer();
             player = 'blue';
             sel = [];
             turnsLeft = { blue: TURNS_EACH, red: TURNS_EACH };
@@ -750,6 +1124,8 @@
             flashCtx.clearRect(0, 0, GRID_PX, GRID_PX);
             hideAcceptBtn();
             document.getElementById('tutorial-overlay').classList.remove('visible');
+            document.getElementById('turns-left').innerHTML =
+                '<span class="turns-blue">Blue: ' + turnsLeft.blue + '</span> | <span class="turns-red">Red: ' + turnsLeft.red + '</span>';
         }
 
         function newGame() {
@@ -947,6 +1323,35 @@
             msg('Turn passed.');
         }
 
+        async function validateWord(word) {
+            const upper = word.toUpperCase();
+            // Tier 1: Local word set
+            if (VALID_WORD_SET && VALID_WORD_SET.has(upper)) {
+                return { valid: true, source: 'local' };
+            }
+            // Tier 2: Primary dictionary API
+            try {
+                const resp = await fetch(API_URL + word.toLowerCase());
+                if (resp.ok) return { valid: true, source: 'primary' };
+            } catch (e) {
+                // Network error — fall through to fallback
+            }
+            // Tier 3: Datamuse fallback API
+            try {
+                const resp = await fetch(API_URL_FALLBACK + word.toLowerCase() + '&max=1');
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.length > 0 && data[0].word === word.toLowerCase()) {
+                        return { valid: true, source: 'fallback' };
+                    }
+                }
+            } catch (e) {
+                // Both APIs failed — treat as network error
+                return { valid: false, source: 'error' };
+            }
+            return { valid: false, source: 'rejected' };
+        }
+
         async function submitWord() {
             if (gameOver || submitting || aiThinking) return;
             if (sel.length < 3) { msg('Minimum 3 letters!'); return; }
@@ -966,31 +1371,26 @@
                 return;
             }
 
-            // Dictionary API validation
+            // Word validation (local → primary API → fallback API)
             submitting = true;
             setButtonsDisabled(true);
             document.getElementById('btn-submit').textContent = 'Checking...';
             msg('Checking "' + word + '"...');
 
-            let valid = false;
-            try {
-                const resp = await fetch(API_URL + word.toLowerCase());
-                valid = resp.ok;
-            } catch (e) {
-                submitting = false;
-                setButtonsDisabled(false);
-                document.getElementById('btn-submit').textContent = 'Submit Word';
+            const result = await validateWord(word);
+
+            submitting = false;
+            setButtonsDisabled(false);
+            document.getElementById('btn-submit').textContent = 'Submit Word';
+
+            if (result.source === 'error') {
                 msg('Network error \u2014 retry or Accept Anyway.');
                 showAcceptBtn();
                 playSound('reject');
                 return;
             }
 
-            submitting = false;
-            setButtonsDisabled(false);
-            document.getElementById('btn-submit').textContent = 'Submit Word';
-
-            if (!valid) {
+            if (!result.valid) {
                 msg('"' + word + '" is not a valid word!');
                 playSound('reject');
                 return;
@@ -1041,7 +1441,7 @@
 
             // Spawn floating score text
             if (gained > 0) {
-                spawnFloatingText('+' + gained.toLocaleString() + ' px', cx, cy, player);
+                spawnFloatingText('+' + formatScorePercent(gained), cx, cy, player);
             }
 
             addHistory(player, word, strength, gained);
@@ -1070,6 +1470,9 @@
                 endGame();
                 return;
             }
+
+            // Restart turn timer
+            startTurnTimer();
 
             // PvC: trigger AI turn when it's Blue's turn
             if (gameMode === 'pvc' && player === 'blue' && !gameOver) {
@@ -1300,36 +1703,50 @@
 
         /* ===== Animated score counters ===== */
         function startScoreAnimation() {
+            const scores = countScores();
+            const blueChanged = scores.blue !== scoreAnimTargetBlue;
+            const redChanged = scores.red !== scoreAnimTargetRed;
+
+            if (blueChanged || redChanged) {
+                scoreAnimStartTime = performance.now();
+                scoreAnimStartBlue = displayedScoreBlue;
+                scoreAnimStartRed = displayedScoreRed;
+                scoreAnimTargetBlue = scores.blue;
+                scoreAnimTargetRed = scores.red;
+
+                // Add enlarge class to the player whose score changed
+                if (blueChanged) document.getElementById('blue-score').classList.add('score-animating');
+                if (redChanged) document.getElementById('red-score').classList.add('score-animating');
+            }
+
             if (animatingScores) return;
             animatingScores = true;
             requestAnimationFrame(animateScoreCounters);
         }
 
         function animateScoreCounters() {
-            const scores = countScores();
-            let done = true;
+            const elapsed = performance.now() - scoreAnimStartTime;
+            const duration = 2000;
+            const t = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - t, 3); // cubic ease-out
 
-            const step = (from, to) => {
-                if (from === to) return to;
-                done = false;
-                const diff = to - from;
-                const delta = Math.max(1, Math.abs(diff) * 0.15);
-                if (Math.abs(diff) <= delta) return to;
-                return from + (diff > 0 ? delta : -delta);
-            };
+            displayedScoreBlue = Math.round(scoreAnimStartBlue + (scoreAnimTargetBlue - scoreAnimStartBlue) * eased);
+            displayedScoreRed = Math.round(scoreAnimStartRed + (scoreAnimTargetRed - scoreAnimStartRed) * eased);
 
-            displayedScoreBlue = Math.round(step(displayedScoreBlue, scores.blue));
-            displayedScoreRed = Math.round(step(displayedScoreRed, scores.red));
+            document.getElementById('blue-score-value').textContent =
+                (gameMode === 'pvc' ? 'CPU: ' : 'Blue: ') + formatScorePercent(displayedScoreBlue);
+            document.getElementById('red-score-value').textContent =
+                (gameMode === 'pvc' ? 'You: ' : 'Red: ') + formatScorePercent(displayedScoreRed);
 
-            document.getElementById('blue-score').textContent =
-                (gameMode === 'pvc' ? 'CPU: ' : 'Blue: ') + displayedScoreBlue.toLocaleString();
-            document.getElementById('red-score').textContent =
-                (gameMode === 'pvc' ? 'You: ' : 'Red: ') + displayedScoreRed.toLocaleString();
-
-            if (!done) {
+            if (t < 1) {
                 requestAnimationFrame(animateScoreCounters);
             } else {
                 animatingScores = false;
+                // Remove enlarge class after a short delay
+                setTimeout(() => {
+                    document.getElementById('blue-score').classList.remove('score-animating');
+                    document.getElementById('red-score').classList.remove('score-animating');
+                }, 300);
             }
         }
 
@@ -1369,10 +1786,10 @@
                     html += '<span class="history-pass">Passed</span>';
                 } else if (h.gained === 0) {
                     html += '<span class="history-word">' + h.word + '</span>';
-                    html += '<span class="history-info history-collinear">0 px</span>';
+                    html += '<span class="history-info history-collinear">0.0%</span>';
                 } else {
                     html += '<span class="history-word">' + h.word + '</span>';
-                    html += '<span class="history-info">+' + h.gained.toLocaleString() + ' px</span>';
+                    html += '<span class="history-info">+' + formatScorePercent(h.gained) + '</span>';
                 }
 
                 html += '</div>';
@@ -1448,29 +1865,65 @@
             }
             if (withArea.length === 0) return null;
 
-            // Score each candidate (tuned for lower skill)
+            // Difficulty-dependent weights
+            const diffSettings = {
+                easy:   { randomness: 1000, areaMult: 0.5, lengthMult: 0.5, topN: 15 },
+                medium: { randomness: 600,  areaMult: 1.0, lengthMult: 1.0, topN: 8 },
+                expert: { randomness: 200,  areaMult: 1.5, lengthMult: 1.2, topN: 3 }
+            };
+            const diff = diffSettings[aiDifficulty] || diffSettings.medium;
+
             const scored = withArea.map(c => {
                 const area = aiCalculateArea(c.path);
                 const len = c.path.length;
 
-                // Length preference: strongly favor 4-letter words
+                // Length preference (expert favors longer words)
                 let lengthBonus = 0;
-                if (len === 4) lengthBonus = 500;
-                else if (len === 3) lengthBonus = 250;
-                else if (len === 5) lengthBonus = 100;
+                if (aiDifficulty === 'expert') {
+                    if (len >= 5) lengthBonus = 800;
+                    else if (len === 4) lengthBonus = 400;
+                    else if (len === 3) lengthBonus = 100;
+                } else {
+                    if (len === 4) lengthBonus = 500;
+                    else if (len === 3) lengthBonus = 250;
+                    else if (len === 5) lengthBonus = 100;
+                }
+                lengthBonus *= diff.lengthMult;
 
-                // Proximity bonus: reward choosing letters closer together
+                // Distance bonus: easy rewards proximity, medium/expert reward spread
                 let totalDist = 0;
                 for (let i = 1; i < c.path.length; i++) {
                     totalDist += Math.abs(c.path[i].r - c.path[i-1].r) + Math.abs(c.path[i].c - c.path[i-1].c);
                 }
                 const avgDist = totalDist / (c.path.length - 1);
-                const proximityBonus = (MAX_RANGE - avgDist) * 150;
+                const distBonus = aiDifficulty === 'easy'
+                    ? (MAX_RANGE - avgDist) * 200  // proximity: closer = higher score
+                    : avgDist * 120;                // spread: farther = higher score
 
-                // Area bonus: capped low so AI doesn't always maximize spread
-                const areaBonus = Math.min(area * 0.02, 500);
+                // Area bonus: reward larger territory polygons
+                const areaBonus = Math.min(area * 0.05, 1200) * diff.areaMult;
 
-                // Bonus for overlap with enemy territory (reduced)
+                // Irregularity bonus: reward shapes that aren't simple rectangles/triangles
+                // Measures how much the path zigzags by checking angle changes between steps
+                let irregularity = 0;
+                if (len >= 3) {
+                    for (let i = 1; i < len - 1; i++) {
+                        const dr1 = c.path[i].r - c.path[i-1].r;
+                        const dc1 = c.path[i].c - c.path[i-1].c;
+                        const dr2 = c.path[i+1].r - c.path[i].r;
+                        const dc2 = c.path[i+1].c - c.path[i].c;
+                        // Cross product magnitude — nonzero means direction change
+                        const cross = Math.abs(dr1 * dc2 - dc1 * dr2);
+                        // Dot product sign — negative means backtracking (sharper turn)
+                        const dot = dr1 * dr2 + dc1 * dc2;
+                        irregularity += cross > 0 ? 1 : 0;
+                        if (dot < 0) irregularity += 0.5; // extra for sharp turns
+                    }
+                    irregularity = irregularity / (len - 2); // normalize to 0-1.5 range
+                }
+                const irregularityBonus = irregularity * 350;
+
+                // Overlap with enemy territory
                 let overlapBonus = 0;
                 const centroidX = c.path.reduce((s, p) => s + p.c, 0) / c.path.length;
                 const centroidY = c.path.reduce((s, p) => s + p.r, 0) / c.path.length;
@@ -1481,14 +1934,12 @@
                     if (tOwner[idx] === TEAM.RED) overlapBonus = 150;
                 }
 
-                // High randomness for more variety
-                const score = lengthBonus + proximityBonus + areaBonus + overlapBonus + Math.random() * 600;
+                const score = lengthBonus + distBonus + areaBonus + irregularityBonus + overlapBonus + Math.random() * diff.randomness;
                 return { ...c, score };
             });
 
-            // Sort by score, pick from top 8 candidates with some randomness
             scored.sort((a, b) => b.score - a.score);
-            const topN = Math.min(8, scored.length);
+            const topN = Math.min(diff.topN, scored.length);
             return scored[Math.floor(Math.random() * topN)];
         }
 
@@ -1527,31 +1978,16 @@
             }
 
             const word = chosen.word.toUpperCase();
-            const strength = Math.min(chosen.path.length - 2, 5);
+            let strength = Math.min(chosen.path.length - 2, 5);
 
-            // Validate against dictionary API (accept on network error)
-            msg('Checking "' + word + '"...');
-            let valid = true;
-            try {
-                const resp = await fetch(API_URL + word.toLowerCase());
-                valid = resp.ok;
-            } catch (e) {
-                // Accept on network error since words come from curated list
-                valid = true;
+            // Difficulty-based strength scaling
+            if (aiDifficulty === 'easy' && Math.random() < 0.4) {
+                strength = Math.max(1, strength - 1);
+            } else if (aiDifficulty === 'expert' && Math.random() < 0.5) {
+                strength = Math.min(5, strength + 1);
             }
 
-            if (!valid) {
-                // Word rejected by API - try to find another or pass
-                sel = [];
-                aiThinking = false;
-                setButtonsDisabled(false);
-                addHistory('blue', null, 0, 0);
-                msg('Computer passed.');
-                advanceTurn();
-                return;
-            }
-
-            // Finalize the word
+            // AI words come from curated list — skip API validation
             aiThinking = false;
             setButtonsDisabled(false);
             finalizeWord(word, strength);
@@ -1612,6 +2048,7 @@
         /* ===== Game end ===== */
         function endGame() {
             gameOver = true;
+            stopTurnTimer();
             playSound('gameend');
             const scores = countScores();
             const overlay = document.getElementById('game-over');
@@ -1621,18 +2058,18 @@
 
             if (gameMode === 'pvc') {
                 scoresEl.innerHTML =
-                    '<span style="color:#60a5fa">CPU: ' + scores.blue.toLocaleString() + '</span>' +
+                    '<span style="color:#60a5fa">CPU: ' + formatScorePercent(scores.blue) + '</span>' +
                     '  \u2014  ' +
-                    '<span style="color:#f87171">You: ' + scores.red.toLocaleString() + '</span>';
+                    '<span style="color:#f87171">You: ' + formatScorePercent(scores.red) + '</span>';
 
                 if (scores.red > scores.blue) {
                     title.textContent = 'You Win!';
                     title.style.color = '#34d399';
-                    subtitle.textContent = 'by ' + (scores.red - scores.blue).toLocaleString() + ' pixels';
+                    subtitle.textContent = 'by ' + formatScorePercent(scores.red - scores.blue) + ' territory';
                 } else if (scores.blue > scores.red) {
                     title.textContent = 'Computer Wins!';
                     title.style.color = '#60a5fa';
-                    subtitle.textContent = 'by ' + (scores.blue - scores.red).toLocaleString() + ' pixels';
+                    subtitle.textContent = 'by ' + formatScorePercent(scores.blue - scores.red) + ' territory';
                 } else {
                     title.textContent = 'Draw!';
                     title.style.color = '#e2e8f0';
@@ -1640,18 +2077,18 @@
                 }
             } else {
                 scoresEl.innerHTML =
-                    '<span style="color:#60a5fa">Blue: ' + scores.blue.toLocaleString() + '</span>' +
+                    '<span style="color:#60a5fa">Blue: ' + formatScorePercent(scores.blue) + '</span>' +
                     '  \u2014  ' +
-                    '<span style="color:#f87171">Red: ' + scores.red.toLocaleString() + '</span>';
+                    '<span style="color:#f87171">Red: ' + formatScorePercent(scores.red) + '</span>';
 
                 if (scores.blue > scores.red) {
                     title.textContent = 'Blue Wins!';
                     title.style.color = '#60a5fa';
-                    subtitle.textContent = 'by ' + (scores.blue - scores.red).toLocaleString() + ' pixels';
+                    subtitle.textContent = 'by ' + formatScorePercent(scores.blue - scores.red) + ' territory';
                 } else if (scores.red > scores.blue) {
                     title.textContent = 'Red Wins!';
                     title.style.color = '#f87171';
-                    subtitle.textContent = 'by ' + (scores.red - scores.blue).toLocaleString() + ' pixels';
+                    subtitle.textContent = 'by ' + formatScorePercent(scores.red - scores.blue) + ' territory';
                 } else {
                     title.textContent = 'Draw!';
                     title.style.color = '#e2e8f0';
@@ -1840,9 +2277,8 @@
                 ti.style.color = player === 'blue' ? '#60a5fa' : '#f87171';
             }
 
-            const totalLeft = turnsLeft.blue + turnsLeft.red;
-            document.getElementById('turns-left').textContent =
-                totalLeft + ' turn' + (totalLeft !== 1 ? 's' : '') + ' left';
+            document.getElementById('turns-left').innerHTML =
+                '<span class="turns-blue">Blue: ' + turnsLeft.blue + '</span> | <span class="turns-red">Red: ' + turnsLeft.red + '</span>';
 
             // Animated score counters
             startScoreAnimation();
@@ -1875,6 +2311,25 @@
             genGrid();
             updateUI();
             render();
+
+            // Load menu pixel art decorations
+            const decoMap = {
+                'deco-palm-left': MENU_ASSETS.palmTall,
+                'deco-palm-right': MENU_ASSETS.palmBend,
+                'deco-palm-bg': MENU_ASSETS.palmSmall,
+                'deco-bush-left': MENU_ASSETS.bushLarge,
+                'deco-bush-right': MENU_ASSETS.bushSmall,
+                'deco-grass-1': MENU_ASSETS.grassLarge,
+                'deco-grass-2': MENU_ASSETS.grassSmall,
+                'deco-grass-3': MENU_ASSETS.grassLarge,
+                'deco-flower-red': MENU_ASSETS.flowerRed,
+                'deco-flower-purple': MENU_ASSETS.flowerPurple,
+                'deco-flower-yellow': MENU_ASSETS.flowerYellow
+            };
+            for (const [cls, src] of Object.entries(decoMap)) {
+                const el = document.querySelector('.' + cls);
+                if (el) el.src = src;
+            }
         });
     </script>
 </body>
