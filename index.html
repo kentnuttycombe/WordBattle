@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Territory Words</title>
+    <title>Word Conquest</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -121,11 +121,11 @@
         }
         .options-title {
             font-size: 36px; font-weight: 900; color: #e2e8f0;
-            margin-bottom: 32px;
+            margin-bottom: 20px;
         }
         .options-section {
             background: #1e293b; border-radius: 12px;
-            padding: 20px 28px; margin-bottom: 16px;
+            padding: 16px 28px; margin-bottom: 8px;
             min-width: 340px; max-width: 420px;
         }
         .options-section-title { font-size: 16px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
@@ -602,6 +602,11 @@
             .deco-bush-left { width: 55px; }
             .deco-bush-right { width: 40px; }
             .options-section { min-width: 280px; padding: 16px 20px; }
+            #online-screen {
+                justify-content: flex-start;
+                padding-top: 24px;
+                overflow-y: auto;
+            }
             .online-title { font-size: 28px; }
             .online-section { min-width: 220px; padding: 20px 18px; }
             .lobby-code { font-size: 40px; letter-spacing: 8px; }
@@ -614,7 +619,7 @@
 <body>
     <!-- Menu Screen -->
     <div id="menu-screen">
-        <div class="menu-title">Territory Words</div>
+        <div class="menu-title">Word Conquest</div>
         <div class="menu-subtitle">Capture territory by spelling words on the grid</div>
         <div class="menu-cards">
             <div class="menu-card pvp" onclick="startGame('pvp')">
@@ -661,7 +666,6 @@
 
         <div class="options-section">
             <div class="options-section-title">Computer Difficulty</div>
-            <div class="options-section-desc">Affects AI word selection and territory strength in Player vs Computer mode.</div>
             <div class="options-buttons">
                 <button class="opt-btn" onclick="setDifficulty('easy')" id="opt-easy">Easy</button>
                 <button class="opt-btn opt-active" onclick="setDifficulty('medium')" id="opt-medium">Medium</button>
@@ -672,16 +676,15 @@
 
         <div class="options-section">
             <div class="options-section-title">Turn Timer</div>
-            <div class="options-section-desc">Adds a 20-second countdown to each player's turn. Auto-passes on expiry.</div>
             <div class="options-buttons">
-                <button class="opt-btn opt-active" onclick="setTimerOption(false)" id="opt-timer-off">Off</button>
-                <button class="opt-btn" onclick="setTimerOption(true)" id="opt-timer-on">On (20s)</button>
+                <button class="opt-btn opt-active" onclick="setTimerOption(0)" id="opt-timer-off">Off</button>
+                <button class="opt-btn" onclick="setTimerOption(30)" id="opt-timer-30">30s</button>
+                <button class="opt-btn" onclick="setTimerOption(60)" id="opt-timer-60">1 min</button>
             </div>
         </div>
 
         <div class="options-section">
             <div class="options-section-title">Board Size</div>
-            <div class="options-section-desc">Changes the grid dimensions. Larger boards mean more territory to fight over.</div>
             <div class="options-buttons options-buttons-5">
                 <button class="opt-btn" onclick="setBoardSize(9)" id="opt-size-9">9&times;9</button>
                 <button class="opt-btn" onclick="setBoardSize(10)" id="opt-size-10">10&times;10</button>
@@ -821,7 +824,7 @@
             [TEAM.RED]:     { r: 239, g: 68,  b: 68  },
             [TEAM.NEUTRAL]: { r: 168, g: 85,  b: 247 }
         };
-        const STR_ALPHA = [0, 20, 45, 85, 140, 195];
+        const STR_ALPHA = [0, 30, 58, 98, 153, 208];
         const NEUTRAL_ALPHA = 40;
         const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
         const API_URL_FALLBACK = 'https://api.datamuse.com/words?sp=';
@@ -883,11 +886,11 @@
 
         // Weighted letter bag (English frequency approximation)
         const LETTER_BAG =
-            'EEEEEEEEEEEEE' +
+            'EEEEEEEEEEEEEE' +
             'TTTTTTTTT' +
             'AAAAAAAA' +
             'OOOOOOOO' +
-            'IIIIIII' +
+            'IIIIIIII' +
             'NNNNNNN' +
             'SSSSSS' +
             'RRRRRR' +
@@ -958,7 +961,7 @@
         /* ===== Tutorial steps ===== */
         const TUTORIAL_STEPS = [
             {
-                title: 'Welcome to Territory Words!',
+                title: 'Welcome to Word Conquest!',
                 desc: 'In this game, you spell words by selecting letters on the grid. The letters you pick form a polygon that captures territory. Let\'s learn how it works!',
                 action: 'next',
                 highlights: []
@@ -997,7 +1000,7 @@
             },
             {
                 title: 'You\'re Ready!',
-                desc: 'You now know the basics of Territory Words. Spread your letters wide for big territory, spell longer words for higher strength, and contest your opponent\'s land. Have fun!',
+                desc: 'You now know the basics of Word Conquest. Spread your letters wide for big territory, spell longer words for higher strength, and contest your opponent\'s land. Have fun!',
                 action: 'done',
                 highlights: []
             }
@@ -1023,6 +1026,7 @@
         // Options state
         let aiDifficulty = 'medium'; // 'easy' | 'medium' | 'expert'
         let timerEnabled = false;
+        let timerDuration = 0;
         let boardSize = 11; // 9, 10, 11, 12, 13
         let turnTimerRemaining = 0;
         let turnTimerInterval = null;
@@ -1558,10 +1562,12 @@
             document.getElementById('difficulty-hint').textContent = hints[level];
         }
 
-        function setTimerOption(enabled) {
-            timerEnabled = enabled;
-            document.getElementById('opt-timer-off').classList.toggle('opt-active', !enabled);
-            document.getElementById('opt-timer-on').classList.toggle('opt-active', enabled);
+        function setTimerOption(seconds) {
+            timerEnabled = seconds > 0;
+            timerDuration = seconds;
+            document.getElementById('opt-timer-off').classList.toggle('opt-active', seconds === 0);
+            document.getElementById('opt-timer-30').classList.toggle('opt-active', seconds === 30);
+            document.getElementById('opt-timer-60').classList.toggle('opt-active', seconds === 60);
         }
 
         function setTurnsOption() {
@@ -1605,10 +1611,10 @@
                 document.getElementById('turn-timer').style.display = 'none';
                 return;
             }
-            turnTimerRemaining = 20;
+            turnTimerRemaining = timerDuration;
             const timerEl = document.getElementById('turn-timer');
             timerEl.style.display = '';
-            timerEl.textContent = '20s';
+            timerEl.textContent = turnTimerRemaining + 's';
             timerEl.classList.remove('timer-urgent');
 
             turnTimerInterval = setInterval(() => {
@@ -1782,9 +1788,24 @@
             for (let r = 0; r < GRID; r++) {
                 grid[r] = [];
                 for (let c = 0; c < GRID; c++) {
-                    grid[r][c] = LETTER_BAG[Math.floor(Math.random() * LETTER_BAG.length)];
+                    let letter;
+                    let attempts = 0;
+                    do {
+                        letter = LETTER_BAG[Math.floor(Math.random() * LETTER_BAG.length)];
+                        attempts++;
+                    } while (attempts < 20 && hasAdjacentDuplicate(r, c, letter));
+                    grid[r][c] = letter;
                 }
             }
+        }
+
+        function hasAdjacentDuplicate(r, c, letter) {
+            const neighbors = [[-1,-1],[-1,0],[-1,1],[0,-1]];
+            for (const [dr, dc] of neighbors) {
+                const nr = r + dr, nc = c + dc;
+                if (nr >= 0 && nr < GRID && nc >= 0 && nc < GRID && grid[nr][nc] === letter) return true;
+            }
+            return false;
         }
 
         /* ===== Coordinate helpers ===== */
@@ -2503,9 +2524,14 @@
 
         function aiChooseWord(candidates) {
             // Filter to words with area (non-collinear with 3+ letters)
-            let withArea = candidates.filter(c => c.path.length >= 3 && aiCalculateArea(c.path) > 100);
+            const minArea = TOTAL_PIXELS * 0.03;
+            let withArea = candidates.filter(c => c.path.length >= 3 && aiCalculateArea(c.path) >= minArea);
 
-            // If no area words, try any valid words
+            // If no words meet the 3% threshold, try any with area
+            if (withArea.length === 0) {
+                withArea = candidates.filter(c => c.path.length >= 3 && aiCalculateArea(c.path) > 100);
+            }
+            // If still none, try any valid words
             if (withArea.length === 0) {
                 withArea = candidates.filter(c => c.path.length >= 3);
             }
@@ -2513,7 +2539,7 @@
 
             // Difficulty-dependent weights
             const diffSettings = {
-                easy:   { randomness: 1000, areaMult: 0.5, lengthMult: 0.5, topN: 15 },
+                easy:   { randomness: 1000, areaMult: 0.3, lengthMult: 0.4, topN: 20 },
                 medium: { randomness: 600,  areaMult: 1.0, lengthMult: 1.0, topN: 8 },
                 expert: { randomness: 200,  areaMult: 1.5, lengthMult: 1.2, topN: 3 }
             };
@@ -2627,7 +2653,7 @@
             let strength = Math.min(chosen.path.length - 2, 5);
 
             // Difficulty-based strength scaling
-            if (aiDifficulty === 'easy' && Math.random() < 0.4) {
+            if (aiDifficulty === 'easy' && Math.random() < 0.55) {
                 strength = Math.max(1, strength - 1);
             } else if (aiDifficulty === 'expert' && Math.random() < 0.5) {
                 strength = Math.min(5, strength + 1);
