@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word Conquest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Creepster&family=Permanent+Marker&family=Fredoka:wght@600&family=Playfair+Display:wght@700&family=Mystery+Quest&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -240,13 +243,22 @@
 
         #word-display {
             text-align: center;
-            font-size: 18px;
+            font-size: 27px;
             font-family: 'Courier New', monospace;
-            font-weight: 600;
-            padding: 6px;
-            min-height: 34px;
+            font-weight: 700;
+            padding: 8px;
+            min-height: 42px;
             margin-bottom: 6px;
             color: #94a3b8;
+            transition: transform 0.15s ease;
+        }
+        #word-display.word-pop {
+            animation: wordPop 0.3s ease-out;
+        }
+        @keyframes wordPop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.15); }
+            100% { transform: scale(1); }
         }
 
         #gameCanvas {
@@ -371,6 +383,36 @@
             font-size: 13px;
         }
 
+        /* ===== Pass confirm ===== */
+        #pass-confirm {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4); z-index: 100;
+            justify-content: center; align-items: center;
+        }
+        #pass-confirm.visible { display: flex; }
+        #duck-taunt {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5); z-index: 100;
+            justify-content: center; align-items: center;
+        }
+        #duck-taunt.visible { display: flex; }
+        .pass-confirm-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 18px 28px;
+            text-align: center;
+        }
+        .pass-confirm-content p {
+            font-size: 15px; color: #e2e8f0; margin-bottom: 14px;
+        }
+        .pass-confirm-buttons { display: flex; gap: 10px; justify-content: center; }
+        .pass-confirm-buttons button { padding: 7px 24px; font-size: 13px; border-radius: 7px; }
+        .pass-yes { background: #92400e; color: #fff; }
+        .pass-yes:hover { background: #78350f; }
+        .pass-no { background: #334155; color: #e2e8f0; }
+        .pass-no:hover { background: #475569; }
+
         /* ===== Game over overlay ===== */
         #game-over {
             display: none; position: fixed; inset: 0;
@@ -442,6 +484,11 @@
             #tutorial-step-title { font-size: 16px; margin-bottom: 6px; }
             #tutorial-step-desc { font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
             .tutorial-buttons button { padding: 8px 22px; font-size: 14px; }
+            .score-label { font-size: 14px; }
+            .score-value { font-size: 27px; }
+            .score-box { font-size: 27px; min-width: 170px; }
+            #turn-indicator { font-size: 27px; }
+            #turns-left { font-size: 17px; }
         }
         #btn-tutorial-next { background: #34d399; color: #0f172a; font-weight: 700; }
         #btn-tutorial-next:hover { background: #6ee7b7; }
@@ -574,6 +621,408 @@
         #online-indicator .conn-dot.connected { background: #34d399; }
         #online-indicator .conn-dot.disconnected { background: #ef4444; }
 
+        /* ===== Quest Mode ===== */
+        .menu-card.quest:hover { border-color: #f97316; }
+        .menu-card.quest .menu-card-title { color: #f97316; }
+
+        #quest-screen {
+            position: fixed; inset: 0; z-index: 210;
+            background: linear-gradient(180deg, #06050f 0%, #0d0b1a 30%, #0f172a 70%, #0a1020 100%);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-end;
+            transition: opacity 0.4s ease;
+            overflow: hidden;
+        }
+        #quest-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* The vertical chain container — positioned so current is centered */
+        #quest-chain {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: bottom 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Single node: connector line + card */
+        .quest-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Vertical connector line between nodes */
+        .quest-connector {
+            width: 4px;
+            height: 80px;
+            background: linear-gradient(180deg, #334155 0%, #475569 50%, #334155 100%);
+            position: relative;
+        }
+        .quest-connector.defeated-line {
+            background: linear-gradient(180deg, #166534 0%, #22c55e 50%, #166534 100%);
+            box-shadow: 0 0 8px rgba(34,197,94,0.3);
+        }
+        /* Glowing dot at connector midpoint */
+        .quest-connector::after {
+            content: '';
+            position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #475569;
+        }
+        .quest-connector.defeated-line::after {
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34,197,94,0.5);
+        }
+
+        /* Enemy card — landscape rectangle, width = 2x height */
+        .quest-enemy-card {
+            width: min(50vw, 480px);
+            aspect-ratio: 2 / 1;
+            background: #111827;
+            border-radius: 14px;
+            border: 3px solid #1e293b;
+            display: flex;
+            align-items: stretch;
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.4s, box-shadow 0.4s, opacity 0.4s, filter 0.4s;
+        }
+
+        /* Current enemy — bold glowing border */
+        .quest-enemy-card.available {
+            border-color: #f97316;
+            box-shadow:
+                0 0 20px rgba(249,115,22,0.4),
+                0 0 50px rgba(249,115,22,0.15),
+                inset 0 0 30px rgba(249,115,22,0.05);
+            animation: quest-current-pulse 2s ease-in-out infinite alternate;
+        }
+        @keyframes quest-current-pulse {
+            from {
+                box-shadow:
+                    0 0 15px rgba(249,115,22,0.3),
+                    0 0 40px rgba(249,115,22,0.1),
+                    inset 0 0 20px rgba(249,115,22,0.03);
+            }
+            to {
+                box-shadow:
+                    0 0 30px rgba(249,115,22,0.55),
+                    0 0 70px rgba(249,115,22,0.2),
+                    inset 0 0 40px rgba(249,115,22,0.08);
+                border-color: #fb923c;
+            }
+        }
+
+        .quest-enemy-card.defeated {
+            border-color: #166534;
+            box-shadow: 0 0 12px rgba(34,197,94,0.15);
+        }
+        .quest-enemy-card.locked {
+            border-color: #1e293b;
+            opacity: 0.35;
+            filter: grayscale(0.8) brightness(0.6);
+        }
+
+        /* Image takes left ~45% */
+        .quest-enemy-card .qec-img-wrap {
+            width: 45%;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .quest-enemy-card .qec-img-wrap img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* Gradient fade from image to info */
+        .quest-enemy-card .qec-img-wrap::after {
+            content: '';
+            position: absolute; top: 0; right: 0;
+            width: 40%; height: 100%;
+            background: linear-gradient(90deg, transparent, #111827);
+        }
+        /* Defeated checkmark overlay */
+        .quest-enemy-card.defeated .qec-img-wrap::before {
+            content: '\2714';
+            position: absolute; top: 8px; left: 8px; z-index: 2;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: #16a34a;
+            color: #fff; font-size: 15px; font-weight: 900;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        /* Info panel on the right */
+        .quest-enemy-card .qec-info {
+            flex: 1; display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 12px 16px 12px 4px;
+            position: relative; z-index: 1;
+        }
+
+        .quest-enemy-card .qec-name {
+            font-size: clamp(16px, 2.5vw, 22px);
+            color: #e2e8f0;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        /* Per-enemy fonts */
+        .quest-enemy-card[data-enemy="hippo"] .qec-name {
+            font-family: 'Bungee Shade', cursive;
+            color: #facc15;
+        }
+        .quest-enemy-card[data-enemy="duck"] .qec-name {
+            font-family: 'Creepster', cursive;
+            color: #a78bfa;
+            letter-spacing: 1px;
+        }
+        .quest-enemy-card[data-enemy="raccoon"] .qec-name {
+            font-family: 'Permanent Marker', cursive;
+            color: #fb923c;
+        }
+        .quest-enemy-card[data-enemy="squirrel"] .qec-name {
+            font-family: 'Fredoka', sans-serif;
+            color: #4ade80;
+        }
+        .quest-enemy-card[data-enemy="penguin"] .qec-name {
+            font-family: 'Playfair Display', serif;
+            color: #93c5fd;
+            font-style: italic;
+        }
+        .quest-enemy-card[data-enemy="walrus"] .qec-name {
+            font-family: 'Mystery Quest', cursive;
+            color: #c084fc;
+            font-size: clamp(18px, 2.8vw, 26px);
+        }
+
+        .quest-enemy-card .qec-diff {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 6px;
+        }
+        .qec-diff.easy { color: #34d399; }
+        .qec-diff.medium { color: #fbbf24; }
+        .qec-diff.expert { color: #f87171; }
+
+        .quest-enemy-card .qec-power {
+            font-size: 11px; color: #94a3b8; line-height: 1.35;
+            margin-bottom: 10px;
+        }
+
+        .quest-battle-btn {
+            align-self: flex-start;
+            padding: 7px 22px; border-radius: 8px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: #fff; border: none;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .quest-battle-btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 4px 20px rgba(249,115,22,0.4);
+        }
+
+        .quest-status-badge {
+            align-self: flex-start;
+            display: inline-block; padding: 4px 12px;
+            border-radius: 6px; font-size: 11px; font-weight: 700;
+        }
+        .quest-status-badge.defeated-badge {
+            background: rgba(22,101,52,0.3); color: #4ade80;
+        }
+        .quest-status-badge.locked-badge {
+            background: rgba(100,116,139,0.15); color: #64748b;
+        }
+
+        /* Bottom controls bar */
+        .quest-bottom-bar {
+            position: relative; z-index: 5;
+            display: flex; gap: 12px;
+            padding: 16px 20px 24px;
+            align-items: center;
+        }
+        .quest-back-btn {
+            padding: 10px 28px; border-radius: 8px;
+            border: 2px solid #334155; background: #1e293b; color: #94a3b8;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quest-back-btn:hover { border-color: #f97316; color: #e2e8f0; transform: translateY(-2px); }
+        .quest-reset-btn {
+            padding: 8px 16px; border-radius: 6px;
+            border: 1px solid #475569; background: transparent; color: #64748b;
+            font-size: 12px; cursor: pointer; transition: all 0.2s;
+        }
+        .quest-reset-btn:hover { border-color: #ef4444; color: #ef4444; }
+
+        /* Transition flash overlay for scrolling */
+        #quest-flash {
+            position: absolute; inset: 0; z-index: 4;
+            pointer-events: none; opacity: 0;
+            background: radial-gradient(ellipse at center, rgba(249,115,22,0.3) 0%, transparent 70%);
+            transition: opacity 0.3s;
+        }
+        #quest-flash.flash-active {
+            animation: quest-flash-burst 1.2s ease-out forwards;
+        }
+        @keyframes quest-flash-burst {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            40% { opacity: 0.6; }
+            100% { opacity: 0; }
+        }
+
+        /* Sparkle particles during scroll */
+        .quest-sparkle {
+            position: absolute; border-radius: 50%;
+            pointer-events: none; z-index: 3;
+            background: #f97316;
+            animation: quest-sparkle-fly 1s ease-out forwards;
+        }
+        @keyframes quest-sparkle-fly {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0) translateY(-60px); }
+        }
+
+        /* Quest Indicator (during gameplay) */
+        #quest-indicator {
+            position: fixed; top: 12px; right: 12px; z-index: 90;
+            background: #1e293b; border-radius: 10px;
+            padding: 10px 14px; font-size: 12px;
+            border: 1px solid #f97316;
+            display: none; max-width: 200px;
+        }
+        #quest-indicator .qi-header {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+        }
+        #quest-indicator .qi-img {
+            width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+        }
+        #quest-indicator .qi-name {
+            font-weight: 700; color: #f97316; font-size: 13px;
+        }
+        #quest-indicator .qi-power {
+            color: #94a3b8; font-size: 11px; line-height: 1.3;
+        }
+
+        /* Shakeup overlay */
+        #shakeup-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); z-index: 300;
+            justify-content: center; align-items: center;
+        }
+        #shakeup-overlay.visible { display: flex; }
+        .shakeup-content {
+            text-align: center; animation: popIn 0.3s ease-out;
+        }
+        .shakeup-content img {
+            width: 100px; height: 100px; border-radius: 50%;
+            object-fit: cover; border: 3px solid #fbbf24;
+            margin-bottom: 12px;
+            animation: shakeup-shake 0.4s ease-in-out infinite alternate;
+        }
+        @keyframes shakeup-shake {
+            from { transform: rotate(-5deg) scale(1); }
+            to { transform: rotate(5deg) scale(1.05); }
+        }
+        .shakeup-content h2 {
+            font-size: 28px; color: #fbbf24; margin-bottom: 6px;
+        }
+        .shakeup-content p { font-size: 14px; color: #94a3b8; }
+
+        /* Spell overlay */
+        #spell-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.75); z-index: 300;
+            justify-content: center; align-items: center;
+        }
+        #spell-overlay.visible { display: flex; }
+        .spell-content {
+            text-align: center; animation: popIn 0.3s ease-out;
+        }
+        .spell-content img {
+            width: 90px; height: 90px; border-radius: 50%;
+            object-fit: cover; border: 3px solid #a78bfa;
+            margin-bottom: 12px;
+            animation: spell-pulse 0.6s ease-in-out infinite alternate;
+        }
+        @keyframes spell-pulse {
+            from { box-shadow: 0 0 10px rgba(167,139,250,0.3); }
+            to { box-shadow: 0 0 30px rgba(167,139,250,0.7); }
+        }
+        .spell-content h2 {
+            font-size: 24px; color: #a78bfa; margin-bottom: 4px;
+        }
+        .spell-content p { font-size: 14px; color: #cbd5e1; margin-bottom: 4px; }
+        .spell-content .spell-effect { font-size: 12px; color: #94a3b8; }
+
+        /* Victory screen */
+        #victory-screen {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.85); z-index: 310;
+            justify-content: center; align-items: center;
+            flex-direction: column;
+        }
+        #victory-screen.visible { display: flex; }
+        .victory-content {
+            text-align: center; animation: popIn 0.5s ease-out;
+            position: relative; z-index: 1;
+        }
+        .victory-content h1 {
+            font-size: 48px; font-weight: 900;
+            background: linear-gradient(135deg, #fbbf24, #f97316, #ef4444);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+        .victory-content .victory-subtitle {
+            font-size: 18px; color: #94a3b8; margin-bottom: 24px;
+        }
+        .victory-portraits {
+            display: flex; gap: 12px; justify-content: center;
+            flex-wrap: wrap; margin-bottom: 28px;
+        }
+        .victory-portrait {
+            width: 70px; height: 70px; border-radius: 50%;
+            object-fit: cover; border: 3px solid #34d399;
+            box-shadow: 0 0 12px rgba(52,211,153,0.3);
+        }
+        .victory-content button {
+            padding: 14px 40px; font-size: 17px;
+            background: #f97316; color: #fff; border-radius: 10px;
+            font-weight: 700;
+        }
+        .victory-content button:hover { background: #ea580c; }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed; inset: 0; z-index: 305;
+            pointer-events: none;
+        }
+
+        /* Frozen cell shimmer */
+        @keyframes frozen-shimmer {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0.4; }
+        }
+
+        /* Letter bounce animation for hippo swap */
+        @keyframes letter-bounce {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.4); }
+            60% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
         /* ===== Responsive ===== */
         @media (max-width: 920px) {
             #game-area { flex-direction: column; align-items: center; }
@@ -591,7 +1040,7 @@
             .score-value { font-size: 14px; }
             #turns-left { font-size: 10px; }
             #turn-indicator { font-size: 15px; }
-            #word-display { font-size: 15px; }
+            #word-display { font-size: 22px; }
             #controls { gap: 6px; }
             button { padding: 7px 14px; font-size: 13px; }
             .menu-title { font-size: 36px; }
@@ -611,6 +1060,14 @@
             .online-section { min-width: 220px; padding: 20px 18px; }
             .lobby-code { font-size: 40px; letter-spacing: 8px; }
             #online-indicator { font-size: 11px; padding: 6px 10px; }
+            .quest-enemy-card { width: min(80vw, 360px); }
+            .quest-connector { height: 50px; }
+            .quest-enemy-card .qec-name { font-size: clamp(13px, 3.5vw, 18px); }
+            .quest-enemy-card .qec-power { font-size: 10px; }
+            #quest-indicator { max-width: 160px; font-size: 11px; }
+            #quest-indicator .qi-img { width: 30px; height: 30px; }
+            .victory-portrait { width: 55px; height: 55px; }
+            .victory-content h1 { font-size: 36px; }
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -642,6 +1099,17 @@
                 <div class="menu-card-title">Online</div>
                 <div class="menu-card-desc">Play against a friend over the internet</div>
             </div>
+            <div class="menu-card quest" onclick="showQuestScreen()">
+                <div class="menu-card-icon">&#127965;</div>
+                <div class="menu-card-title">Quest</div>
+                <div class="menu-card-desc">Battle 6 unique enemies in a campaign</div>
+            </div>
+        </div>
+        <!-- Temporary test dropdown -->
+        <div style="text-align:center; margin-top:18px;">
+            <select id="quest-test-select" style="padding:8px 16px; font-size:16px; border-radius:8px; border:2px solid #f97316; background:#1a1a2e; color:#fff; cursor:pointer;">
+                <option value="" disabled selected>-- Test Quest Battle --</option>
+            </select>
         </div>
         <button class="menu-options-btn" onclick="openOptions()">Options</button>
         <div class="menu-decorations">
@@ -737,6 +1205,55 @@
         </div>
     </div>
 
+    <!-- Quest Screen -->
+    <div id="quest-screen" class="hidden">
+        <div id="quest-flash"></div>
+        <div id="quest-chain"></div>
+        <div class="quest-bottom-bar">
+            <button class="quest-back-btn" onclick="hideQuestScreen()">Back to Menu</button>
+            <button class="quest-reset-btn" onclick="resetQuestProgress()">Reset Progress</button>
+        </div>
+    </div>
+
+    <!-- Shakeup Overlay -->
+    <div id="shakeup-overlay">
+        <div class="shakeup-content">
+            <img id="shakeup-img" src="" alt="">
+            <h2>Board Shakeup!</h2>
+            <p>Letters scrambled!</p>
+        </div>
+    </div>
+
+    <!-- Spell Overlay -->
+    <div id="spell-overlay">
+        <div class="spell-content">
+            <img id="spell-img" src="" alt="">
+            <h2 id="spell-name"></h2>
+            <p id="spell-desc"></p>
+            <div class="spell-effect" id="spell-effect"></div>
+        </div>
+    </div>
+
+    <!-- Victory Screen -->
+    <div id="victory-screen">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="victory-content">
+            <h1>Quest Complete!</h1>
+            <div class="victory-subtitle">You defeated all 6 enemies!</div>
+            <div class="victory-portraits" id="victory-portraits"></div>
+            <button onclick="hideVictoryScreen()">Return to Menu</button>
+        </div>
+    </div>
+
+    <!-- Quest Indicator (during gameplay) -->
+    <div id="quest-indicator">
+        <div class="qi-header">
+            <img class="qi-img" id="qi-img" src="" alt="">
+            <span class="qi-name" id="qi-name"></span>
+        </div>
+        <div class="qi-power" id="qi-power"></div>
+    </div>
+
     <!-- Online Indicator -->
     <div id="online-indicator">
         <div class="online-role" id="online-role-text"></div>
@@ -792,7 +1309,28 @@
             <h1 id="winner-title">Game Over!</h1>
             <p id="final-scores"></p>
             <p id="winner-subtitle"></p>
-            <button onclick="newGame()">New Game</button>
+            <button id="btn-game-over" onclick="newGame()">New Game</button>
+        </div>
+    </div>
+
+    <div id="pass-confirm">
+        <div class="pass-confirm-content">
+            <p>Pass your turn?</p>
+            <div class="pass-confirm-buttons">
+                <button class="pass-yes" onclick="confirmPass()">Yes</button>
+                <button class="pass-no" onclick="cancelPass()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Duck taunt dialog -->
+    <div id="duck-taunt">
+        <div class="pass-confirm-content" style="max-width:320px;">
+            <img id="duck-taunt-img" src="Images for Quest Mode/Dastardly Duck.jpg" alt="Dastardly Duck" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #a78bfa;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm so dastardly, I took some of the territory already. hahaha! <em>*Quack*</em></p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissDuckTaunt()" style="background:#a78bfa;">Bring it on!</button>
+            </div>
         </div>
     </div>
 
@@ -815,7 +1353,7 @@
         let CW = GRID_PX + PAD * 2;
         let CH = CW;
         let TURNS_EACH = 8;
-        const MAX_RANGE = 4;
+        let MAX_RANGE = 4;
         const FLASH_MS = 400;
 
         const TEAM = { NONE: 0, BLUE: 1, RED: 2, NEUTRAL: 3 };
@@ -826,6 +1364,39 @@
         };
         const STR_ALPHA = [0, 30, 58, 98, 153, 208];
         const NEUTRAL_ALPHA = 40;
+
+        /* ===== Quest Mode Config ===== */
+        const QUEST_ENEMIES = [
+            { id: 'hippo', name: 'Hip Hop Hippo', img: 'Images for Quest Mode/Hip Hop Hippo.jpeg', difficulty: 'easy', power: 'swap', desc: 'Swaps 2 random letters each turn', boardSize: 9, turns: 5 },
+            { id: 'duck', name: 'Dastardly Duck', img: 'Images for Quest Mode/Dastardly Duck.jpg', difficulty: 'easy', power: 'headstart', desc: 'Starts with 20% of the board already claimed' },
+            { id: 'raccoon', name: 'Rowdy Raccoon', img: 'Images for Quest Mode/Rowdy Raccoon.jpg', difficulty: 'medium', power: 'shakeup', desc: 'Scrambles the board every 3 turns' },
+            { id: 'squirrel', name: 'Stretchy Squirrel', img: 'Images for Quest Mode/Stretchy Squirrel.jpg', difficulty: 'medium', power: 'range', desc: 'Has extended letter range' },
+            { id: 'penguin', name: 'Professor Penguin', img: 'Images for Quest Mode/Professor Penguin.jpg', difficulty: 'expert', power: 'science', desc: 'Gets bonus strength for science words' },
+            { id: 'walrus', name: 'Wizardly Walrus', img: 'Images for Quest Mode/Wizardly Walrus.jpg', difficulty: 'expert', power: 'spells', desc: 'Casts 3 powerful spells during battle' }
+        ];
+
+        const WALRUS_SPELLS = [
+            { id: 'steal', name: 'Territory Steal', desc: 'Steals 5% of your territory', turn: 3 },
+            { id: 'freeze', name: 'Freeze', desc: 'Freezes 5 random cells for 2 turns', turn: 5 },
+            { id: 'double', name: 'Double Strength', desc: 'Next word has double strength', turn: 7 }
+        ];
+
+        const SCIENCE_WORDS = new Set([
+            'ATOM','CELL','GENE','ION','LAB','DNA','RNA','MASS','BOND',
+            'ACID','BASE','VOLT','WATT','LENS','FLUX','SPIN','WAVE',
+            'STAR','MOON','MARS','NOVA','CORE','FUSE','HEAT','MELT',
+            'TEST','DATA','DOSE','CURE','VEIN','BONE','LUNG','SKIN',
+            'FORCE','LIGHT','SOUND','POWER','ENERGY','FIELD','SOLID',
+            'FLUID','STEAM','SOLAR','LASER','ORBIT','SPACE','EARTH',
+            'BRAIN','HEART','NERVE','PLANT','FUNGI','VIRUS','BLOOD',
+            'STEEL','METAL','OXIDE','REACT','PHASE','SCALE','SPEED',
+            'MICRO','MACRO','GRAPH','METER','CYCLE','DECAY','PROBE',
+            'THETA','SIGMA','GAMMA','DELTA','ALPHA','OMEGA','PRISM',
+            'QUARK','BOSON','CHARM','GLUON','MESON','HADRON','LEPTON',
+            'PHOTON','PROTON','NEURON','PLASMA','CARBON','OXYGEN',
+            'HELIUM','RADIUS','MAGNET','TENSOR','MATRIX','VECTOR'
+        ]);
+
         const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
         const API_URL_FALLBACK = 'https://api.datamuse.com/words?sp=';
         let TOTAL_PIXELS = GRID_PX * GRID_PX;
@@ -1067,6 +1638,16 @@
         let onlineGameCode = '';
         let onlineListeners = [];
         let onlineMoveCount = 0;
+
+        // Quest mode state
+        let questMode = false;
+        let questEnemyIndex = 0;
+        let questProgress = JSON.parse(localStorage.getItem('questProgress') || '[]');
+        let questTurnCount = 0;
+        let questFrozenCells = [];    // [{r,c,turnsLeft}]
+        let questWalrusSpellsUsed = 0;
+        let questWalrusDoubleNext = false;
+        let shakeupAnim = null; // {moves: [{letter, fromX, fromY, toX, toY}], startTime, duration}
 
         /* ===== Canvas refs ===== */
         let cvs, ctx;
@@ -1768,10 +2349,21 @@
             document.getElementById('tutorial-overlay').classList.remove('visible');
             document.getElementById('turns-left').innerHTML =
                 '<span class="turns-blue">Blue: ' + turnsLeft.blue + '</span> | <span class="turns-red">Red: ' + turnsLeft.red + '</span>';
+            // Reset quest-specific state
+            questTurnCount = 0;
+            questFrozenCells = [];
+            questWalrusSpellsUsed = 0;
+            questWalrusDoubleNext = false;
         }
 
         function newGame() {
             if (onlineMode) cleanupOnlineGame();
+            // Reset quest state
+            if (questMode) {
+                MAX_RANGE = 4;
+                questMode = false;
+                document.getElementById('quest-indicator').style.display = 'none';
+            }
             resetState();
             document.getElementById('game-over').classList.remove('visible');
             // Return to menu
@@ -1867,6 +2459,8 @@
                 cvs.style.cursor = 'default';
             } else if (grid[cell.r][cell.c] === '') {
                 cvs.style.cursor = 'default';
+            } else if (questMode && questFrozenCells.some(f => f.r === cell.r && f.c === cell.c)) {
+                cvs.style.cursor = 'not-allowed';
             } else if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
                 cvs.style.cursor = 'default';
             } else if (!inRange(cell.r, cell.c)) {
@@ -1940,6 +2534,12 @@
             if (grid[cell.r][cell.c] === '') return;
             if (!inRange(cell.r, cell.c)) return;
 
+            // Quest: frozen cells cannot be selected
+            if (questMode && questFrozenCells.some(f => f.r === cell.r && f.c === cell.c)) {
+                msg('That cell is frozen!');
+                return;
+            }
+
             if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
                 msg('Already selected!');
                 return;
@@ -1979,11 +2579,24 @@
             if (gameOver || submitting || aiThinking) return;
             if (tutorialActive) return;
             if (onlineMode && !isMyTurn()) return;
+            showPassConfirm();
+        }
+
+        function showPassConfirm() {
+            document.getElementById('pass-confirm').classList.add('visible');
+        }
+
+        function confirmPass() {
+            document.getElementById('pass-confirm').classList.remove('visible');
             hideAcceptBtn();
             addHistory(player, null, 0, 0);
             if (onlineMode) broadcastMove(null, null, 0, 'pass');
             advanceTurn();
             msg('Turn passed.');
+        }
+
+        function cancelPass() {
+            document.getElementById('pass-confirm').classList.remove('visible');
         }
 
         async function validateWord(word) {
@@ -2122,6 +2735,17 @@
             turnsLeft[player]--;
             sel = [];
             player = player === 'blue' ? 'red' : 'blue';
+
+            // Quest: increment turn count and manage frozen cells
+            if (questMode) {
+                questTurnCount++;
+                for (let i = questFrozenCells.length - 1; i >= 0; i--) {
+                    questFrozenCells[i].turnsLeft--;
+                    if (questFrozenCells[i].turnsLeft <= 0) {
+                        questFrozenCells.splice(i, 1);
+                    }
+                }
+            }
 
             // Turn pulse animation
             const ti = document.getElementById('turn-indicator');
@@ -2400,10 +3024,10 @@
             displayedScoreBlue = Math.round(scoreAnimStartBlue + (scoreAnimTargetBlue - scoreAnimStartBlue) * eased);
             displayedScoreRed = Math.round(scoreAnimStartRed + (scoreAnimTargetRed - scoreAnimStartRed) * eased);
 
-            document.getElementById('blue-score-value').textContent =
-                (gameMode === 'pvc' ? 'CPU: ' : 'Blue: ') + formatScorePercent(displayedScoreBlue);
-            document.getElementById('red-score-value').textContent =
-                (gameMode === 'pvc' ? 'You: ' : 'Red: ') + formatScorePercent(displayedScoreRed);
+            const blueLabel = questMode ? QUEST_ENEMIES[questEnemyIndex].name.split(' ').pop() + ': ' : (gameMode === 'pvc' ? 'CPU: ' : 'Blue: ');
+            const redLabel = (questMode || gameMode === 'pvc') ? 'You: ' : 'Red: ';
+            document.getElementById('blue-score-value').textContent = blueLabel + formatScorePercent(displayedScoreBlue);
+            document.getElementById('red-score-value').textContent = redLabel + formatScorePercent(displayedScoreRed);
 
             if (t < 1) {
                 requestAnimationFrame(animateScoreCounters);
@@ -2445,7 +3069,7 @@
             for (let i = 0; i < history.length; i++) {
                 const h = history[i];
                 const dotClass = h.player === 'blue' ? 'blue' : 'red';
-                const label = (gameMode === 'pvc' && h.player === 'blue') ? 'CPU' : '';
+                const label = (questMode && h.player === 'blue') ? QUEST_ENEMIES[questEnemyIndex].name.split(' ').pop() : ((gameMode === 'pvc' && h.player === 'blue') ? 'CPU' : '');
                 html += '<div class="history-entry">';
                 html += '<span class="history-dot ' + dotClass + '"></span>';
 
@@ -2470,6 +3094,7 @@
         function aiFindWords() {
             const found = [];
             const visited = Array.from({length: GRID}, () => new Array(GRID).fill(false));
+            const aiRange = (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'range') ? MAX_RANGE + 1 : MAX_RANGE;
 
             function dfs(path, word) {
                 if (word.length >= 3 && AI_WORD_SET.has(word)) {
@@ -2482,8 +3107,8 @@
                     for (let c = 0; c < GRID; c++) {
                         if (visited[r][c]) continue;
                         if (grid[r][c] === '') continue;
-                        // Manhattan distance check
-                        if ((Math.abs(r - last.r) + Math.abs(c - last.c)) > MAX_RANGE) continue;
+                        // Manhattan distance check (quest: squirrel gets extended range)
+                        if ((Math.abs(r - last.r) + Math.abs(c - last.c)) > aiRange) continue;
 
                         const nextWord = word + grid[r][c];
                         if (!AI_PREFIX_SET.has(nextWord)) continue;
@@ -2622,6 +3247,11 @@
             setButtonsDisabled(true);
             render();
 
+            // Quest: apply pre-AI powers
+            if (questMode) {
+                await applyQuestPower('beforeAI');
+            }
+
             // Brief delay for natural feel
             await new Promise(r => setTimeout(r, 800 + Math.random() * 700));
 
@@ -2635,7 +3265,13 @@
                 setButtonsDisabled(false);
                 addHistory('blue', null, 0, 0);
                 msg('Computer passed.');
+
                 advanceTurn();
+
+                // Quest: apply post-AI powers even on pass (only if game hasn't ended)
+                if (questMode && !gameOver) {
+                    await applyQuestPower('afterAI');
+                }
                 return;
             }
 
@@ -2659,10 +3295,29 @@
                 strength = Math.min(5, strength + 1);
             }
 
+            // Quest: Professor Penguin science bonus
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'science') {
+                if (SCIENCE_WORDS.has(word)) {
+                    strength = Math.min(5, strength + 1);
+                    msg('Professor played a science word! Bonus strength!');
+                }
+            }
+
+            // Quest: Walrus double strength
+            if (questMode && questWalrusDoubleNext) {
+                strength = Math.min(5, strength * 2);
+                questWalrusDoubleNext = false;
+            }
+
             // AI words come from curated list — skip API validation
             aiThinking = false;
             setButtonsDisabled(false);
             finalizeWord(word, strength);
+
+            // Quest: apply post-AI powers (only if game hasn't ended)
+            if (questMode && !gameOver) {
+                await applyQuestPower('afterAI');
+            }
         }
 
         /* ===== Tutorial System ===== */
@@ -2729,6 +3384,69 @@
             const title = document.getElementById('winner-title');
             const scoresEl = document.getElementById('final-scores');
             const subtitle = document.getElementById('winner-subtitle');
+
+            if (questMode) {
+                const enemy = QUEST_ENEMIES[questEnemyIndex];
+                scoresEl.innerHTML =
+                    '<span style="color:#60a5fa">' + enemy.name + ': ' + formatScorePercent(scores.blue) + '</span>' +
+                    '  \u2014  ' +
+                    '<span style="color:#f87171">You: ' + formatScorePercent(scores.red) + '</span>';
+
+                if (scores.red > scores.blue) {
+                    // Player wins
+                    title.textContent = 'Victory!';
+                    title.style.color = '#34d399';
+                    subtitle.textContent = 'You defeated ' + enemy.name + '!';
+
+                    // Save progress
+                    if (!questProgress.includes(questEnemyIndex)) {
+                        questProgress.push(questEnemyIndex);
+                        localStorage.setItem('questProgress', JSON.stringify(questProgress));
+                    }
+
+                    // Check if all 6 defeated
+                    if (questProgress.length >= QUEST_ENEMIES.length) {
+                        // Delay then show victory screen
+                        setTimeout(() => {
+                            overlay.classList.remove('visible');
+                            showVictoryScreen();
+                        }, 2000);
+                    }
+                } else if (scores.blue > scores.red) {
+                    title.textContent = 'Defeat!';
+                    title.style.color = '#f87171';
+                    subtitle.textContent = enemy.name + ' wins by ' + formatScorePercent(scores.blue - scores.red) + ' territory';
+                } else {
+                    title.textContent = 'Draw!';
+                    title.style.color = '#e2e8f0';
+                    subtitle.textContent = 'A tie against ' + enemy.name;
+                }
+
+                // Replace button with quest-specific behavior
+                const goBtn = document.getElementById('btn-game-over');
+                goBtn.textContent = 'Continue Quest';
+                const playerWon = scores.red > scores.blue;
+                goBtn.onclick = function() {
+                    document.getElementById('game-over').classList.remove('visible');
+                    // Restore button for future use
+                    goBtn.textContent = 'New Game';
+                    goBtn.onclick = function() { newGame(); };
+                    MAX_RANGE = 4;
+                    questMode = false;
+                    document.getElementById('quest-indicator').style.display = 'none';
+                    resetState();
+                    genGrid();
+                    renderHistory();
+                    updateUI();
+                    render();
+                    document.getElementById('menu-screen').classList.remove('hidden');
+                    showQuestScreen(playerWon);
+                };
+
+                updateCanvasGlow();
+                overlay.classList.add('visible');
+                return;
+            }
 
             if (onlineMode) {
                 const myColor = onlineRole === 'host' ? 'blue' : 'red';
@@ -2827,7 +3545,23 @@
                 }
             }
 
-            // 3c. Tutorial highlights
+            // 3c. Frozen cell overlays (quest mode)
+            if (questMode && questFrozenCells.length > 0) {
+                const now = performance.now();
+                const shimmer = 0.4 + 0.3 * Math.sin(now / 300);
+                for (const fc of questFrozenCells) {
+                    ctx.fillStyle = 'rgba(147,197,253,' + shimmer.toFixed(2) + ')';
+                    ctx.fillRect(PAD + fc.c * CELL, PAD + fc.r * CELL, CELL, CELL);
+                    // Ice crystal indicator
+                    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                    ctx.font = '16px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('\u2744', PAD + fc.c * CELL + CELL/2, PAD + fc.r * CELL + CELL/2 - 12);
+                }
+            }
+
+            // 3d. Tutorial highlights
             if (tutorialActive && tutorialStep < TUTORIAL_STEPS.length) {
                 const step = TUTORIAL_STEPS[tutorialStep];
                 const highlights = step.highlights || [];
@@ -2921,23 +3655,38 @@
             // 6. Letters
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            for (let r = 0; r < GRID; r++) {
-                for (let c = 0; c < GRID; c++) {
-                    if (grid[r][c] === '') continue;
-                    const p = cellCenter(r, c);
-                    const isSel = sel.some(s => s.r === r && s.c === c);
-                    const oor = hasSelection && !isSel && !inRange(r, c);
-                    ctx.font = isSel
-                        ? 'bold 24px "Courier New", monospace'
-                        : 'bold 22px "Courier New", monospace';
-                    if (isSel) {
-                        ctx.fillStyle = player === 'blue' ? '#1d4ed8' : '#b91c1c';
-                    } else if (oor) {
-                        ctx.fillStyle = '#64748b';
-                    } else {
-                        ctx.fillStyle = '#334155';
+            if (shakeupAnim) {
+                // During shakeup animation: draw letters at interpolated positions
+                const elapsed = performance.now() - shakeupAnim.startTime;
+                const t = Math.min(elapsed / shakeupAnim.duration, 1);
+                // Smooth ease-in-out
+                const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                ctx.font = 'bold 22px "Courier New", monospace';
+                ctx.fillStyle = '#334155';
+                for (const m of shakeupAnim.moves) {
+                    const x = m.fromX + (m.toX - m.fromX) * eased;
+                    const y = m.fromY + (m.toY - m.fromY) * eased;
+                    ctx.fillText(m.letter, x, y);
+                }
+            } else {
+                for (let r = 0; r < GRID; r++) {
+                    for (let c = 0; c < GRID; c++) {
+                        if (grid[r][c] === '') continue;
+                        const p = cellCenter(r, c);
+                        const isSel = sel.some(s => s.r === r && s.c === c);
+                        const oor = hasSelection && !isSel && !inRange(r, c);
+                        ctx.font = isSel
+                            ? 'bold 24px "Courier New", monospace'
+                            : 'bold 22px "Courier New", monospace';
+                        if (isSel) {
+                            ctx.fillStyle = player === 'blue' ? '#1d4ed8' : '#b91c1c';
+                        } else if (oor) {
+                            ctx.fillStyle = '#64748b';
+                        } else {
+                            ctx.fillStyle = '#334155';
+                        }
+                        ctx.fillText(grid[r][c], p.x, p.y);
                     }
-                    ctx.fillText(grid[r][c], p.x, p.y);
                 }
             }
 
@@ -2974,6 +3723,15 @@
                     ti.textContent = "Opponent's Turn";
                     ti.style.color = onlineRole === 'host' ? '#f87171' : '#60a5fa';
                 }
+            } else if (questMode) {
+                const enemy = QUEST_ENEMIES[questEnemyIndex];
+                if (player === 'blue') {
+                    ti.textContent = enemy.name + "'s Turn";
+                    ti.style.color = '#60a5fa';
+                } else {
+                    ti.textContent = "Your Turn";
+                    ti.style.color = '#f87171';
+                }
             } else if (gameMode === 'pvc') {
                 if (player === 'blue') {
                     ti.textContent = aiThinking ? "Computer's Turn" : "Computer's Turn";
@@ -3004,6 +3762,9 @@
                     : '';
                 wd.textContent = letters + str;
                 wd.style.color = player === 'blue' ? '#60a5fa' : '#f87171';
+                wd.classList.remove('word-pop');
+                void wd.offsetWidth;
+                wd.classList.add('word-pop');
             }
         }
 
@@ -3015,12 +3776,562 @@
             msgTimer = setTimeout(() => { el.style.opacity = '0'; }, 3000);
         }
 
+        /* ===== Quest Mode Functions ===== */
+        let questScrollAnimating = false;
+
+        function showQuestScreen(animateFromDefeat) {
+            const screen = document.getElementById('quest-screen');
+            screen.classList.remove('hidden');
+            renderQuestEnemies();
+
+            if (animateFromDefeat) {
+                // Wait for renderQuestEnemies' requestAnimationFrame to position chain first
+                requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    const chain = document.getElementById('quest-chain');
+                    const targetBottom = chain.style.bottom;
+                    // Start one node lower (previous enemy was centered)
+                    const nodeHeight = getQuestNodeHeight();
+                    chain.style.transition = 'none';
+                    chain.style.bottom = (parseInt(targetBottom) - nodeHeight) + 'px';
+                    // Force reflow
+                    void chain.offsetHeight;
+                    // Flash effect
+                    const flash = document.getElementById('quest-flash');
+                    flash.classList.remove('flash-active');
+                    void flash.offsetHeight;
+                    flash.classList.add('flash-active');
+                    // Spawn sparkles
+                    spawnQuestSparkles();
+                    // Animate to correct position
+                    chain.style.transition = 'bottom 1.2s cubic-bezier(0.22, 1, 0.36, 1)';
+                    requestAnimationFrame(() => {
+                        chain.style.bottom = targetBottom;
+                    });
+                    setTimeout(() => flash.classList.remove('flash-active'), 1300);
+                });
+                });
+            }
+        }
+
+        function hideQuestScreen() {
+            document.getElementById('quest-screen').classList.add('hidden');
+        }
+
+        function getQuestNodeHeight() {
+            // Approximate height of one card + connector
+            const card = document.querySelector('.quest-enemy-card');
+            if (card) {
+                return card.offsetHeight + 80; // card height + connector
+            }
+            return 320; // fallback
+        }
+
+        function spawnQuestSparkles() {
+            const screen = document.getElementById('quest-screen');
+            const colors = ['#f97316', '#fbbf24', '#fb923c', '#facc15', '#34d399', '#a78bfa'];
+            for (let i = 0; i < 30; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'quest-sparkle';
+                const size = 3 + Math.random() * 6;
+                spark.style.width = size + 'px';
+                spark.style.height = size + 'px';
+                spark.style.left = (20 + Math.random() * 60) + '%';
+                spark.style.top = (30 + Math.random() * 40) + '%';
+                spark.style.background = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.animationDuration = (0.6 + Math.random() * 0.8) + 's';
+                screen.appendChild(spark);
+                setTimeout(() => spark.remove(), 1500);
+            }
+        }
+
+        function renderQuestEnemies() {
+            const chain = document.getElementById('quest-chain');
+
+            // Determine the current enemy index (first non-defeated)
+            let currentIdx = 0;
+            for (let i = 0; i < QUEST_ENEMIES.length; i++) {
+                if (!questProgress.includes(i)) { currentIdx = i; break; }
+                if (i === QUEST_ENEMIES.length - 1) currentIdx = QUEST_ENEMIES.length; // all defeated
+            }
+
+            // Build chain HTML: enemies listed bottom-to-top (index 0 at bottom, 5 at top)
+            // But in DOM order, top-to-bottom, so index 5 first
+            let html = '';
+            for (let i = QUEST_ENEMIES.length - 1; i >= 0; i--) {
+                const enemy = QUEST_ENEMIES[i];
+                const defeated = questProgress.includes(i);
+                const available = !defeated && (i === 0 || questProgress.includes(i - 1));
+                const locked = !defeated && !available;
+                const statusClass = locked ? 'locked' : (defeated ? 'defeated' : 'available');
+
+                // Connector line above (between this node and the one above it in DOM = next index)
+                // No connector above the topmost node
+                if (i < QUEST_ENEMIES.length - 1) {
+                    const lineClass = defeated ? 'defeated-line' : '';
+                    html += '<div class="quest-connector ' + lineClass + '"></div>';
+                }
+
+                html += '<div class="quest-node">';
+                html += '<div class="quest-enemy-card ' + statusClass + '" data-enemy="' + enemy.id + '">';
+                html += '<div class="qec-img-wrap"><img src="' + enemy.img + '" alt="' + enemy.name + '"></div>';
+                html += '<div class="qec-info">';
+                html += '<div class="qec-name">' + enemy.name + '</div>';
+                html += '<div class="qec-diff ' + enemy.difficulty + '">' + enemy.difficulty + '</div>';
+                html += '<div class="qec-power">' + enemy.desc + '</div>';
+
+                if (defeated) {
+                    html += '<span class="quest-status-badge defeated-badge">\u2714 Defeated</span>';
+                } else if (available) {
+                    html += '<button class="quest-battle-btn" onclick="startQuestBattle(' + i + ')">Battle!</button>';
+                } else {
+                    html += '<span class="quest-status-badge locked-badge">\uD83D\uDD12 Locked</span>';
+                }
+
+                html += '</div></div></div>';
+            }
+
+            chain.innerHTML = html;
+
+            // Position chain so the current enemy card is centered vertically on screen.
+            // Chain is laid out top-to-bottom: [enemy5, conn, enemy4, conn, ..., enemy0]
+            // We need to find the offset of the current enemy's card within the chain
+            // and set `bottom` so that card is centered.
+            requestAnimationFrame(() => {
+                positionQuestChain(currentIdx);
+            });
+        }
+
+        function positionQuestChain(currentIdx) {
+            const chain = document.getElementById('quest-chain');
+            const screen = document.getElementById('quest-screen');
+            const screenH = screen.offsetHeight;
+            const chainH = chain.offsetHeight;
+
+            // The current enemy in DOM is at reverse index: QUEST_ENEMIES.length - 1 - currentIdx
+            // Find the actual card element
+            const cards = chain.querySelectorAll('.quest-enemy-card');
+            // Cards are in DOM order: index 5, 4, 3, 2, 1, 0
+            // So currentIdx maps to cards[QUEST_ENEMIES.length - 1 - currentIdx]
+            const domIdx = QUEST_ENEMIES.length - 1 - Math.min(currentIdx, QUEST_ENEMIES.length - 1);
+            const card = cards[domIdx];
+
+            if (!card) {
+                chain.style.bottom = '80px';
+                return;
+            }
+
+            // card's offset from top of chain
+            const cardTop = card.offsetTop;
+            const cardH = card.offsetHeight;
+            const cardCenter = cardTop + cardH / 2;
+
+            // We want cardCenter to be at screenH / 2
+            // chain is positioned with `bottom`, so:
+            // bottom of chain = screenH - (chain.offsetTop + chainH)
+            // We want: chain top + cardCenter = screenH/2
+            // chain top = screenH/2 - cardCenter
+            // bottom = screenH - (chain top + chainH) = screenH - (screenH/2 - cardCenter + chainH)
+            // bottom = screenH/2 + cardCenter - chainH
+            const bottomVal = (screenH / 2) + cardCenter - chainH;
+
+            chain.style.bottom = bottomVal + 'px';
+        }
+
+        function resetQuestProgress() {
+            if (!confirm('Reset all quest progress? This cannot be undone.')) return;
+            questProgress = [];
+            localStorage.setItem('questProgress', '[]');
+            renderQuestEnemies();
+        }
+
+        function startQuestBattle(enemyIndex) {
+            questMode = true;
+            questEnemyIndex = enemyIndex;
+            questTurnCount = 0;
+            questFrozenCells = [];
+            questWalrusSpellsUsed = 0;
+            questWalrusDoubleNext = false;
+
+            const enemy = QUEST_ENEMIES[enemyIndex];
+            gameMode = 'pvc';
+            aiDifficulty = enemy.difficulty;
+
+            // Per-enemy board size and turns, defaulting to 11x11 / 8 turns
+            recalculateGridSize(enemy.boardSize || 11);
+            resizeCanvases();
+            TURNS_EACH = enemy.turns || 8;
+            timerEnabled = false;
+            timerDuration = 0;
+
+            // Squirrel: extended range for AI (handled in aiFindWords)
+            MAX_RANGE = 4;
+
+            resetState();
+            genGrid();
+            buildValidWordSet();
+            buildAIWordSets();
+
+            // Hide screens, show game
+            document.getElementById('quest-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.add('hidden');
+
+            // Show quest indicator
+            const qi = document.getElementById('quest-indicator');
+            document.getElementById('qi-img').src = enemy.img;
+            document.getElementById('qi-name').textContent = enemy.name;
+            document.getElementById('qi-power').textContent = enemy.desc;
+            qi.style.display = 'block';
+
+            renderHistory();
+            updateUI();
+            render();
+            updateCanvasGlow();
+
+            // Duck headstart: apply 20% territory and show taunt before AI goes
+            if (enemy.power === 'headstart') {
+                applyDuckHeadstart();
+                rebuildTerritoryVisual();
+                render();
+                document.getElementById('duck-taunt').classList.add('visible');
+                // AI turn starts after player dismisses the taunt
+            } else {
+                // AI goes first
+                setTimeout(() => aiTakeTurn(), 600);
+            }
+        }
+
+        function applyDuckHeadstart() {
+            // Fill 20% of the board with a contiguous blob of Blue territory
+            const totalPixels = GRID_PX * GRID_PX;
+            const targetCount = Math.floor(totalPixels * 0.20);
+
+            // Pick a random seed point (away from edges for a nice blob)
+            const margin = Math.floor(GRID_PX * 0.2);
+            let seedX = margin + Math.floor(Math.random() * (GRID_PX - margin * 2));
+            let seedY = margin + Math.floor(Math.random() * (GRID_PX - margin * 2));
+            const seedIdx = seedY * GRID_PX + seedX;
+
+            // BFS flood fill from the seed to create a contiguous mass
+            const filled = new Uint8Array(totalPixels);
+            const queue = [seedIdx];
+            filled[seedIdx] = 1;
+            let filledCount = 0;
+
+            while (queue.length > 0 && filledCount < targetCount) {
+                // Pick a random element from the queue for organic shape
+                const qIdx = Math.floor(Math.random() * queue.length);
+                const pxIdx = queue[qIdx];
+                queue[qIdx] = queue[queue.length - 1];
+                queue.pop();
+
+                tOwner[pxIdx] = TEAM.BLUE;
+                tStrength[pxIdx] = 2;
+                filledCount++;
+
+                // Add neighbors (4-directional)
+                const x = pxIdx % GRID_PX;
+                const y = Math.floor(pxIdx / GRID_PX);
+                const neighbors = [
+                    y > 0 ? pxIdx - GRID_PX : -1,
+                    y < GRID_PX - 1 ? pxIdx + GRID_PX : -1,
+                    x > 0 ? pxIdx - 1 : -1,
+                    x < GRID_PX - 1 ? pxIdx + 1 : -1
+                ];
+                for (const n of neighbors) {
+                    if (n >= 0 && n < totalPixels && !filled[n]) {
+                        filled[n] = 1;
+                        queue.push(n);
+                    }
+                }
+            }
+        }
+
+        function dismissDuckTaunt() {
+            document.getElementById('duck-taunt').classList.remove('visible');
+            // Now start the AI's first turn
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function resetQuestProgress() {
+            if (!confirm('Reset all quest progress? This cannot be undone.')) return;
+            questProgress = [];
+            localStorage.setItem('questProgress', '[]');
+            renderQuestEnemies();
+        }
+
+        /* Quest power application */
+        async function applyQuestPower(timing) {
+            if (!questMode) return;
+            const enemy = QUEST_ENEMIES[questEnemyIndex];
+
+            if (enemy.power === 'swap' && timing === 'beforeAI') {
+                // Hip Hop Hippo: swap 2 random letters
+                const cells = [];
+                for (let r = 0; r < GRID; r++) {
+                    for (let c = 0; c < GRID; c++) {
+                        if (grid[r][c] !== '' && !questFrozenCells.some(f => f.r === r && f.c === c)) {
+                            cells.push({r, c});
+                        }
+                    }
+                }
+                if (cells.length >= 2) {
+                    const i1 = Math.floor(Math.random() * cells.length);
+                    let i2 = Math.floor(Math.random() * (cells.length - 1));
+                    if (i2 >= i1) i2++;
+                    const c1 = cells[i1], c2 = cells[i2];
+                    const tmp = grid[c1.r][c1.c];
+                    grid[c1.r][c1.c] = grid[c2.r][c2.c];
+                    grid[c2.r][c2.c] = tmp;
+                    render();
+                    msg('Hippo swapped letters!');
+                    await new Promise(r => setTimeout(r, 600));
+                }
+            }
+
+            // Duck's power ('headstart') is applied before the game starts, not per-turn
+
+            if (enemy.power === 'shakeup' && timing === 'beforeAI') {
+                // Rowdy Raccoon: scramble every 3 turns with animated letter movement
+                if (questTurnCount > 0 && questTurnCount % 3 === 0) {
+                    // Show overlay briefly
+                    document.getElementById('shakeup-img').src = enemy.img;
+                    document.getElementById('shakeup-overlay').classList.add('visible');
+                    await new Promise(r => setTimeout(r, 1200));
+                    document.getElementById('shakeup-overlay').classList.remove('visible');
+
+                    // Collect existing letters with their source positions
+                    const letters = [];
+                    const sourcePositions = [];
+                    const allPositions = [];
+                    for (let r = 0; r < GRID; r++) {
+                        for (let c = 0; c < GRID; c++) {
+                            allPositions.push({r, c});
+                            if (grid[r][c] !== '') {
+                                letters.push(grid[r][c]);
+                                sourcePositions.push({r, c});
+                            }
+                        }
+                    }
+
+                    // Shuffle all positions, take the first letters.length as destinations
+                    // Remaining positions stay blank (preserving the same blank count)
+                    const shuffledPositions = allPositions.map(p => ({...p}));
+                    for (let i = shuffledPositions.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [shuffledPositions[i], shuffledPositions[j]] = [shuffledPositions[j], shuffledPositions[i]];
+                    }
+                    const destPositions = shuffledPositions.slice(0, letters.length);
+
+                    // Build animation move list
+                    const moves = [];
+                    for (let i = 0; i < letters.length; i++) {
+                        const from = cellCenter(sourcePositions[i].r, sourcePositions[i].c);
+                        const to = cellCenter(destPositions[i].r, destPositions[i].c);
+                        moves.push({
+                            letter: letters[i],
+                            fromX: from.x, fromY: from.y,
+                            toX: to.x, toY: to.y
+                        });
+                    }
+
+                    // Clear grid before animation (letters rendered by animation system)
+                    for (let r = 0; r < GRID; r++) {
+                        for (let c = 0; c < GRID; c++) {
+                            grid[r][c] = '';
+                        }
+                    }
+
+                    // Start animation
+                    const duration = 2500;
+                    shakeupAnim = { moves, startTime: performance.now(), duration };
+
+                    function animateShakeup() {
+                        render();
+                        const elapsed = performance.now() - shakeupAnim.startTime;
+                        if (elapsed < duration) {
+                            requestAnimationFrame(animateShakeup);
+                        } else {
+                            // Animation done — place letters in their final positions
+                            shakeupAnim = null;
+                            for (let i = 0; i < letters.length; i++) {
+                                grid[destPositions[i].r][destPositions[i].c] = letters[i];
+                            }
+                            render();
+                        }
+                    }
+                    requestAnimationFrame(animateShakeup);
+
+                    // Wait for animation to complete
+                    await new Promise(r => setTimeout(r, duration + 100));
+                    msg('Raccoon scrambled the board!');
+                    await new Promise(r => setTimeout(r, 300));
+                }
+            }
+
+            if (enemy.power === 'spells' && timing === 'afterAI') {
+                // Wizardly Walrus: cast spells at turns 3, 5, 7
+                for (const spell of WALRUS_SPELLS) {
+                    if (questTurnCount === spell.turn && questWalrusSpellsUsed < WALRUS_SPELLS.indexOf(spell) + 1) {
+                        questWalrusSpellsUsed = WALRUS_SPELLS.indexOf(spell) + 1;
+
+                        // Show spell overlay
+                        document.getElementById('spell-img').src = enemy.img;
+                        document.getElementById('spell-name').textContent = spell.name;
+                        document.getElementById('spell-desc').textContent = spell.desc;
+                        document.getElementById('spell-effect').textContent = 'Walrus casts ' + spell.name + '!';
+                        document.getElementById('spell-overlay').classList.add('visible');
+
+                        await new Promise(r => setTimeout(r, 2000));
+                        document.getElementById('spell-overlay').classList.remove('visible');
+
+                        if (spell.id === 'steal') {
+                            // Steal 5% of red territory -> blue
+                            const totalPixels = GRID_PX * GRID_PX;
+                            let redPixels = [];
+                            for (let i = 0; i < totalPixels; i++) {
+                                if (tOwner[i] === TEAM.RED) redPixels.push(i);
+                            }
+                            const stealCount = Math.floor(redPixels.length * 0.05);
+                            for (let i = 0; i < stealCount && i < redPixels.length; i++) {
+                                const j = i + Math.floor(Math.random() * (redPixels.length - i));
+                                [redPixels[i], redPixels[j]] = [redPixels[j], redPixels[i]];
+                                tOwner[redPixels[i]] = TEAM.BLUE;
+                                tStrength[redPixels[i]] = 2;
+                            }
+                            rebuildTerritoryVisual();
+                            render();
+                            msg('Walrus stole your territory!');
+                        }
+
+                        if (spell.id === 'freeze') {
+                            // Freeze 5 random cells for 2 turns
+                            const available = [];
+                            for (let r = 0; r < GRID; r++) {
+                                for (let c = 0; c < GRID; c++) {
+                                    if (grid[r][c] !== '' && !questFrozenCells.some(f => f.r === r && f.c === c)) {
+                                        available.push({r, c});
+                                    }
+                                }
+                            }
+                            for (let i = 0; i < 5 && available.length > 0; i++) {
+                                const idx = Math.floor(Math.random() * available.length);
+                                questFrozenCells.push({r: available[idx].r, c: available[idx].c, turnsLeft: 2});
+                                available.splice(idx, 1);
+                            }
+                            render();
+                            msg('Walrus froze some cells!');
+                        }
+
+                        if (spell.id === 'double') {
+                            questWalrusDoubleNext = true;
+                            msg('Walrus will have double strength next turn!');
+                        }
+
+                        await new Promise(r => setTimeout(r, 400));
+                        break;
+                    }
+                }
+            }
+        }
+
+        /* Victory screen */
+        function showVictoryScreen() {
+            const vs = document.getElementById('victory-screen');
+            const portraits = document.getElementById('victory-portraits');
+            let html = '';
+            for (const enemy of QUEST_ENEMIES) {
+                html += '<img class="victory-portrait" src="' + enemy.img + '" alt="' + enemy.name + '">';
+            }
+            portraits.innerHTML = html;
+            vs.classList.add('visible');
+            startConfetti();
+        }
+
+        function hideVictoryScreen() {
+            document.getElementById('victory-screen').classList.remove('visible');
+            stopConfetti();
+            newGame();
+        }
+
+        /* Confetti animation */
+        let confettiAnimId = null;
+        let confettiParticles = [];
+
+        function startConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const ctx2 = canvas.getContext('2d');
+
+            confettiParticles = [];
+            const colors = ['#f97316','#fbbf24','#34d399','#60a5fa','#a78bfa','#f87171','#e879f9'];
+            for (let i = 0; i < 150; i++) {
+                confettiParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    w: 6 + Math.random() * 6,
+                    h: 4 + Math.random() * 4,
+                    vx: (Math.random() - 0.5) * 3,
+                    vy: 1.5 + Math.random() * 3,
+                    rot: Math.random() * 360,
+                    rotSpeed: (Math.random() - 0.5) * 10,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+            }
+
+            function animateConfetti() {
+                ctx2.clearRect(0, 0, canvas.width, canvas.height);
+                for (const p of confettiParticles) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.rot += p.rotSpeed;
+                    if (p.y > canvas.height + 20) {
+                        p.y = -10;
+                        p.x = Math.random() * canvas.width;
+                    }
+                    ctx2.save();
+                    ctx2.translate(p.x, p.y);
+                    ctx2.rotate(p.rot * Math.PI / 180);
+                    ctx2.fillStyle = p.color;
+                    ctx2.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                    ctx2.restore();
+                }
+                confettiAnimId = requestAnimationFrame(animateConfetti);
+            }
+            confettiAnimId = requestAnimationFrame(animateConfetti);
+        }
+
+        function stopConfetti() {
+            if (confettiAnimId) {
+                cancelAnimationFrame(confettiAnimId);
+                confettiAnimId = null;
+            }
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx2 = canvas.getContext('2d');
+            ctx2.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
         /* ===== Start ===== */
         window.addEventListener('DOMContentLoaded', () => {
             initCanvas();
             genGrid();
             updateUI();
             render();
+
+            // Temp: populate quest test dropdown
+            const sel = document.getElementById('quest-test-select');
+            QUEST_ENEMIES.forEach((e, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = e.name;
+                sel.appendChild(opt);
+            });
+            sel.addEventListener('change', () => {
+                const idx = parseInt(sel.value);
+                sel.selectedIndex = 0;
+                startQuestBattle(idx);
+            });
 
             // Load menu pixel art decorations
             const decoMap = {
