@@ -390,12 +390,12 @@
             justify-content: center; align-items: center;
         }
         #pass-confirm.visible { display: flex; }
-        #duck-taunt {
+        #duck-taunt, #goat-taunt, #hippo-taunt, #raccoon-taunt, #squirrel-taunt, #penguin-taunt, #walrus-taunt {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.5); z-index: 100;
             justify-content: center; align-items: center;
         }
-        #duck-taunt.visible { display: flex; }
+        #duck-taunt.visible, #goat-taunt.visible, #hippo-taunt.visible, #raccoon-taunt.visible, #squirrel-taunt.visible, #penguin-taunt.visible, #walrus-taunt.visible { display: flex; }
         .pass-confirm-content {
             background: #1e293b;
             border: 1px solid #334155;
@@ -775,6 +775,10 @@
             line-height: 1.2;
         }
         /* Per-enemy fonts */
+        .quest-enemy-card[data-enemy="goat"] .qec-name {
+            font-family: 'Fredoka', sans-serif;
+            color: #f9a8d4;
+        }
         .quest-enemy-card[data-enemy="hippo"] .qec-name {
             font-family: 'Bungee Shade', cursive;
             color: #facc15;
@@ -1101,14 +1105,14 @@
             </div>
             <div class="menu-card quest" onclick="showQuestScreen()">
                 <div class="menu-card-icon">&#127965;</div>
-                <div class="menu-card-title">Quest</div>
-                <div class="menu-card-desc">Battle 6 unique enemies in a campaign</div>
+                <div class="menu-card-title">Campaign</div>
+                <div class="menu-card-desc" id="quest-card-desc"></div>
             </div>
         </div>
         <!-- Temporary test dropdown -->
         <div style="text-align:center; margin-top:18px;">
             <select id="quest-test-select" style="padding:8px 16px; font-size:16px; border-radius:8px; border:2px solid #f97316; background:#1a1a2e; color:#fff; cursor:pointer;">
-                <option value="" disabled selected>-- Test Quest Battle --</option>
+                <option value="" disabled selected>-- Test Campaign Battle --</option>
             </select>
         </div>
         <button class="menu-options-btn" onclick="openOptions()">Options</button>
@@ -1238,8 +1242,8 @@
     <div id="victory-screen">
         <canvas id="confetti-canvas"></canvas>
         <div class="victory-content">
-            <h1>Quest Complete!</h1>
-            <div class="victory-subtitle">You defeated all 6 enemies!</div>
+            <h1>Campaign Complete!</h1>
+            <div class="victory-subtitle" id="victory-subtitle"></div>
             <div class="victory-portraits" id="victory-portraits"></div>
             <button onclick="hideVictoryScreen()">Return to Menu</button>
         </div>
@@ -1327,9 +1331,69 @@
     <div id="duck-taunt">
         <div class="pass-confirm-content" style="max-width:320px;">
             <img id="duck-taunt-img" src="Images for Quest Mode/Dastardly Duck.jpg" alt="Dastardly Duck" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #a78bfa;margin-bottom:10px;">
-            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm so dastardly, I took some of the territory already. hahaha! <em>*Quack*</em></p>
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Dastardly Duck! I'm so dastardly, I took some of the territory already. hahaha! <em>*Quack*</em></p>
             <div class="pass-confirm-buttons" style="margin-top:14px;">
                 <button class="pass-yes" onclick="dismissDuckTaunt()" style="background:#a78bfa;">Bring it on!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="hippo-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Hip Hop Hippo.jpg" alt="Hip Hop Hippo" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #facc15;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Hip Hop Hippo! I'm so fast with words, I play twice before each of your turns. Can you keep up with my flow?</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissHippoTaunt()" style="background:#facc15;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="walrus-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Wizardly Walrus.jpg" alt="Wizardly Walrus" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #c084fc;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Wizardly Walrus! I have spells powerful enough to make any opponent TREMBLE UNDER MY MIGHY TUSKS!!!</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissWalrusTaunt()" style="background:#c084fc;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="penguin-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Professor Penguin.jpg" alt="Professor Penguin" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #93c5fd;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Professor Penguin! I play long science words because I'm smarter than you.</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissPenguinTaunt()" style="background:#93c5fd;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="squirrel-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Stretchy Squirrel.jpg" alt="Stretchy Squirrel" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #4ade80;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm streeeeeeeeetchy Squirrel! I can reach extra far for my next letter.</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissSquirrelTaunt()" style="background:#4ade80;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="raccoon-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Rowdy Raccoon.jpg" alt="Rowdy Raccoon" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #fb923c;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Rowdy Raccoon! Every once and a while I like to go crazy and throw letters around. I can't help it!</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissRaccoonTaunt()" style="background:#fb923c;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="goat-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Goofy Goat.jpg" alt="Goofy Goat" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #f9a8d4;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Goofy Goat! I don't have any special powers, and I'm not very good. I just like to be goofy</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissGoatTaunt()" style="background:#f9a8d4;color:#1e293b;">Let's go!</button>
             </div>
         </div>
     </div>
@@ -1367,18 +1431,19 @@
 
         /* ===== Quest Mode Config ===== */
         const QUEST_ENEMIES = [
-            { id: 'hippo', name: 'Hip Hop Hippo', img: 'Images for Quest Mode/Hip Hop Hippo.jpeg', difficulty: 'easy', power: 'swap', desc: 'Swaps 2 random letters each turn', boardSize: 9, turns: 5 },
+            { id: 'goat', name: 'Goofy Goat', img: 'Images for Quest Mode/Goofy Goat.jpg', difficulty: 'easy', power: 'none', desc: 'No special power', boardSize: 9, turns: 5 },
+            { id: 'hippo', name: 'Hip Hop Hippo', img: 'Images for Quest Mode/Hip Hop Hippo.jpg', difficulty: 'easy', power: 'doubleturn', desc: 'Plays twice between each of your turns', boardSize: 10, turns: 5, aiTurns: 10 },
             { id: 'duck', name: 'Dastardly Duck', img: 'Images for Quest Mode/Dastardly Duck.jpg', difficulty: 'easy', power: 'headstart', desc: 'Starts with 20% of the board already claimed' },
-            { id: 'raccoon', name: 'Rowdy Raccoon', img: 'Images for Quest Mode/Rowdy Raccoon.jpg', difficulty: 'medium', power: 'shakeup', desc: 'Scrambles the board every 3 turns' },
-            { id: 'squirrel', name: 'Stretchy Squirrel', img: 'Images for Quest Mode/Stretchy Squirrel.jpg', difficulty: 'medium', power: 'range', desc: 'Has extended letter range' },
-            { id: 'penguin', name: 'Professor Penguin', img: 'Images for Quest Mode/Professor Penguin.jpg', difficulty: 'expert', power: 'science', desc: 'Gets bonus strength for science words' },
+            { id: 'raccoon', name: 'Rowdy Raccoon', img: 'Images for Quest Mode/Rowdy Raccoon.jpg', difficulty: 'medium', power: 'shakeup', desc: 'Scrambles the board every 2 turns' },
+            { id: 'squirrel', name: 'Stretchy Squirrel', img: 'Images for Quest Mode/Stretchy Squirrel.jpg', difficulty: 'medium', power: 'range', desc: 'Can stretch up to 7 tiles between letters' },
+            { id: 'penguin', name: 'Professor Penguin', img: 'Images for Quest Mode/Professor Penguin.jpg', difficulty: 'expert', power: 'science', desc: 'Only plays scientific terms (6+ letters)' },
             { id: 'walrus', name: 'Wizardly Walrus', img: 'Images for Quest Mode/Wizardly Walrus.jpg', difficulty: 'expert', power: 'spells', desc: 'Casts 3 powerful spells during battle' }
         ];
 
         const WALRUS_SPELLS = [
-            { id: 'steal', name: 'Territory Steal', desc: 'Steals 5% of your territory', turn: 3 },
+            { id: 'steal', name: 'Territory Steal', desc: 'Steals a chunk of your territory', turn: 3 },
             { id: 'freeze', name: 'Freeze', desc: 'Freezes 5 random cells for 2 turns', turn: 5 },
-            { id: 'double', name: 'Double Strength', desc: 'Next word has double strength', turn: 7 }
+            { id: 'short', name: 'Short Reach', desc: 'Limits your letter range to 2 tiles next turn', turn: 7 }
         ];
 
         const SCIENCE_WORDS = new Set([
@@ -1497,6 +1562,118 @@
             for (const w of AI_WORD_SET) {
                 for (let i = 1; i <= w.length; i++) {
                     AI_PREFIX_SET.add(w.substring(0, i));
+                }
+            }
+        }
+
+        /* ===== Professor Penguin: science-only word set (6+ letter single words) ===== */
+        let PENGUIN_WORD_SET = null;
+        let PENGUIN_PREFIX_SET = null;
+
+        function buildPenguinWordSets() {
+            if (PENGUIN_WORD_SET) return;
+            const allTerms = [
+                'ABASIA','ABDOMEN','ABERRANT','ABERRATION','ABIOGENESIS','ABNORMAL','ABORIGINES',
+                'ABORT','ABSOLUTE','ABSORPTION','ABSTRACT','ABULIA','ABYSSAL','ACAULESCENT',
+                'ACCELERATION','ACCIDENT','ACHENE','ACHROMATIC','ACID','ACTINIUM','ACTINOZOAN',
+                'ACULEATE','ACUMINATE','ADIABATIC','ADRENALIN','ADSORPTION','ADVENTITIOUS',
+                'AERIAL','AFFECT','AFFERENT','AGORAPHOBIA','AGRONOMICS','AGROSTOLOGY',
+                'ALBINO','ALBUMEN','ALBUMIN','ALCOHOL','ALKALI','ALLOTROPY','ALLOY','ALLUVIUM',
+                'ALPINE','ALUMINIUM','AMALGAM','AMMETER','AMORPHOUS','AMPERE','AMPHIBIA',
+                'AMPLEXICAUL','ANABOLISM','ANALOGY','ANALYSIS','ANANDROUS','ANAPHYLAXIS',
+                'ANATOMY','ANEMOGRAPH','ANGIOSPERM','ANHYDROUS','ANIMAL','ANIMALCULE','ANION',
+                'ANNUAL','ANNULATE','ANNULATED','ANODE','ANTENNA','ANTHER','ANTHROPOGEOGRAPHY',
+                'ANTHROPOLOGY','ANTICLINAL','ANTICYCLONE','ANTIDOTE','ANTIMONY',
+                'APETALOUS','APHASIA','APHELION','APHELIOTROPIC','APOGEE','APONEUROSIS',
+                'AQUATIC','ARACHNIDA','ARACHNOID','ARBOREAL','ARCHEOLOGY','ARCHEAN',
+                'ARENICOLOUS','ARGON','ARSENIC','ARTICULATION','ASCENDANT','ASEXUAL',
+                'ASSAY','ASSOCIATION','ASTEROID','ASTRONOMY','ASTROPHYSICS','ATMOSPHERE',
+                'AURORA','AXIOM','BACILLUS','BACTERIUM','BARBARIAN','BARIUM','BAROMETER',
+                'BATRACHIA','BATTERY','BEHAVIORISM','BICHLORIDE','BIENNIAL','BINARY',
+                'BIOCHEMISTRY','BIOLOGY','BIOPHORE','BISEXUAL','BISMUTH','BORON','BOTANY',
+                'BRACHYCEPHALIC','BROMINE','BRONZE','CADMIUM','CAESIUM','CALCIUM','CALCULUS',
+                'CALORIE','CALORIMETER','CALYX','CAMBRIAN','CANDLEPOWER','CAPILLARITY',
+                'CAPITAL','CARBON','CARBONIFEROUS','CARBURETOR','CARBURETTOR','CARDIO',
+                'CARINA','CARNIVORA','CARPEL','CATABOLISM','CATALYSIS','CAUDAL','CAUSE',
+                'CELSIUS','CENOGETIC','CENOZOIC','CENTIGRADE','CENTIMETER','CENTRIFUGAL',
+                'CENTRIPETAL','CENTROSOME','CENTRUM','CEPHALIC','CEPHALOPODA','CEREAL',
+                'CERIUM','CETACEA','CHEMISTRY','CHIROPTERA','CHLORIDE','CHLORINE',
+                'CHLOROPHYLL','CHROMIUM','CHROMO','CHROMOSOME','CIVILIZATION','CLIMATE',
+                'COBALT','COCCUS','COELENTERATA','COHESION','COLLOID','COLUMBIUM','NIOBIUM',
+                'COMBUSTION','COMMUNITY','COMPARATIVE','COMPLEX','COMPOUND','CONATION',
+                'CONCAVE','CONCEPT','CONCEPTION','CONDENSE','CONDUCT','CONDUCTANCE',
+                'CONDUCTIVITY','CONDUCTOR','CONGEAL','CONNATE','CONSTANT','CONVEX',
+                'COORDINATE','COPERNICAN','COPPER','COROLLA','CORONA','COTYLEDON','COULOMB',
+                'CRETACEOUS','CRIMINOLOGY','CRUSTACEA','CRYSTAL','CTENOPHORA','CYCLONE',
+                'CYTOPLASM','DARWINISM','DECLINATION','DECURRENT','DEHYDRATE','DENDROLOGY',
+                'DEVONIAN','DIADELPHOUS','DIANDROUS','DIELECTRIC','DISEASE','DISSOCIATE',
+                'DOLDRUMS','DOLICHOCEPHALIC','DYNAMICS','ECCENTRIC','ECHINODERM','ECLIPSE',
+                'ECLIPTIC','ECOLOGY','ECONOMICS','EDENTATE','EFFECT','EFFERENT','EFFICIENCY',
+                'EFFLORESCENCE','ELECTRICITY','ELECTRODE','ELECTROLYSIS','ELECTROLYTE',
+                'ELECTRON','ELEMENT','EMANATION','EMBRYO','ENDOGENOUS','ENDOSPERM',
+                'ENDOTHELIUM','ENERGY','ENTOMOLOGY','ENVIRONMENT','EOCENE','EPIPHYTE',
+                'EQUATION','EQUINOX','ERBIUM','EROSION','ESTHETICS','AESTHETICS','ETHER',
+                'ETHICS','ETHNOLOGY','EUROPIUM','EVAPORATE','EVERGREEN','EVOLUTION',
+                'EXPERIMENT','EXPLAIN','FACTOR','FACULA','FAHRENHEIT','FECUNDATE','FEMALE',
+                'FERMENT','FILAMENT','FLOCCULUS','FLORESCENCE','FLOWER','FLUORESCENCE',
+                'FLUORINE','FORECONSCIOUS','FORENSIC','FORMULA','FOSSIL','FREEZE','FRICTION',
+                'FULCRUM','FUNCTION','FUNCTIONAL','FUNGUS','GADOLINIUM','GALLIUM','GAMETE',
+                'GANGLION','GASTROPODA','GENERALIZATION','GENETICS','GENITAL','GEOGRAPHY',
+                'GEOLOGY','GERMANIUM','GLACIER','GLOMERATE','GLOTTIS','GLUCINUM','BERYLLIUM',
+                'GLUCOSE','GNEISS','GRAVITY','GRAVITATION','GREGARIOUS','GYMNOSPERM',
+                'HALLUCINATION','HARDNESS','HELIUM','HERMAPHRODITE','HERPETOLOGY','HEXAPODA',
+                'HINTERLAND','HISTOLOGY','HISTORY','HOLMIUM','HOMOLOGY','HORMONE',
+                'HUMIDITY','HURRICANE','HYBRID','HYDRATE','HYDRAULICS','HYDROCARBON',
+                'HYDROGEN','HYDROLYSIS','HYDROMETER','HYDROSTATICS','HYDROUS','HYDROZOAN',
+                'HYGIENE','HYGROMETRY','HYPOTHESIS','IGNEOUS','INDEHISCENT','INDIUM',
+                'INDUCTANCE','INERTIA','INFLORESCENCE','INFUSORIA','INORGANIC','INSECT',
+                'INSTINCT','INTERFERENCE','INVERTEBRATE','IODINE','IRIDIUM','ISOBAR',
+                'ISOTHERM','JURASSIC','KIDNEY','KILOGRAM','KRYPTON','LABILE','LANTHANUM',
+                'LEUCOCYTE','LITHIUM','LITMUS','LUTECIUM','MAGNESIUM','MAGNETIZE','MAMMAL',
+                'MANDIBLE','MANGANESE','MARSUPIAL','MATHEMATICS','MATTER','MECHANICS',
+                'MEDICINE','MEGACEPHALIC','MERCURY','MESOZOIC','METABOLISM','METAPHYSICS',
+                'METAZOA','MICROBE','MINERAL','MINERALOGY','MIOCENE','MITOSIS','MIXTURE',
+                'MOLECULE','MOLYBDENUM','MOMENTUM','MONADELPHOUS','MONILIFORM','MONECIOUS',
+                'MONOPOLY','MONOTREME','MONSOON','MORAINE','MORPHOLOGY','MUSCLE','MUSCOLOGY',
+                'MUTATION','MYCOLOGY','MYRIAPODA','NARCOTIC','NASCENT','NEBULAR','NECTAR',
+                'NEOCENE','NEODYMIUM','NEOLITHIC','NEUROSIS','NEUTRAL','NICKEL','NITROGEN',
+                'NORMAL','NUTRITIVE','OLIGOCENE','ONTOGENY','OPSONIC','OPTICS','OPTIMUM',
+                'ORDOVICIAN','ORGANIC','ORGANISM','OSMIUM','OVERTONE','OXIDIZE','OXYGEN',
+                'PALEOZOIC','PALEONTOLOGY','PALLADIUM','PARALLAX','PARALOGY','PARASITE',
+                'PARTHENOGENESIS','PELAGIAN','PELAGIC','PENOLOGY','PERENNIAL','PHAGOCYTE',
+                'PHENOMENON','PHENOMENA','PHILOLOGY','PHILOSOPHY','PHONOLOGY','PHOSPHORUS',
+                'PHOTICS','PHOTOLOGY','PHYLUM','PHYSICS','PISTIL','PLANET','PLATINUM',
+                'PLEISTOCENE','POLLEN','POLLINATION','POLONIUM','POTASSIUM','POUNDAL',
+                'PRACTICE','PRASEODYMIUM','PRECIPITATE','PREHENSILE','PRESSURE','PRIMATE',
+                'PROPERTY','PROTEAN','PROTEID','PROTEIN','PROTOPLASM','PROTOZOAN','PSEUDO',
+                'PSYCHIATRY','PSYCHOLOGY','PSYCHOPHYSICS','PSYCHOSIS','PTERIDOPHYTE',
+                'QUANTEL','QUANTITY','QUANTUM','QUATERNARY','RADICAL','RADICLE','RADIOACTIVE',
+                'RADIUM','RAREFACTION','REACT','REACTION','REAUMUR','RECENT','RECTIFY',
+                'REDUCE','REFRACT','RELATIVITY','REPRODUCTION','REPTILE','RESISTANCE',
+                'RHODIUM','RODENT','RUBIDIUM','RUMINANT','RUTHENIUM','SAMARIUM','SAPONIFY',
+                'SATURATE','SCANDIUM','SCIENCE','SECONDARY','SELENIUM','SEMINAL',
+                'SEMINIFEROUS','SENSATION','SENTIMENT','SEPTUM','SESSILE','SHEATH',
+                'SILICON','SILVER','SIMOOM','SIMPLE','SOCIAL','SOCIOLOGY','SODIUM',
+                'SOLUTION','SOMATIC','SPECIES','SPECTRUM','SPERMARY','SPOROZOAN',
+                'STAMEN','STATICS','STATISTICS','STIGMA','STIPULE','STRATUM','STRONTIUM',
+                'SUBALPINE','SUBLIMATION','SULPHUR','SUPERSTITION','SYMBOL','SYNCLINAL',
+                'SYNTHETIC','TANTALUM','TELLURIUM','TEMPERATURE','TENDON','TERBIUM',
+                'TERTIARY','THALLIUM','THALLOPHYTE','THALLUS','THEOLOGY','THEORY','THERMO',
+                'THORAX','TINCTURE','TITANIUM','TRIASSIC','TYPHOON','ULOTRICHI','UNGULATE',
+                'URANIUM','VACUUM','VANADIUM','VELOCITY','VERTEBRATE','VITALISM','VITAMINES',
+                'VOLUME','WEIGHT','XENON','XYLOGY','YTTRIUM','ZIRCONIUM','ZOOCHEMISTRY',
+                'ZOOLOGY','ZYGOTE','ZYMOSIS','ZYMURGY'
+            ];
+            PENGUIN_WORD_SET = new Set();
+            PENGUIN_PREFIX_SET = new Set();
+            for (const w of allTerms) {
+                if (w.length >= 6) {
+                    PENGUIN_WORD_SET.add(w);
+                }
+            }
+            for (const w of PENGUIN_WORD_SET) {
+                for (let i = 1; i <= w.length; i++) {
+                    PENGUIN_PREFIX_SET.add(w.substring(0, i));
                 }
             }
         }
@@ -1646,7 +1823,10 @@
         let questTurnCount = 0;
         let questFrozenCells = [];    // [{r,c,turnsLeft}]
         let questWalrusSpellsUsed = 0;
+        let questWalrusSpellOrder = []; // shuffled spell ids assigned to turns 3, 5, 7
         let questWalrusDoubleNext = false;
+        let questHippoFirstTurn = false; // true when Hippo is on first of two turns
+        let questPlayerShortRange = false; // true when player's range is limited to 2
         let shakeupAnim = null; // {moves: [{letter, fromX, fromY, toX, toY}], startTime, duration}
 
         /* ===== Canvas refs ===== */
@@ -2347,13 +2527,18 @@
             flashCtx.clearRect(0, 0, GRID_PX, GRID_PX);
             hideAcceptBtn();
             document.getElementById('tutorial-overlay').classList.remove('visible');
+            const initDisplayBlue = (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'doubleturn')
+                ? Math.ceil(turnsLeft.blue / 2) : turnsLeft.blue;
             document.getElementById('turns-left').innerHTML =
-                '<span class="turns-blue">Blue: ' + turnsLeft.blue + '</span> | <span class="turns-red">Red: ' + turnsLeft.red + '</span>';
+                '<span class="turns-blue">Blue: ' + initDisplayBlue + '</span> | <span class="turns-red">Red: ' + turnsLeft.red + '</span>';
             // Reset quest-specific state
             questTurnCount = 0;
             questFrozenCells = [];
             questWalrusSpellsUsed = 0;
+            questWalrusSpellOrder = [];
             questWalrusDoubleNext = false;
+            questHippoFirstTurn = false;
+            questPlayerShortRange = false;
         }
 
         function newGame() {
@@ -2415,7 +2600,8 @@
         function inRange(r, c) {
             if (sel.length === 0) return true;
             const last = sel[sel.length - 1];
-            return (Math.abs(r - last.r) + Math.abs(c - last.c)) <= MAX_RANGE;
+            const range = questPlayerShortRange ? 2 : MAX_RANGE;
+            return (Math.abs(r - last.r) + Math.abs(c - last.c)) <= range;
         }
 
         function selectionArea() {
@@ -2732,6 +2918,11 @@
         }
 
         function advanceTurn() {
+            // Clear short range after player (red) finishes their turn
+            if (player === 'red' && questPlayerShortRange) {
+                questPlayerShortRange = false;
+            }
+
             turnsLeft[player]--;
             sel = [];
             player = player === 'blue' ? 'red' : 'blue';
@@ -3094,13 +3285,22 @@
         function aiFindWords() {
             const found = [];
             const visited = Array.from({length: GRID}, () => new Array(GRID).fill(false));
-            const aiRange = (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'range') ? MAX_RANGE + 1 : MAX_RANGE;
+            const isSquirrel = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'range';
+            const isPenguin = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'science';
+            const aiRange = isSquirrel ? 7 : MAX_RANGE;
+            const aiMaxLen = isPenguin ? 8 : (isSquirrel ? 4 : 5);
+            const aiMinLen = isPenguin ? 6 : 3;
+
+            // Penguin uses science-only word/prefix sets
+            if (isPenguin) buildPenguinWordSets();
+            const wordSet = isPenguin ? PENGUIN_WORD_SET : AI_WORD_SET;
+            const prefixSet = isPenguin ? PENGUIN_PREFIX_SET : AI_PREFIX_SET;
 
             function dfs(path, word) {
-                if (word.length >= 3 && AI_WORD_SET.has(word)) {
+                if (word.length >= aiMinLen && wordSet.has(word)) {
                     found.push({ word, path: path.map(p => ({...p})) });
                 }
-                if (word.length >= 5) return; // max 5 letters
+                if (word.length >= aiMaxLen) return;
                 const last = path[path.length - 1];
 
                 for (let r = 0; r < GRID; r++) {
@@ -3111,7 +3311,7 @@
                         if ((Math.abs(r - last.r) + Math.abs(c - last.c)) > aiRange) continue;
 
                         const nextWord = word + grid[r][c];
-                        if (!AI_PREFIX_SET.has(nextWord)) continue;
+                        if (!prefixSet.has(nextWord)) continue;
 
                         visited[r][c] = true;
                         path.push({r, c});
@@ -3126,7 +3326,7 @@
                 for (let c = 0; c < GRID; c++) {
                     if (grid[r][c] === '') continue;
                     const letter = grid[r][c];
-                    if (!AI_PREFIX_SET.has(letter)) continue;
+                    if (!prefixSet.has(letter)) continue;
                     visited[r][c] = true;
                     dfs([{r, c}], letter);
                     visited[r][c] = false;
@@ -3148,6 +3348,21 @@
         }
 
         function aiChooseWord(candidates) {
+            const isSquirrel = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'range';
+            const isHippo = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'doubleturn';
+
+            // Hip Hop Hippo: cap territory at 10% per play
+            if (isHippo) {
+                const maxArea = TOTAL_PIXELS * 0.10;
+                candidates = candidates.filter(c => aiCalculateArea(c.path) <= maxArea);
+            }
+
+            // Stretchy Squirrel: cap territory at 20% per play
+            if (isSquirrel) {
+                const maxArea = TOTAL_PIXELS * 0.20;
+                candidates = candidates.filter(c => aiCalculateArea(c.path) <= maxArea);
+            }
+
             // Filter to words with area (non-collinear with 3+ letters)
             const minArea = TOTAL_PIXELS * 0.03;
             let withArea = candidates.filter(c => c.path.length >= 3 && aiCalculateArea(c.path) >= minArea);
@@ -3231,27 +3446,41 @@
                     if (tOwner[idx] === TEAM.RED) overlapBonus = 150;
                 }
 
-                const score = lengthBonus + distBonus + areaBonus + irregularityBonus + overlapBonus + Math.random() * diff.randomness;
+                // Stretchy Squirrel: huge bonus for words with a stretch of 6+ tiles
+                let stretchBonus = 0;
+                if (isSquirrel) {
+                    for (let i = 1; i < c.path.length; i++) {
+                        const d = Math.abs(c.path[i].r - c.path[i-1].r) + Math.abs(c.path[i].c - c.path[i-1].c);
+                        if (d >= 6) { stretchBonus = 3000; break; }
+                    }
+                }
+
+                const score = lengthBonus + distBonus + areaBonus + irregularityBonus + overlapBonus + stretchBonus + Math.random() * diff.randomness;
                 return { ...c, score };
             });
 
             scored.sort((a, b) => b.score - a.score);
             const topN = Math.min(diff.topN, scored.length);
+
+            // Stretchy Squirrel: always prefer words with a 6+ tile stretch when available
+            if (isSquirrel) {
+                const stretchCandidates = scored.filter(c => {
+                    for (let i = 1; i < c.path.length; i++) {
+                        const d = Math.abs(c.path[i].r - c.path[i-1].r) + Math.abs(c.path[i].c - c.path[i-1].c);
+                        if (d >= 6) return true;
+                    }
+                    return false;
+                });
+                if (stretchCandidates.length > 0) {
+                    const pick = Math.min(3, stretchCandidates.length);
+                    return stretchCandidates[Math.floor(Math.random() * pick)];
+                }
+            }
+
             return scored[Math.floor(Math.random() * topN)];
         }
 
-        async function aiTakeTurn() {
-            if (gameOver || player !== 'blue' || gameMode !== 'pvc') return;
-            aiThinking = true;
-            msg('Computer is thinking...');
-            setButtonsDisabled(true);
-            render();
-
-            // Quest: apply pre-AI powers
-            if (questMode) {
-                await applyQuestPower('beforeAI');
-            }
-
+        async function aiPlayOneTurn() {
             // Brief delay for natural feel
             await new Promise(r => setTimeout(r, 800 + Math.random() * 700));
 
@@ -3265,14 +3494,8 @@
                 setButtonsDisabled(false);
                 addHistory('blue', null, 0, 0);
                 msg('Computer passed.');
-
                 advanceTurn();
-
-                // Quest: apply post-AI powers even on pass (only if game hasn't ended)
-                if (questMode && !gameOver) {
-                    await applyQuestPower('afterAI');
-                }
-                return;
+                return false; // did not play a word
             }
 
             // Animate letter selection one at a time
@@ -3295,28 +3518,56 @@
                 strength = Math.min(5, strength + 1);
             }
 
-            // Quest: Professor Penguin science bonus
+            // Quest: Professor Penguin — announce the scientific term
             if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'science') {
-                if (SCIENCE_WORDS.has(word)) {
-                    strength = Math.min(5, strength + 1);
-                    msg('Professor played a science word! Bonus strength!');
-                }
+                msg('Professor played: ' + word + '!');
             }
 
-            // Quest: Walrus double strength
-            if (questMode && questWalrusDoubleNext) {
-                strength = Math.min(5, strength * 2);
-                questWalrusDoubleNext = false;
-            }
 
             // AI words come from curated list — skip API validation
             aiThinking = false;
             setButtonsDisabled(false);
             finalizeWord(word, strength);
+            return true; // played a word
+        }
+
+        async function aiTakeTurn() {
+            if (gameOver || player !== 'blue' || gameMode !== 'pvc') return;
+            aiThinking = true;
+            msg('Computer is thinking...');
+            setButtonsDisabled(true);
+            render();
+
+            // Quest: apply pre-AI powers
+            if (questMode) {
+                await applyQuestPower('beforeAI');
+            }
+
+            const isHippoDouble = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'doubleturn';
+
+            // First turn
+            const played = await aiPlayOneTurn();
 
             // Quest: apply post-AI powers (only if game hasn't ended)
             if (questMode && !gameOver) {
                 await applyQuestPower('afterAI');
+            }
+
+            // Hip Hop Hippo: play a second turn
+            if (isHippoDouble && !gameOver && played) {
+                // advanceTurn() already switched player to 'red' — switch back to 'blue'
+                player = 'blue';
+                aiThinking = true;
+                msg('Hippo plays again...');
+                setButtonsDisabled(true);
+                render();
+
+                await aiPlayOneTurn();
+
+                // Post-AI powers after second turn
+                if (questMode && !gameOver) {
+                    await applyQuestPower('afterAI');
+                }
             }
         }
 
@@ -3424,7 +3675,7 @@
 
                 // Replace button with quest-specific behavior
                 const goBtn = document.getElementById('btn-game-over');
-                goBtn.textContent = 'Continue Quest';
+                goBtn.textContent = 'Continue Campaign';
                 const playerWon = scores.red > scores.blue;
                 goBtn.onclick = function() {
                     document.getElementById('game-over').classList.remove('visible');
@@ -3745,8 +3996,10 @@
                 ti.style.color = player === 'blue' ? '#60a5fa' : '#f87171';
             }
 
+            const displayBlue = (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'doubleturn')
+                ? Math.ceil(turnsLeft.blue / 2) : turnsLeft.blue;
             document.getElementById('turns-left').innerHTML =
-                '<span class="turns-blue">Blue: ' + turnsLeft.blue + '</span> | <span class="turns-red">Red: ' + turnsLeft.red + '</span>';
+                '<span class="turns-blue">Blue: ' + displayBlue + '</span> | <span class="turns-red">Red: ' + turnsLeft.red + '</span>';
 
             // Animated score counters
             startScoreAnimation();
@@ -3939,7 +4192,7 @@
         }
 
         function resetQuestProgress() {
-            if (!confirm('Reset all quest progress? This cannot be undone.')) return;
+            if (!confirm('Reset all campaign progress? This cannot be undone.')) return;
             questProgress = [];
             localStorage.setItem('questProgress', '[]');
             renderQuestEnemies();
@@ -3951,6 +4204,7 @@
             questTurnCount = 0;
             questFrozenCells = [];
             questWalrusSpellsUsed = 0;
+            questWalrusSpellOrder = [];
             questWalrusDoubleNext = false;
 
             const enemy = QUEST_ENEMIES[enemyIndex];
@@ -3968,6 +4222,12 @@
             MAX_RANGE = 4;
 
             resetState();
+
+            // Hippo: give AI double turns so it doesn't run out early
+            if (enemy.aiTurns) {
+                turnsLeft.blue = enemy.aiTurns;
+            }
+
             genGrid();
             buildValidWordSet();
             buildAIWordSets();
@@ -3988,13 +4248,32 @@
             render();
             updateCanvasGlow();
 
-            // Duck headstart: apply 20% territory and show taunt before AI goes
+            // Pre-battle taunts and powers
             if (enemy.power === 'headstart') {
                 applyDuckHeadstart();
                 rebuildTerritoryVisual();
                 render();
                 document.getElementById('duck-taunt').classList.add('visible');
                 // AI turn starts after player dismisses the taunt
+            } else if (enemy.power === 'doubleturn') {
+                document.getElementById('hippo-taunt').classList.add('visible');
+            } else if (enemy.power === 'spells') {
+                // Randomize spell order for turns 3, 5, 7
+                const spellIds = WALRUS_SPELLS.map(s => s.id);
+                for (let i = spellIds.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [spellIds[i], spellIds[j]] = [spellIds[j], spellIds[i]];
+                }
+                questWalrusSpellOrder = spellIds;
+                document.getElementById('walrus-taunt').classList.add('visible');
+            } else if (enemy.power === 'science') {
+                document.getElementById('penguin-taunt').classList.add('visible');
+            } else if (enemy.power === 'range') {
+                document.getElementById('squirrel-taunt').classList.add('visible');
+            } else if (enemy.power === 'shakeup') {
+                document.getElementById('raccoon-taunt').classList.add('visible');
+            } else if (enemy.power === 'none') {
+                document.getElementById('goat-taunt').classList.add('visible');
             } else {
                 // AI goes first
                 setTimeout(() => aiTakeTurn(), 600);
@@ -4053,8 +4332,38 @@
             setTimeout(() => aiTakeTurn(), 600);
         }
 
+        function dismissGoatTaunt() {
+            document.getElementById('goat-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissHippoTaunt() {
+            document.getElementById('hippo-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissRaccoonTaunt() {
+            document.getElementById('raccoon-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissSquirrelTaunt() {
+            document.getElementById('squirrel-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissPenguinTaunt() {
+            document.getElementById('penguin-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissWalrusTaunt() {
+            document.getElementById('walrus-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
         function resetQuestProgress() {
-            if (!confirm('Reset all quest progress? This cannot be undone.')) return;
+            if (!confirm('Reset all campaign progress? This cannot be undone.')) return;
             questProgress = [];
             localStorage.setItem('questProgress', '[]');
             renderQuestEnemies();
@@ -4065,35 +4374,13 @@
             if (!questMode) return;
             const enemy = QUEST_ENEMIES[questEnemyIndex];
 
-            if (enemy.power === 'swap' && timing === 'beforeAI') {
-                // Hip Hop Hippo: swap 2 random letters
-                const cells = [];
-                for (let r = 0; r < GRID; r++) {
-                    for (let c = 0; c < GRID; c++) {
-                        if (grid[r][c] !== '' && !questFrozenCells.some(f => f.r === r && f.c === c)) {
-                            cells.push({r, c});
-                        }
-                    }
-                }
-                if (cells.length >= 2) {
-                    const i1 = Math.floor(Math.random() * cells.length);
-                    let i2 = Math.floor(Math.random() * (cells.length - 1));
-                    if (i2 >= i1) i2++;
-                    const c1 = cells[i1], c2 = cells[i2];
-                    const tmp = grid[c1.r][c1.c];
-                    grid[c1.r][c1.c] = grid[c2.r][c2.c];
-                    grid[c2.r][c2.c] = tmp;
-                    render();
-                    msg('Hippo swapped letters!');
-                    await new Promise(r => setTimeout(r, 600));
-                }
-            }
+            // Hip Hop Hippo: double turn (handled in aiTakeTurn)
 
             // Duck's power ('headstart') is applied before the game starts, not per-turn
 
             if (enemy.power === 'shakeup' && timing === 'beforeAI') {
                 // Rowdy Raccoon: scramble every 3 turns with animated letter movement
-                if (questTurnCount > 0 && questTurnCount % 3 === 0) {
+                if (questTurnCount > 0 && questTurnCount % 2 === 0) {
                     // Show overlay briefly
                     document.getElementById('shakeup-img').src = enemy.img;
                     document.getElementById('shakeup-overlay').classList.add('visible');
@@ -4170,10 +4457,14 @@
             }
 
             if (enemy.power === 'spells' && timing === 'afterAI') {
-                // Wizardly Walrus: cast spells at turns 3, 5, 7
-                for (const spell of WALRUS_SPELLS) {
-                    if (questTurnCount === spell.turn && questWalrusSpellsUsed < WALRUS_SPELLS.indexOf(spell) + 1) {
-                        questWalrusSpellsUsed = WALRUS_SPELLS.indexOf(spell) + 1;
+                // Wizardly Walrus: cast spells at turns 3, 5, 7 in random order
+                const spellTurns = [3, 5, 7];
+                const spellIdx = spellTurns.indexOf(questTurnCount);
+                if (spellIdx !== -1 && questWalrusSpellsUsed <= spellIdx) {
+                    const spellId = questWalrusSpellOrder[spellIdx];
+                    const spell = WALRUS_SPELLS.find(s => s.id === spellId);
+                    if (spell) {
+                        questWalrusSpellsUsed = spellIdx + 1;
 
                         // Show spell overlay
                         document.getElementById('spell-img').src = enemy.img;
@@ -4186,21 +4477,45 @@
                         document.getElementById('spell-overlay').classList.remove('visible');
 
                         if (spell.id === 'steal') {
-                            // Steal 5% of red territory -> blue
+                            // Steal a contiguous chunk (5-8%) of red territory via BFS
                             const totalPixels = GRID_PX * GRID_PX;
-                            let redPixels = [];
+                            const redPixels = [];
                             for (let i = 0; i < totalPixels; i++) {
                                 if (tOwner[i] === TEAM.RED) redPixels.push(i);
                             }
-                            const stealCount = Math.floor(redPixels.length * 0.05);
-                            for (let i = 0; i < stealCount && i < redPixels.length; i++) {
-                                const j = i + Math.floor(Math.random() * (redPixels.length - i));
-                                [redPixels[i], redPixels[j]] = [redPixels[j], redPixels[i]];
-                                tOwner[redPixels[i]] = TEAM.BLUE;
-                                tStrength[redPixels[i]] = 2;
+                            if (redPixels.length > 0) {
+                                const stealPct = 0.05 + Math.random() * 0.03; // 5-8%
+                                const stealCount = Math.floor(totalPixels * stealPct);
+                                // BFS from a random red pixel to steal a contiguous chunk
+                                const seed = redPixels[Math.floor(Math.random() * redPixels.length)];
+                                const stolen = new Set();
+                                const queue = [seed];
+                                stolen.add(seed);
+                                while (queue.length > 0 && stolen.size < stealCount) {
+                                    const px = queue.shift();
+                                    const x = px % GRID_PX;
+                                    const y = Math.floor(px / GRID_PX);
+                                    const neighbors = [
+                                        y > 0 ? (y - 1) * GRID_PX + x : -1,
+                                        y < GRID_PX - 1 ? (y + 1) * GRID_PX + x : -1,
+                                        x > 0 ? y * GRID_PX + (x - 1) : -1,
+                                        x < GRID_PX - 1 ? y * GRID_PX + (x + 1) : -1
+                                    ];
+                                    for (const n of neighbors) {
+                                        if (n >= 0 && !stolen.has(n) && tOwner[n] === TEAM.RED) {
+                                            stolen.add(n);
+                                            queue.push(n);
+                                            if (stolen.size >= stealCount) break;
+                                        }
+                                    }
+                                }
+                                for (const px of stolen) {
+                                    tOwner[px] = TEAM.BLUE;
+                                    tStrength[px] = 2;
+                                }
+                                rebuildTerritoryVisual();
+                                render();
                             }
-                            rebuildTerritoryVisual();
-                            render();
                             msg('Walrus stole your territory!');
                         }
 
@@ -4223,13 +4538,12 @@
                             msg('Walrus froze some cells!');
                         }
 
-                        if (spell.id === 'double') {
-                            questWalrusDoubleNext = true;
-                            msg('Walrus will have double strength next turn!');
+                        if (spell.id === 'short') {
+                            questPlayerShortRange = true;
+                            msg('Your letter range is limited to 2 tiles next turn!');
                         }
 
                         await new Promise(r => setTimeout(r, 400));
-                        break;
                     }
                 }
             }
@@ -4238,6 +4552,7 @@
         /* Victory screen */
         function showVictoryScreen() {
             const vs = document.getElementById('victory-screen');
+            document.getElementById('victory-subtitle').textContent = 'You defeated all ' + QUEST_ENEMIES.length + ' enemies!';
             const portraits = document.getElementById('victory-portraits');
             let html = '';
             for (const enemy of QUEST_ENEMIES) {
@@ -4318,6 +4633,8 @@
             genGrid();
             updateUI();
             render();
+
+            document.getElementById('quest-card-desc').textContent = 'Battle ' + QUEST_ENEMIES.length + ' unique enemies in a campaign';
 
             // Temp: populate quest test dropdown
             const sel = document.getElementById('quest-test-select');
