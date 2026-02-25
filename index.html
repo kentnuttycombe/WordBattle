@@ -390,12 +390,12 @@
             justify-content: center; align-items: center;
         }
         #pass-confirm.visible { display: flex; }
-        #duck-taunt, #goat-taunt, #hippo-taunt, #raccoon-taunt, #squirrel-taunt, #penguin-taunt, #walrus-taunt {
+        #duck-taunt, #goat-taunt, #hippo-taunt, #flamingo-taunt, #turtle-taunt, #raccoon-taunt, #squirrel-taunt, #panda-taunt, #penguin-taunt, #walrus-taunt, #snake-taunt {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.5); z-index: 100;
             justify-content: center; align-items: center;
         }
-        #duck-taunt.visible, #goat-taunt.visible, #hippo-taunt.visible, #raccoon-taunt.visible, #squirrel-taunt.visible, #penguin-taunt.visible, #walrus-taunt.visible { display: flex; }
+        #duck-taunt.visible, #goat-taunt.visible, #hippo-taunt.visible, #flamingo-taunt.visible, #turtle-taunt.visible, #raccoon-taunt.visible, #squirrel-taunt.visible, #panda-taunt.visible, #penguin-taunt.visible, #walrus-taunt.visible, #snake-taunt.visible { display: flex; }
         .pass-confirm-content {
             background: #1e293b;
             border: 1px solid #334155;
@@ -783,9 +783,18 @@
             font-family: 'Bungee Shade', cursive;
             color: #facc15;
         }
+        .quest-enemy-card[data-enemy="flamingo"] .qec-name {
+            font-family: 'Fredoka', sans-serif;
+            color: #f472b6;
+        }
         .quest-enemy-card[data-enemy="duck"] .qec-name {
             font-family: 'Creepster', cursive;
             color: #a78bfa;
+            letter-spacing: 1px;
+        }
+        .quest-enemy-card[data-enemy="turtle"] .qec-name {
+            font-family: 'Fredoka', sans-serif;
+            color: #2dd4bf;
             letter-spacing: 1px;
         }
         .quest-enemy-card[data-enemy="raccoon"] .qec-name {
@@ -795,6 +804,10 @@
         .quest-enemy-card[data-enemy="squirrel"] .qec-name {
             font-family: 'Fredoka', sans-serif;
             color: #4ade80;
+        }
+        .quest-enemy-card[data-enemy="panda"] .qec-name {
+            font-family: 'Creepster', cursive;
+            color: #a3e635;
         }
         .quest-enemy-card[data-enemy="penguin"] .qec-name {
             font-family: 'Playfair Display', serif;
@@ -1358,6 +1371,26 @@
         </div>
     </div>
 
+    <div id="panda-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Petty Panda.jpg" alt="Petty Panda" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #a3e635;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Petty Panda! I don't like sharing, so you stick to your half of the board and I'll stick to mine.</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissPandaTaunt()" style="background:#a3e635;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="snake-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Sneaky Snake.jpg" alt="Sneaky Snake" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #10b981;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Sneaky Snake! I keep our territories hidden until the game is over.</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissSnakeTaunt()" style="background:#10b981;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
     <div id="penguin-taunt">
         <div class="pass-confirm-content" style="max-width:340px;">
             <img src="Images for Quest Mode/Professor Penguin.jpg" alt="Professor Penguin" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #93c5fd;margin-bottom:10px;">
@@ -1378,6 +1411,26 @@
         </div>
     </div>
 
+    <div id="flamingo-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Foolish Flamingo.jpg" alt="Foolish Flamingo" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #f472b6;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Foolish Flamingo! I don't know any words longer than 3 letters, so you aren't allowed to play any either!</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissFlamingoTaunt()" style="background:#f472b6;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="turtle-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Tenacious Turtle.jpg" alt="Tenacious Turtle" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #2dd4bf;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Tenacious Turtle! I capture all my territories at maximum strength</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissTurtleTaunt()" style="background:#2dd4bf;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
     <div id="raccoon-taunt">
         <div class="pass-confirm-content" style="max-width:340px;">
             <img src="Images for Quest Mode/Rowdy Raccoon.jpg" alt="Rowdy Raccoon" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #fb923c;margin-bottom:10px;">
@@ -1391,7 +1444,7 @@
     <div id="goat-taunt">
         <div class="pass-confirm-content" style="max-width:340px;">
             <img src="Images for Quest Mode/Goofy Goat.jpg" alt="Goofy Goat" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #f9a8d4;margin-bottom:10px;">
-            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Goofy Goat! I don't have any special powers, and I'm not very good. I just like to be goofy</p>
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Goofy Goat! I don't have any special powers, and I'm not very good. I just like to be goofy!</p>
             <div class="pass-confirm-buttons" style="margin-top:14px;">
                 <button class="pass-yes" onclick="dismissGoatTaunt()" style="background:#f9a8d4;color:#1e293b;">Let's go!</button>
             </div>
@@ -1432,18 +1485,22 @@
         /* ===== Quest Mode Config ===== */
         const QUEST_ENEMIES = [
             { id: 'goat', name: 'Goofy Goat', img: 'Images for Quest Mode/Goofy Goat.jpg', difficulty: 'easy', power: 'none', desc: 'No special power', boardSize: 9, turns: 5 },
+            { id: 'flamingo', name: 'Foolish Flamingo', img: 'Images for Quest Mode/Foolish Flamingo.jpg', difficulty: 'easy', power: 'shortwords', desc: 'Both players limited to 3-letter words', boardSize: 10, turns: 7 },
             { id: 'hippo', name: 'Hip Hop Hippo', img: 'Images for Quest Mode/Hip Hop Hippo.jpg', difficulty: 'easy', power: 'doubleturn', desc: 'Plays twice between each of your turns', boardSize: 10, turns: 5, aiTurns: 10 },
             { id: 'duck', name: 'Dastardly Duck', img: 'Images for Quest Mode/Dastardly Duck.jpg', difficulty: 'easy', power: 'headstart', desc: 'Starts with 20% of the board already claimed' },
+            { id: 'snake', name: 'Sneaky Snake', img: 'Images for Quest Mode/Sneaky Snake.jpg', difficulty: 'medium', power: 'stealth', desc: 'All territory is hidden until the game ends', boardSize: 11, turns: 7 },
+            { id: 'turtle', name: 'Tenacious Turtle', img: 'Images for Quest Mode/Tenacious Turtle.jpg', difficulty: 'medium', power: 'superstrength', desc: 'Captures all territory at maximum strength', boardSize: 9, turns: 5 },
             { id: 'raccoon', name: 'Rowdy Raccoon', img: 'Images for Quest Mode/Rowdy Raccoon.jpg', difficulty: 'medium', power: 'shakeup', desc: 'Scrambles the board every 2 turns' },
             { id: 'squirrel', name: 'Stretchy Squirrel', img: 'Images for Quest Mode/Stretchy Squirrel.jpg', difficulty: 'medium', power: 'range', desc: 'Can stretch up to 7 tiles between letters' },
+            { id: 'panda', name: 'Petty Panda', img: 'Images for Quest Mode/Petty Panda.jpg', difficulty: 'expert', power: 'splitboard', desc: 'Board is split: each player uses their own half', boardSize: 12 },
             { id: 'penguin', name: 'Professor Penguin', img: 'Images for Quest Mode/Professor Penguin.jpg', difficulty: 'expert', power: 'science', desc: 'Only plays scientific terms (6+ letters)' },
             { id: 'walrus', name: 'Wizardly Walrus', img: 'Images for Quest Mode/Wizardly Walrus.jpg', difficulty: 'expert', power: 'spells', desc: 'Casts 3 powerful spells during battle' }
         ];
 
         const WALRUS_SPELLS = [
-            { id: 'steal', name: 'Territory Steal', desc: 'Steals a chunk of your territory', turn: 3 },
-            { id: 'freeze', name: 'Freeze', desc: 'Freezes 5 random cells for 2 turns', turn: 5 },
-            { id: 'short', name: 'Short Reach', desc: 'Limits your letter range to 2 tiles next turn', turn: 7 }
+            { id: 'steal', name: 'Territory Steal', desc: 'Steals a chunk of your territory' },
+            { id: 'freeze', name: 'Freeze', desc: 'Freezes 5 random cells for 2 turns' },
+            { id: 'short', name: 'Short Reach', desc: 'Limits your letter range to 2 tiles next turn' }
         ];
 
         const SCIENCE_WORDS = new Set([
@@ -1827,6 +1884,8 @@
         let questWalrusDoubleNext = false;
         let questHippoFirstTurn = false; // true when Hippo is on first of two turns
         let questPlayerShortRange = false; // true when player's range is limited to 2
+        let questSnakeMoves = [];  // [{path, player, strength}] recorded moves for stealth reveal
+        let questSnakeRevealing = false; // true during end-of-game territory reveal
         let shakeupAnim = null; // {moves: [{letter, fromX, fromY, toX, toY}], startTime, duration}
 
         /* ===== Canvas refs ===== */
@@ -2539,6 +2598,8 @@
             questWalrusDoubleNext = false;
             questHippoFirstTurn = false;
             questPlayerShortRange = false;
+            questSnakeMoves = [];
+            questSnakeRevealing = false;
         }
 
         function newGame() {
@@ -2597,7 +2658,21 @@
             return null;
         }
 
+        function isPlayerHalf(r, c) {
+            if (!questMode || QUEST_ENEMIES[questEnemyIndex]?.power !== 'splitboard') return true;
+            return c < Math.floor(GRID / 2);
+        }
+
+        function isAIHalf(r, c) {
+            if (!questMode || QUEST_ENEMIES[questEnemyIndex]?.power !== 'splitboard') return true;
+            return c >= Math.floor(GRID / 2);
+        }
+
         function inRange(r, c) {
+            // Splitboard: player can only use their half
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'splitboard') {
+                if (!isPlayerHalf(r, c)) return false;
+            }
             if (sel.length === 0) return true;
             const last = sel[sel.length - 1];
             const range = questPlayerShortRange ? 2 : MAX_RANGE;
@@ -2646,6 +2721,8 @@
             } else if (grid[cell.r][cell.c] === '') {
                 cvs.style.cursor = 'default';
             } else if (questMode && questFrozenCells.some(f => f.r === cell.r && f.c === cell.c)) {
+                cvs.style.cursor = 'not-allowed';
+            } else if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'splitboard' && !isPlayerHalf(cell.r, cell.c)) {
                 cvs.style.cursor = 'not-allowed';
             } else if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
                 cvs.style.cursor = 'default';
@@ -2726,8 +2803,20 @@
                 return;
             }
 
+            // Quest: splitboard - player can only use their half
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'splitboard' && !isPlayerHalf(cell.r, cell.c)) {
+                msg("That's Panda's side of the board!");
+                return;
+            }
+
             if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
                 msg('Already selected!');
+                return;
+            }
+
+            // Flamingo: block selecting more than 3 letters
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'shortwords' && sel.length >= 3) {
+                msg('Maximum 3 letters against Flamingo!');
                 return;
             }
 
@@ -2890,14 +2979,26 @@
                 return;
             }
 
+            // Sneaky Snake: record move for end-of-game reveal
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'stealth') {
+                questSnakeMoves.push({ path: sel.map(s => ({r: s.r, c: s.c})), player, strength });
+            }
+
             const scoreBefore = countScores();
             applyTerritory(strength);
-            startFlash(sel, player === 'blue' ? TEAM.BLUE : TEAM.RED);
+
+            const isSnakeStealth = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'stealth' && !questSnakeRevealing;
+
+            if (!isSnakeStealth) {
+                startFlash(sel, player === 'blue' ? TEAM.BLUE : TEAM.RED);
+            }
 
             // Spawn particles at polygon centroid
             const cx = sel.reduce((s, p) => s + cellCenter(p.r, p.c).x, 0) / sel.length;
             const cy = sel.reduce((s, p) => s + cellCenter(p.r, p.c).y, 0) / sel.length;
-            spawnParticles(cx, cy, player === 'blue' ? TEAM.BLUE : TEAM.RED);
+            if (!isSnakeStealth) {
+                spawnParticles(cx, cy, player === 'blue' ? TEAM.BLUE : TEAM.RED);
+            }
 
             const scoreAfter = countScores();
             const gained = player === 'blue'
@@ -2905,12 +3006,12 @@
                 : scoreAfter.red - scoreBefore.red;
 
             // Spawn floating score text
-            if (gained > 0) {
+            if (gained > 0 && !isSnakeStealth) {
                 spawnFloatingText('+' + formatScorePercent(gained), cx, cy, player);
             }
 
-            addHistory(player, word, strength, gained);
-            msg('"' + word + '" captured! Strength ' + strength);
+            addHistory(player, word, strength, isSnakeStealth ? -1 : gained);
+            msg(isSnakeStealth ? ('"' + word + '" accepted!') : ('"' + word + '" captured! Strength ' + strength));
             playSound('accept');
             removeUsedLetters();
             if (onlineMode && isMyTurn()) broadcastMove(word, sel.map(s => ({r:s.r, c:s.c})), strength, 'word');
@@ -3217,8 +3318,11 @@
 
             const blueLabel = questMode ? QUEST_ENEMIES[questEnemyIndex].name.split(' ').pop() + ': ' : (gameMode === 'pvc' ? 'CPU: ' : 'Blue: ');
             const redLabel = (questMode || gameMode === 'pvc') ? 'You: ' : 'Red: ';
-            document.getElementById('blue-score-value').textContent = blueLabel + formatScorePercent(displayedScoreBlue);
-            document.getElementById('red-score-value').textContent = redLabel + formatScorePercent(displayedScoreRed);
+
+            // Sneaky Snake: hide scores during stealth
+            const snakeStealth = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'stealth' && !questSnakeRevealing && !gameOver;
+            document.getElementById('blue-score-value').textContent = blueLabel + (snakeStealth ? '???' : formatScorePercent(displayedScoreBlue));
+            document.getElementById('red-score-value').textContent = redLabel + (snakeStealth ? '???' : formatScorePercent(displayedScoreRed));
 
             if (t < 1) {
                 requestAnimationFrame(animateScoreCounters);
@@ -3266,6 +3370,10 @@
 
                 if (!h.word) {
                     html += '<span class="history-pass">Passed</span>';
+                } else if (h.gained === -1) {
+                    // Sneaky Snake stealth: hide territory gain
+                    html += '<span class="history-word">' + h.word + '</span>';
+                    html += '<span class="history-info" style="color:#10b981;">???</span>';
                 } else if (h.gained === 0) {
                     html += '<span class="history-word">' + h.word + '</span>';
                     html += '<span class="history-info history-collinear">0.0%</span>';
@@ -3287,9 +3395,12 @@
             const visited = Array.from({length: GRID}, () => new Array(GRID).fill(false));
             const isSquirrel = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'range';
             const isPenguin = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'science';
+            const isFlamingo = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'shortwords';
+            const isSplitboard = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'splitboard';
             const aiRange = isSquirrel ? 7 : MAX_RANGE;
-            const aiMaxLen = isPenguin ? 8 : (isSquirrel ? 4 : 5);
+            const aiMaxLen = isFlamingo ? 3 : (isPenguin ? 8 : (isSquirrel ? 4 : 5));
             const aiMinLen = isPenguin ? 6 : 3;
+            const aiHalfStart = isSplitboard ? Math.floor(GRID / 2) : 0;
 
             // Penguin uses science-only word/prefix sets
             if (isPenguin) buildPenguinWordSets();
@@ -3304,7 +3415,7 @@
                 const last = path[path.length - 1];
 
                 for (let r = 0; r < GRID; r++) {
-                    for (let c = 0; c < GRID; c++) {
+                    for (let c = aiHalfStart; c < GRID; c++) {
                         if (visited[r][c]) continue;
                         if (grid[r][c] === '') continue;
                         // Manhattan distance check (quest: squirrel gets extended range)
@@ -3323,7 +3434,7 @@
             }
 
             for (let r = 0; r < GRID; r++) {
-                for (let c = 0; c < GRID; c++) {
+                for (let c = aiHalfStart; c < GRID; c++) {
                     if (grid[r][c] === '') continue;
                     const letter = grid[r][c];
                     if (!prefixSet.has(letter)) continue;
@@ -3350,6 +3461,8 @@
         function aiChooseWord(candidates) {
             const isSquirrel = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'range';
             const isHippo = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'doubleturn';
+            const isTurtle = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'superstrength';
+            const isPanda = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'splitboard';
 
             // Hip Hop Hippo: cap territory at 10% per play
             if (isHippo) {
@@ -3361,6 +3474,14 @@
             if (isSquirrel) {
                 const maxArea = TOTAL_PIXELS * 0.20;
                 candidates = candidates.filter(c => aiCalculateArea(c.path) <= maxArea);
+            }
+
+            // Tenacious Turtle: remove the top 10% largest-area candidates to reduce territory
+            if (isTurtle && candidates.length > 1) {
+                const sorted = [...candidates].sort((a, b) => aiCalculateArea(b.path) - aiCalculateArea(a.path));
+                const cutoff = Math.max(1, Math.floor(candidates.length * 0.1));
+                const excluded = new Set(sorted.slice(0, cutoff));
+                candidates = candidates.filter(c => !excluded.has(c));
             }
 
             // Filter to words with area (non-collinear with 3+ letters)
@@ -3455,7 +3576,45 @@
                     }
                 }
 
-                const score = lengthBonus + distBonus + areaBonus + irregularityBonus + overlapBonus + stretchBonus + Math.random() * diff.randomness;
+                // Petty Panda: bonus for hugging edges and spreading across the half
+                let pandaBonus = 0;
+                if (isPanda) {
+                    const halfStart = Math.floor(GRID / 2); // left edge of AI half
+                    const halfEnd = GRID - 1;               // right edge
+                    const halfWidth = halfEnd - halfStart;   // columns available
+                    const rows = c.path.map(p => p.r);
+                    const cols = c.path.map(p => p.c);
+                    const minR = Math.min(...rows), maxR = Math.max(...rows);
+                    const minC = Math.min(...cols), maxC = Math.max(...cols);
+
+                    // Spread bonus: reward paths covering a large fraction of the AI half
+                    const rowSpread = (maxR - minR) / (GRID - 1);    // 0-1
+                    const colSpread = (maxC - minC) / halfWidth;     // 0-1
+                    pandaBonus += (rowSpread + colSpread) * 1500;
+
+                    // Edge proximity bonus: reward touching or being near edges
+                    const topDist = minR;                    // distance to top edge
+                    const botDist = (GRID - 1) - maxR;      // distance to bottom edge
+                    const leftDist = minC - halfStart;       // distance to divider edge
+                    const rightDist = halfEnd - maxC;        // distance to right edge
+                    // Bonus for each edge the path gets close to (within 1 cell)
+                    if (topDist <= 1) pandaBonus += 600;
+                    if (botDist <= 1) pandaBonus += 600;
+                    if (leftDist <= 1) pandaBonus += 600;
+                    if (rightDist <= 1) pandaBonus += 600;
+
+                    // Unclaimed territory bonus: prefer areas AI hasn't already claimed
+                    const cx = Math.floor((minC + maxC) / 2);
+                    const cy = Math.floor((minR + maxR) / 2);
+                    const px = cy * CELL + CELL / 2;
+                    const py = cx * CELL + CELL / 2;
+                    const pidx = Math.floor(px) * GRID_PX + Math.floor(py);
+                    if (pidx >= 0 && pidx < GRID_PX * GRID_PX && tOwner[pidx] !== TEAM.BLUE) {
+                        pandaBonus += 800;
+                    }
+                }
+
+                const score = lengthBonus + distBonus + areaBonus + irregularityBonus + overlapBonus + stretchBonus + pandaBonus + Math.random() * diff.randomness;
                 return { ...c, score };
             });
 
@@ -3516,6 +3675,11 @@
                 strength = Math.max(1, strength - 1);
             } else if (aiDifficulty === 'expert' && Math.random() < 0.5) {
                 strength = Math.min(5, strength + 1);
+            }
+
+            // Quest: Tenacious Turtle — maximum strength on all plays
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'superstrength') {
+                strength = 5;
             }
 
             // Quest: Professor Penguin — announce the scientific term
@@ -3629,6 +3793,49 @@
         function endGame() {
             gameOver = true;
             stopTurnTimer();
+
+            // Sneaky Snake: reveal territories one by one before showing results
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'stealth' && !questSnakeRevealing && questSnakeMoves.length > 0) {
+                questSnakeRevealing = true;
+                // Save final state, then clear territory for replay
+                const savedOwner = new Uint8Array(tOwner);
+                const savedStrength = new Uint8Array(tStrength);
+                tOwner.fill(TEAM.NONE);
+                tStrength.fill(0);
+                rebuildTerritoryVisual();
+                render();
+
+                msg('Revealing territories...');
+
+                let moveIdx = 0;
+                function revealNext() {
+                    if (moveIdx >= questSnakeMoves.length) {
+                        // Restore final state (handles overlapping territory correctly)
+                        tOwner.set(savedOwner);
+                        tStrength.set(savedStrength);
+                        rebuildTerritoryVisual();
+                        render();
+                        startScoreAnimation();
+                        // Now show the actual endGame overlay
+                        setTimeout(() => endGame(), 800);
+                        return;
+                    }
+                    const move = questSnakeMoves[moveIdx];
+                    // Temporarily set sel and player so applyTerritory works
+                    sel = move.path;
+                    player = move.player;
+                    applyTerritory(move.strength);
+                    startFlash(sel, move.player === 'blue' ? TEAM.BLUE : TEAM.RED);
+                    render();
+                    startScoreAnimation();
+                    sel = [];
+                    moveIdx++;
+                    setTimeout(revealNext, 1000);
+                }
+                revealNext();
+                return;
+            }
+
             playSound('gameend');
             const scores = countScores();
             const overlay = document.getElementById('game-over');
@@ -3781,8 +3988,25 @@
             ctx.fillStyle = '#f8f5ee';
             ctx.fillRect(PAD, PAD, GRID_PX, GRID_PX);
 
-            // 3. Territory
-            ctx.drawImage(tCvs, PAD, PAD);
+            // 3. Territory (hidden during Sneaky Snake stealth, unless revealing)
+            const isSnakeStealth = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'stealth' && !questSnakeRevealing && !gameOver;
+            if (!isSnakeStealth) {
+                ctx.drawImage(tCvs, PAD, PAD);
+            }
+
+            // 3a-split. Splitboard: gray out opponent's half
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'splitboard') {
+                const halfCol = Math.floor(GRID / 2);
+                if (player === 'red') {
+                    // Gray out AI's half (right side) for the player
+                    ctx.fillStyle = 'rgba(15,23,42,0.35)';
+                    ctx.fillRect(PAD + halfCol * CELL, PAD, (GRID - halfCol) * CELL, GRID_PX);
+                } else {
+                    // Gray out player's half (left side) for the AI
+                    ctx.fillStyle = 'rgba(15,23,42,0.35)';
+                    ctx.fillRect(PAD, PAD, halfCol * CELL, GRID_PX);
+                }
+            }
 
             // 3b. Range gray-out
             if (sel.length > 0) {
@@ -3845,6 +4069,22 @@
                 const y = PAD + i * CELL + 0.5;
                 ctx.beginPath(); ctx.moveTo(x, PAD); ctx.lineTo(x, PAD + GRID_PX); ctx.stroke();
                 ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(PAD + GRID_PX, y); ctx.stroke();
+            }
+
+            // 4a-split. Splitboard divider line
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'splitboard') {
+                const halfCol = Math.floor(GRID / 2);
+                const divX = PAD + halfCol * CELL;
+                ctx.save();
+                ctx.strokeStyle = '#f97316';
+                ctx.lineWidth = 4;
+                ctx.setLineDash([8, 4]);
+                ctx.beginPath();
+                ctx.moveTo(divX, PAD);
+                ctx.lineTo(divX, PAD + GRID_PX);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.restore();
             }
 
             // 4b. Hover highlight
@@ -4206,6 +4446,8 @@
             questWalrusSpellsUsed = 0;
             questWalrusSpellOrder = [];
             questWalrusDoubleNext = false;
+            questSnakeMoves = [];
+            questSnakeRevealing = false;
 
             const enemy = QUEST_ENEMIES[enemyIndex];
             gameMode = 'pvc';
@@ -4257,6 +4499,14 @@
                 // AI turn starts after player dismisses the taunt
             } else if (enemy.power === 'doubleturn') {
                 document.getElementById('hippo-taunt').classList.add('visible');
+            } else if (enemy.power === 'shortwords') {
+                document.getElementById('flamingo-taunt').classList.add('visible');
+            } else if (enemy.power === 'stealth') {
+                document.getElementById('snake-taunt').classList.add('visible');
+            } else if (enemy.power === 'superstrength') {
+                document.getElementById('turtle-taunt').classList.add('visible');
+            } else if (enemy.power === 'splitboard') {
+                document.getElementById('panda-taunt').classList.add('visible');
             } else if (enemy.power === 'spells') {
                 // Randomize spell order for turns 3, 5, 7
                 const spellIds = WALRUS_SPELLS.map(s => s.id);
@@ -4337,6 +4587,11 @@
             setTimeout(() => aiTakeTurn(), 600);
         }
 
+        function dismissSnakeTaunt() {
+            document.getElementById('snake-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
         function dismissHippoTaunt() {
             document.getElementById('hippo-taunt').classList.remove('visible');
             setTimeout(() => aiTakeTurn(), 600);
@@ -4347,8 +4602,23 @@
             setTimeout(() => aiTakeTurn(), 600);
         }
 
+        function dismissFlamingoTaunt() {
+            document.getElementById('flamingo-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissTurtleTaunt() {
+            document.getElementById('turtle-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
         function dismissSquirrelTaunt() {
             document.getElementById('squirrel-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissPandaTaunt() {
+            document.getElementById('panda-taunt').classList.remove('visible');
             setTimeout(() => aiTakeTurn(), 600);
         }
 
@@ -4457,9 +4727,14 @@
             }
 
             if (enemy.power === 'spells' && timing === 'afterAI') {
-                // Wizardly Walrus: cast spells at turns 3, 5, 7 in random order
-                const spellTurns = [3, 5, 7];
-                const spellIdx = spellTurns.indexOf(questTurnCount);
+                // Wizardly Walrus: cast spells based on player's remaining turns
+                // Spells trigger when player has 6, 4, and 2 turns remaining
+                const totalPlayerTurns = (enemy.turns || TURNS_EACH);
+                const t1 = totalPlayerTurns - Math.floor(totalPlayerTurns / 4);       // ~75% remaining
+                const t2 = Math.ceil(totalPlayerTurns / 2);                           // ~50% remaining
+                const t3 = Math.floor(totalPlayerTurns / 4);                          // ~25% remaining
+                const spellThresholds = [t1, t2, t3];
+                const spellIdx = spellThresholds.indexOf(turnsLeft.red);
                 if (spellIdx !== -1 && questWalrusSpellsUsed <= spellIdx) {
                     const spellId = questWalrusSpellOrder[spellIdx];
                     const spell = WALRUS_SPELLS.find(s => s.id === spellId);
