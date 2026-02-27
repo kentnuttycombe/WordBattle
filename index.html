@@ -390,12 +390,12 @@
             justify-content: center; align-items: center;
         }
         #pass-confirm.visible { display: flex; }
-        #duck-taunt, #goat-taunt, #hippo-taunt, #flamingo-taunt, #turtle-taunt, #raccoon-taunt, #squirrel-taunt, #panda-taunt, #penguin-taunt, #walrus-taunt, #snake-taunt {
+        #duck-taunt, #goat-taunt, #hippo-taunt, #flamingo-taunt, #turtle-taunt, #raccoon-taunt, #squirrel-taunt, #panda-taunt, #penguin-taunt, #walrus-taunt, #snake-taunt, #possum-taunt, #rhino-taunt {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.5); z-index: 100;
             justify-content: center; align-items: center;
         }
-        #duck-taunt.visible, #goat-taunt.visible, #hippo-taunt.visible, #flamingo-taunt.visible, #turtle-taunt.visible, #raccoon-taunt.visible, #squirrel-taunt.visible, #panda-taunt.visible, #penguin-taunt.visible, #walrus-taunt.visible, #snake-taunt.visible { display: flex; }
+        #duck-taunt.visible, #goat-taunt.visible, #hippo-taunt.visible, #flamingo-taunt.visible, #turtle-taunt.visible, #raccoon-taunt.visible, #squirrel-taunt.visible, #panda-taunt.visible, #penguin-taunt.visible, #walrus-taunt.visible, #snake-taunt.visible, #possum-taunt.visible, #rhino-taunt.visible { display: flex; }
         .pass-confirm-content {
             background: #1e293b;
             border: 1px solid #334155;
@@ -801,6 +801,11 @@
             font-family: 'Permanent Marker', cursive;
             color: #fb923c;
         }
+        .quest-enemy-card[data-enemy="rhino"] .qec-name {
+            font-family: 'Fredoka', sans-serif;
+            color: #ef4444;
+            letter-spacing: 1px;
+        }
         .quest-enemy-card[data-enemy="squirrel"] .qec-name {
             font-family: 'Fredoka', sans-serif;
             color: #4ade80;
@@ -954,6 +959,34 @@
             font-size: 28px; color: #fbbf24; margin-bottom: 6px;
         }
         .shakeup-content p { font-size: 14px; color: #94a3b8; }
+
+        /* Shove overlay */
+        #shove-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); z-index: 300;
+            justify-content: center; align-items: center;
+        }
+        #shove-overlay.visible { display: flex; }
+        .shove-content {
+            text-align: center; animation: popIn 0.3s ease-out;
+        }
+        .shove-content img {
+            width: 100px; height: 100px; border-radius: 50%;
+            object-fit: cover; border: 3px solid #f59e0b;
+            margin-bottom: 12px;
+        }
+        .shove-content h2 {
+            font-size: 28px; color: #f59e0b; margin-bottom: 6px;
+        }
+        .shove-content p { font-size: 14px; color: #94a3b8; }
+        .shove-direction {
+            font-size: 40px; margin: 10px 0;
+            animation: shove-bounce 0.4s ease-in-out infinite alternate;
+        }
+        @keyframes shove-bounce {
+            from { transform: translateX(-5px); }
+            to { transform: translateX(5px); }
+        }
 
         /* Spell overlay */
         #spell-overlay {
@@ -1241,6 +1274,16 @@
         </div>
     </div>
 
+    <!-- Shove Overlay -->
+    <div id="shove-overlay">
+        <div class="shove-content">
+            <img src="Images for Quest Mode/Pushy Possum.jpg" alt="Pushy Possum">
+            <h2>Board Shove!</h2>
+            <div class="shove-direction" id="shove-direction-arrow"></div>
+            <p id="shove-direction-text"></p>
+        </div>
+    </div>
+
     <!-- Spell Overlay -->
     <div id="spell-overlay">
         <div class="spell-content">
@@ -1391,6 +1434,16 @@
         </div>
     </div>
 
+    <div id="possum-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Pushy Possum.jpg" alt="Pushy Possum" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #f59e0b;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Pushy Possum! Sometimes I get angry and push the game board around.</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissPossumTaunt()" style="background:#f59e0b;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
     <div id="penguin-taunt">
         <div class="pass-confirm-content" style="max-width:340px;">
             <img src="Images for Quest Mode/Professor Penguin.jpg" alt="Professor Penguin" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #93c5fd;margin-bottom:10px;">
@@ -1451,6 +1504,16 @@
         </div>
     </div>
 
+    <div id="rhino-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Restless Rhino.jpg" alt="Restless Rhino" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #ef4444;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Restless Rhino! I have no time to wait, so you've got 15 seconds to play your turn.</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissRhinoTaunt()" style="background:#ef4444;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Tutorial overlay -->
     <div id="tutorial-overlay">
         <div id="tutorial-step-title"></div>
@@ -1489,10 +1552,12 @@
             { id: 'hippo', name: 'Hip Hop Hippo', img: 'Images for Quest Mode/Hip Hop Hippo.jpg', difficulty: 'easy', power: 'doubleturn', desc: 'Plays twice between each of your turns', boardSize: 10, turns: 5, aiTurns: 10 },
             { id: 'duck', name: 'Dastardly Duck', img: 'Images for Quest Mode/Dastardly Duck.jpg', difficulty: 'easy', power: 'headstart', desc: 'Starts with 20% of the board already claimed' },
             { id: 'snake', name: 'Sneaky Snake', img: 'Images for Quest Mode/Sneaky Snake.jpg', difficulty: 'medium', power: 'stealth', desc: 'All territory is hidden until the game ends', boardSize: 11, turns: 7 },
-            { id: 'turtle', name: 'Tenacious Turtle', img: 'Images for Quest Mode/Tenacious Turtle.jpg', difficulty: 'medium', power: 'superstrength', desc: 'Captures all territory at maximum strength', boardSize: 9, turns: 5 },
             { id: 'raccoon', name: 'Rowdy Raccoon', img: 'Images for Quest Mode/Rowdy Raccoon.jpg', difficulty: 'medium', power: 'shakeup', desc: 'Scrambles the board every 2 turns' },
+            { id: 'turtle', name: 'Tenacious Turtle', img: 'Images for Quest Mode/Tenacious Turtle.jpg', difficulty: 'medium', power: 'superstrength', desc: 'Captures all territory at maximum strength', boardSize: 9, turns: 5 },
             { id: 'squirrel', name: 'Stretchy Squirrel', img: 'Images for Quest Mode/Stretchy Squirrel.jpg', difficulty: 'medium', power: 'range', desc: 'Can stretch up to 7 tiles between letters' },
+            { id: 'rhino', name: 'Restless Rhino', img: 'Images for Quest Mode/Restless Rhino.jpg', difficulty: 'medium', power: 'impatience', desc: 'You only have 15 seconds per turn', boardSize: 10, turns: 7 },
             { id: 'panda', name: 'Petty Panda', img: 'Images for Quest Mode/Petty Panda.jpg', difficulty: 'expert', power: 'splitboard', desc: 'Board is split: each player uses their own half', boardSize: 12 },
+            { id: 'possum', name: 'Pushy Possum', img: 'Images for Quest Mode/Pushy Possum.jpg', difficulty: 'expert', power: 'shove', desc: 'Shoves the board, pushing half the tiles away', boardSize: 12, turns: 8 },
             { id: 'penguin', name: 'Professor Penguin', img: 'Images for Quest Mode/Professor Penguin.jpg', difficulty: 'expert', power: 'science', desc: 'Only plays scientific terms (6+ letters)' },
             { id: 'walrus', name: 'Wizardly Walrus', img: 'Images for Quest Mode/Wizardly Walrus.jpg', difficulty: 'expert', power: 'spells', desc: 'Casts 3 powerful spells during battle' }
         ];
@@ -1519,8 +1584,22 @@
             'HELIUM','RADIUS','MAGNET','TENSOR','MATRIX','VECTOR'
         ]);
 
-        const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
-        const API_URL_FALLBACK = 'https://api.datamuse.com/words?sp=';
+        let DICTIONARY_SET = null;
+        let dictionaryLoadPromise = null;
+
+        function loadDictionary() {
+            dictionaryLoadPromise = fetch('dictionary.txt')
+                .then(r => r.text())
+                .then(text => {
+                    DICTIONARY_SET = new Set(text.split('\n').map(w => w.trim().toUpperCase()).filter(w => w.length > 0));
+                })
+                .catch(err => {
+                    console.error('Failed to load dictionary:', err);
+                    DICTIONARY_SET = new Set();
+                });
+            return dictionaryLoadPromise;
+        }
+        loadDictionary();
         let TOTAL_PIXELS = GRID_PX * GRID_PX;
 
         function recalculateGridSize(size) {
@@ -1887,6 +1966,7 @@
         let questSnakeMoves = [];  // [{path, player, strength}] recorded moves for stealth reveal
         let questSnakeRevealing = false; // true during end-of-game territory reveal
         let shakeupAnim = null; // {moves: [{letter, fromX, fromY, toX, toY}], startTime, duration}
+        let shoveAnim = null;  // {dir, oldLetters, newLetters, shiftCells, startTime, duration, savedTerritoryCanvas}
 
         /* ===== Canvas refs ===== */
         let cvs, ctx;
@@ -2431,6 +2511,11 @@
                 document.getElementById('turn-timer').style.display = 'none';
                 return;
             }
+            // Rhino impatience: only run timer on the player's (red) turns
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'impatience' && player === 'blue') {
+                document.getElementById('turn-timer').style.display = 'none';
+                return;
+            }
             turnTimerRemaining = timerDuration;
             const timerEl = document.getElementById('turn-timer');
             timerEl.style.display = '';
@@ -2810,6 +2895,12 @@
             }
 
             if (sel.some(s => s.r === cell.r && s.c === cell.c)) {
+                // Clicking the last selected letter undoes it
+                const last = sel[sel.length - 1];
+                if (last && last.r === cell.r && last.c === cell.c) {
+                    undoSelection();
+                    return;
+                }
                 msg('Already selected!');
                 return;
             }
@@ -2875,31 +2966,14 @@
         }
 
         async function validateWord(word) {
+            if (!DICTIONARY_SET) await dictionaryLoadPromise;
             const upper = word.toUpperCase();
-            // Tier 1: Local word set
-            if (VALID_WORD_SET && VALID_WORD_SET.has(upper)) {
-                return { valid: true, source: 'local' };
+            // Professor Penguin: also accept science words
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'science') {
+                buildPenguinWordSets();
+                if (PENGUIN_WORD_SET.has(upper)) return { valid: true, source: 'local' };
             }
-            // Tier 2: Primary dictionary API
-            try {
-                const resp = await fetch(API_URL + word.toLowerCase());
-                if (resp.ok) return { valid: true, source: 'primary' };
-            } catch (e) {
-                // Network error — fall through to fallback
-            }
-            // Tier 3: Datamuse fallback API
-            try {
-                const resp = await fetch(API_URL_FALLBACK + word.toLowerCase() + '&max=1');
-                if (resp.ok) {
-                    const data = await resp.json();
-                    if (data.length > 0 && data[0].word === word.toLowerCase()) {
-                        return { valid: true, source: 'fallback' };
-                    }
-                }
-            } catch (e) {
-                // Both APIs failed — treat as network error
-                return { valid: false, source: 'error' };
-            }
+            if (DICTIONARY_SET && DICTIONARY_SET.has(upper)) return { valid: true, source: 'local' };
             return { valid: false, source: 'rejected' };
         }
 
@@ -2923,7 +2997,7 @@
                 return;
             }
 
-            // Word validation (local → primary API → fallback API)
+            // Word validation (dictionary file)
             submitting = true;
             setButtonsDisabled(true);
             document.getElementById('btn-submit').textContent = 'Checking...';
@@ -2934,13 +3008,6 @@
             submitting = false;
             setButtonsDisabled(false);
             document.getElementById('btn-submit').textContent = 'Submit Word';
-
-            if (result.source === 'error') {
-                msg('Network error \u2014 retry or Accept Anyway.');
-                showAcceptBtn();
-                playSound('reject');
-                return;
-            }
 
             if (!result.valid) {
                 msg('"' + word + '" is not a valid word!');
@@ -3990,7 +4057,24 @@
 
             // 3. Territory (hidden during Sneaky Snake stealth, unless revealing)
             const isSnakeStealth = questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'stealth' && !questSnakeRevealing && !gameOver;
-            if (!isSnakeStealth) {
+            if (shoveAnim) {
+                // During shove animation: draw territory sliding at animated offset
+                const elapsed = performance.now() - shoveAnim.startTime;
+                const t = Math.min(elapsed / shoveAnim.duration, 1);
+                const eased = shoveEase(t);
+                const offsetPx = eased * shoveAnim.shiftCells * CELL;
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(PAD, PAD, GRID_PX, GRID_PX);
+                ctx.clip();
+                let dx = 0, dy = 0;
+                if (shoveAnim.dir === 'left') dx = -offsetPx;
+                else if (shoveAnim.dir === 'right') dx = offsetPx;
+                else if (shoveAnim.dir === 'up') dy = -offsetPx;
+                else dy = offsetPx;
+                ctx.drawImage(shoveAnim.savedTerritoryCanvas, PAD + dx, PAD + dy);
+                ctx.restore();
+            } else if (!isSnakeStealth) {
                 ctx.drawImage(tCvs, PAD, PAD);
             }
 
@@ -4159,6 +4243,40 @@
                     const y = m.fromY + (m.toY - m.fromY) * eased;
                     ctx.fillText(m.letter, x, y);
                 }
+            } else if (shoveAnim) {
+                // During shove animation: draw letters sliding across the board
+                const elapsed = performance.now() - shoveAnim.startTime;
+                const t = Math.min(elapsed / shoveAnim.duration, 1);
+                const eased = shoveEase(t);
+                const offsetPx = eased * shoveAnim.shiftCells * CELL;
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(PAD, PAD, GRID_PX, GRID_PX);
+                ctx.clip();
+                ctx.font = 'bold 22px "Courier New", monospace';
+                ctx.fillStyle = '#334155';
+                // Old letters sliding out
+                for (const ol of shoveAnim.oldLetters) {
+                    let x = PAD + ol.c * CELL + CELL / 2;
+                    let y = PAD + ol.r * CELL + CELL / 2;
+                    if (shoveAnim.dir === 'left') x -= offsetPx;
+                    else if (shoveAnim.dir === 'right') x += offsetPx;
+                    else if (shoveAnim.dir === 'up') y -= offsetPx;
+                    else y += offsetPx;
+                    ctx.fillText(ol.letter, x, y);
+                }
+                // New letters sliding in from the opposite edge
+                for (const nl of shoveAnim.newLetters) {
+                    let x = PAD + nl.c * CELL + CELL / 2;
+                    let y = PAD + nl.r * CELL + CELL / 2;
+                    const remaining = shoveAnim.shiftCells * CELL - offsetPx;
+                    if (shoveAnim.dir === 'left') x += remaining;
+                    else if (shoveAnim.dir === 'right') x -= remaining;
+                    else if (shoveAnim.dir === 'up') y += remaining;
+                    else y -= remaining;
+                    ctx.fillText(nl.letter, x, y);
+                }
+                ctx.restore();
             } else {
                 for (let r = 0; r < GRID; r++) {
                     for (let c = 0; c < GRID; c++) {
@@ -4457,8 +4575,13 @@
             recalculateGridSize(enemy.boardSize || 11);
             resizeCanvases();
             TURNS_EACH = enemy.turns || 8;
-            timerEnabled = false;
-            timerDuration = 0;
+            if (enemy.power === 'impatience') {
+                timerEnabled = true;
+                timerDuration = 15;
+            } else {
+                timerEnabled = false;
+                timerDuration = 0;
+            }
 
             // Squirrel: extended range for AI (handled in aiFindWords)
             MAX_RANGE = 4;
@@ -4505,6 +4628,8 @@
                 document.getElementById('snake-taunt').classList.add('visible');
             } else if (enemy.power === 'superstrength') {
                 document.getElementById('turtle-taunt').classList.add('visible');
+            } else if (enemy.power === 'shove') {
+                document.getElementById('possum-taunt').classList.add('visible');
             } else if (enemy.power === 'splitboard') {
                 document.getElementById('panda-taunt').classList.add('visible');
             } else if (enemy.power === 'spells') {
@@ -4522,6 +4647,8 @@
                 document.getElementById('squirrel-taunt').classList.add('visible');
             } else if (enemy.power === 'shakeup') {
                 document.getElementById('raccoon-taunt').classList.add('visible');
+            } else if (enemy.power === 'impatience') {
+                document.getElementById('rhino-taunt').classList.add('visible');
             } else if (enemy.power === 'none') {
                 document.getElementById('goat-taunt').classList.add('visible');
             } else {
@@ -4576,6 +4703,166 @@
             }
         }
 
+        // Custom easing: accelerate for 0.5s, constant for 2.5s, decelerate for 1s (over 4s total)
+        function shoveEase(t) {
+            const t1 = 0.125; // 0.5s / 4s
+            const t2 = 0.75;  // 3.0s / 4s
+            const s3 = 1 - t2; // 0.25
+            const v = 1.0 / (t2 - t1 / 2 + s3 / 2);
+            const a = v / (2 * t1);
+            if (t <= t1) {
+                return a * t * t;
+            } else if (t <= t2) {
+                const p1 = a * t1 * t1;
+                return p1 + v * (t - t1);
+            } else {
+                const p1 = a * t1 * t1;
+                const p2 = p1 + v * (t2 - t1);
+                const s = t - t2;
+                return p2 + v * s - (v / (2 * s3)) * s * s;
+            }
+        }
+
+        async function applyPossumShove() {
+            const shiftCells = 6;
+            const shiftPx = shiftCells * CELL;
+            const dirArrows = { left: '\u2B05', right: '\u27A1', up: '\u2B06', down: '\u2B07' };
+            const dirLabels = { left: 'Shoved Left!', right: 'Shoved Right!', up: 'Shoved Up!', down: 'Shoved Down!' };
+
+            // Evaluate each direction: count surviving blue vs red territory
+            let bestDir = 'left';
+            let bestScore = -Infinity;
+            const dirs = ['left', 'right', 'up', 'down'];
+            for (const dir of dirs) {
+                let blue = 0, red = 0;
+                for (let i = 0; i < GRID_PX * GRID_PX; i++) {
+                    if (tOwner[i] !== TEAM.BLUE && tOwner[i] !== TEAM.RED) continue;
+                    const x = i % GRID_PX;
+                    const y = Math.floor(i / GRID_PX);
+                    let survives = false;
+                    if (dir === 'left') survives = x >= shiftPx;
+                    else if (dir === 'right') survives = x < GRID_PX - shiftPx;
+                    else if (dir === 'up') survives = y >= shiftPx;
+                    else if (dir === 'down') survives = y < GRID_PX - shiftPx;
+                    if (survives) {
+                        if (tOwner[i] === TEAM.BLUE) blue++;
+                        else if (tOwner[i] === TEAM.RED) red++;
+                    }
+                }
+                const score = blue - red;
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestDir = dir;
+                }
+            }
+
+            // Show overlay
+            document.getElementById('shove-direction-arrow').textContent = dirArrows[bestDir];
+            document.getElementById('shove-direction-text').textContent = dirLabels[bestDir];
+            document.getElementById('shove-overlay').classList.add('visible');
+            await new Promise(r => setTimeout(r, 1800));
+            document.getElementById('shove-overlay').classList.remove('visible');
+
+            // Capture old letters for animation
+            const oldLetters = [];
+            for (let r = 0; r < GRID; r++) {
+                for (let c = 0; c < GRID; c++) {
+                    if (grid[r][c] !== '') {
+                        oldLetters.push({ letter: grid[r][c], r, c });
+                    }
+                }
+            }
+
+            // Build new grid to determine new letters in vacated positions
+            const newGrid = [];
+            const newLetters = [];
+            for (let r = 0; r < GRID; r++) {
+                newGrid[r] = [];
+                for (let c = 0; c < GRID; c++) {
+                    let srcR, srcC;
+                    if (bestDir === 'left') { srcR = r; srcC = c + shiftCells; }
+                    else if (bestDir === 'right') { srcR = r; srcC = c - shiftCells; }
+                    else if (bestDir === 'up') { srcR = r + shiftCells; srcC = c; }
+                    else { srcR = r - shiftCells; srcC = c; }
+
+                    if (srcR >= 0 && srcR < GRID && srcC >= 0 && srcC < GRID) {
+                        newGrid[r][c] = grid[srcR][srcC];
+                    } else {
+                        newGrid[r][c] = LETTER_BAG[Math.floor(Math.random() * LETTER_BAG.length)];
+                        newLetters.push({ letter: newGrid[r][c], r, c });
+                    }
+                }
+            }
+
+            // Save a copy of the territory canvas for animation
+            const savedTCvs = document.createElement('canvas');
+            savedTCvs.width = tCvs.width;
+            savedTCvs.height = tCvs.height;
+            savedTCvs.getContext('2d').drawImage(tCvs, 0, 0);
+
+            // Clear grid so normal render doesn't draw letters
+            for (let r = 0; r < GRID; r++) {
+                for (let c = 0; c < GRID; c++) {
+                    grid[r][c] = '';
+                }
+            }
+
+            // Start animation
+            const duration = 4000;
+            shoveAnim = {
+                dir: bestDir,
+                oldLetters,
+                newLetters,
+                shiftCells,
+                startTime: performance.now(),
+                duration,
+                savedTerritoryCanvas: savedTCvs
+            };
+
+            function animateShove() {
+                render();
+                const elapsed = performance.now() - shoveAnim.startTime;
+                if (elapsed < duration) {
+                    requestAnimationFrame(animateShove);
+                } else {
+                    // Animation done — apply final state
+                    shoveAnim = null;
+                    grid = newGrid;
+
+                    // Shift territory pixels
+                    const newOwner = new Uint8Array(GRID_PX * GRID_PX);
+                    const newStrength = new Uint8Array(GRID_PX * GRID_PX);
+                    for (let y = 0; y < GRID_PX; y++) {
+                        for (let x = 0; x < GRID_PX; x++) {
+                            let srcX, srcY;
+                            if (bestDir === 'left') { srcX = x + shiftPx; srcY = y; }
+                            else if (bestDir === 'right') { srcX = x - shiftPx; srcY = y; }
+                            else if (bestDir === 'up') { srcX = x; srcY = y + shiftPx; }
+                            else { srcX = x; srcY = y - shiftPx; }
+
+                            const dstIdx = y * GRID_PX + x;
+                            if (srcX >= 0 && srcX < GRID_PX && srcY >= 0 && srcY < GRID_PX) {
+                                const srcIdx = srcY * GRID_PX + srcX;
+                                newOwner[dstIdx] = tOwner[srcIdx];
+                                newStrength[dstIdx] = tStrength[srcIdx];
+                            }
+                        }
+                    }
+                    tOwner.set(newOwner);
+                    tStrength.set(newStrength);
+
+                    rebuildTerritoryVisual();
+                    render();
+                }
+            }
+            requestAnimationFrame(animateShove);
+
+            // Wait for animation to complete
+            await new Promise(r => setTimeout(r, duration + 100));
+            msg('Possum shoved the board ' + bestDir + '!');
+            await new Promise(r => setTimeout(r, 500));
+        }
+
         function dismissDuckTaunt() {
             document.getElementById('duck-taunt').classList.remove('visible');
             // Now start the AI's first turn
@@ -4589,6 +4876,11 @@
 
         function dismissSnakeTaunt() {
             document.getElementById('snake-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissPossumTaunt() {
+            document.getElementById('possum-taunt').classList.remove('visible');
             setTimeout(() => aiTakeTurn(), 600);
         }
 
@@ -4629,6 +4921,11 @@
 
         function dismissWalrusTaunt() {
             document.getElementById('walrus-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissRhinoTaunt() {
+            document.getElementById('rhino-taunt').classList.remove('visible');
             setTimeout(() => aiTakeTurn(), 600);
         }
 
@@ -4723,6 +5020,13 @@
                     await new Promise(r => setTimeout(r, duration + 100));
                     msg('Raccoon scrambled the board!');
                     await new Promise(r => setTimeout(r, 300));
+                }
+            }
+
+            if (enemy.power === 'shove' && timing === 'beforeAI') {
+                // Pushy Possum: shove the board after 3 turns each and 6 turns each
+                if (questTurnCount === 6 || questTurnCount === 12) {
+                    await applyPossumShove();
                 }
             }
 
