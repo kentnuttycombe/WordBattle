@@ -2740,15 +2740,20 @@
             cvs.addEventListener('mouseleave', () => { hoverCell = null; render(); });
         }
 
-        function resizeCanvases() {
+        function resizeCanvases(preserveTerritory) {
             cvs.width = CW;
             cvs.height = CH;
             tCvs.width = GRID_PX;
             tCvs.height = GRID_PX;
             flashCvs.width = GRID_PX;
             flashCvs.height = GRID_PX;
-            tOwner = new Uint8Array(GRID_PX * GRID_PX);
-            tStrength = new Uint8Array(GRID_PX * GRID_PX);
+            const size = GRID_PX * GRID_PX;
+            if (!preserveTerritory || !tOwner || tOwner.length !== size) {
+                tOwner = new Uint8Array(size);
+                tStrength = new Uint8Array(size);
+            } else {
+                rebuildTerritoryVisual();
+            }
         }
 
         function startGame(mode) {
@@ -4283,6 +4288,7 @@
                 ctx.drawImage(shoveAnim.savedTerritoryCanvas, PAD + dx, PAD + dy);
                 ctx.restore();
             } else if (!isSnakeStealth) {
+                if (!flashing) rebuildTerritoryVisual();
                 ctx.drawImage(tCvs, PAD, PAD);
             }
 
@@ -5620,7 +5626,7 @@
                 if (PAD !== newPad) {
                     PAD = newPad;
                     recalculateGridSize(GRID);
-                    resizeCanvases();
+                    resizeCanvases(true);
                     render();
                 }
                 if (!questMode) return;
