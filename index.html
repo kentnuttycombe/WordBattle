@@ -26,9 +26,10 @@
             position: fixed; inset: 0; z-index: 200;
             background: linear-gradient(180deg, #0a1628 0%, #0f2940 30%, #134b5f 60%, #1a5c3a 85%, #0f3d1f 100%);
             display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
+            justify-content: safe center; align-items: center;
             transition: opacity 0.6s ease, transform 0.6s ease;
-            overflow: hidden;
+            overflow-x: hidden; overflow-y: auto;
+            padding: 20px 0;
         }
         .menu-decorations {
             position: absolute; inset: 0;
@@ -401,12 +402,12 @@
             justify-content: center; align-items: center;
         }
         #pass-confirm.visible { display: flex; }
-        #duck-taunt, #goat-taunt, #hippo-taunt, #flamingo-taunt, #turtle-taunt, #raccoon-taunt, #squirrel-taunt, #panda-taunt, #penguin-taunt, #walrus-taunt, #snake-taunt, #possum-taunt, #rhino-taunt, #condor-taunt, #condor-block, #newt-taunt {
+        #duck-taunt, #goat-taunt, #hippo-taunt, #flamingo-taunt, #turtle-taunt, #raccoon-taunt, #squirrel-taunt, #panda-taunt, #penguin-taunt, #walrus-taunt, #snake-taunt, #possum-taunt, #rhino-taunt, #condor-taunt, #condor-block, #newt-taunt, #dog-taunt {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.5); z-index: 100;
             justify-content: center; align-items: center;
         }
-        #duck-taunt.visible, #goat-taunt.visible, #hippo-taunt.visible, #flamingo-taunt.visible, #turtle-taunt.visible, #raccoon-taunt.visible, #squirrel-taunt.visible, #panda-taunt.visible, #penguin-taunt.visible, #walrus-taunt.visible, #snake-taunt.visible, #possum-taunt.visible, #rhino-taunt.visible, #condor-taunt.visible, #condor-block.visible, #newt-taunt.visible { display: flex; }
+        #duck-taunt.visible, #goat-taunt.visible, #hippo-taunt.visible, #flamingo-taunt.visible, #turtle-taunt.visible, #raccoon-taunt.visible, #squirrel-taunt.visible, #panda-taunt.visible, #penguin-taunt.visible, #walrus-taunt.visible, #snake-taunt.visible, #possum-taunt.visible, #rhino-taunt.visible, #condor-taunt.visible, #condor-block.visible, #newt-taunt.visible, #dog-taunt.visible { display: flex; }
         .pass-confirm-content {
             background: #1e293b;
             border: 1px solid #334155;
@@ -854,7 +855,7 @@
         .qec-diff.expert { color: #f87171; }
 
         .quest-enemy-card .qec-power {
-            font-size: 11px; color: #94a3b8; line-height: 1.35;
+            font-size: 14px; color: #94a3b8; line-height: 1.35;
             margin-bottom: 10px;
         }
 
@@ -1124,7 +1125,12 @@
             #controls { gap: 6px; }
             button { padding: 7px 14px; font-size: 13px; }
             .menu-title { font-size: 36px; }
-            .menu-card { width: 180px; padding: 20px 16px; }
+            .menu-subtitle { margin-bottom: 20px; }
+            .menu-cards { gap: 10px; padding: 0 10px; }
+            .menu-card { width: calc(50% - 10px); min-width: 0; padding: 14px 10px; }
+            .menu-card-icon { font-size: 28px; margin-bottom: 6px; }
+            .menu-card-title { font-size: 15px; margin-bottom: 4px; }
+            .menu-card-desc { font-size: 11px; }
             .deco-palm-left { width: 90px; }
             .deco-palm-right { width: 80px; }
             .deco-palm-bg { width: 70px; }
@@ -1143,7 +1149,7 @@
             .quest-enemy-card { width: min(80vw, 360px); }
             .quest-connector { height: 50px; }
             .quest-enemy-card .qec-name { font-size: clamp(13px, 3.5vw, 18px); }
-            .quest-enemy-card .qec-power { font-size: 10px; }
+            .quest-enemy-card .qec-power { font-size: 13px; }
             /* Quest indicator: full-width top banner on mobile */
             #quest-indicator {
                 position: fixed; top: 0; left: 0; right: 0;
@@ -1601,6 +1607,16 @@
         </div>
     </div>
 
+    <div id="dog-taunt">
+        <div class="pass-confirm-content" style="max-width:340px;">
+            <img src="Images for Quest Mode/Decisive Dog.jpg" alt="Decisive Dog" style="width:170px;height:170px;border-radius:50%;object-fit:cover;border:3px solid #facc15;margin-bottom:10px;">
+            <p style="font-size:14px;line-height:1.5;color:#e2e8f0;">I'm Decisive Dog! Once you pick a letter, there's no going back. And if you play an invalid word, you lose your turn!</p>
+            <div class="pass-confirm-buttons" style="margin-top:14px;">
+                <button class="pass-yes" onclick="dismissDogTaunt()" style="background:#facc15;color:#1e293b;">Let's go!</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Tutorial overlay -->
     <div id="tutorial-overlay">
         <div id="tutorial-step-title"></div>
@@ -1646,6 +1662,7 @@
             { id: 'rhino', name: 'Restless Rhino', img: 'Images for Quest Mode/Restless Rhino.jpg', difficulty: 'medium', power: 'impatience', desc: 'You only have 15 seconds per turn', boardSize: 10, turns: 7 },
             { id: 'newt', name: 'Nerdy Newt', img: 'Images for Quest Mode/nerdy newt.jpg', difficulty: 'medium', aiDiff: 'easy', power: 'numbers', desc: 'Only words that spell out numbers are valid', boardSize: 10, turns: 5 },
             { id: 'panda', name: 'Petty Panda', img: 'Images for Quest Mode/Petty Panda.jpg', difficulty: 'expert', power: 'splitboard', desc: 'Board is split: each player uses their own half', boardSize: 12 },
+            { id: 'dog', name: 'Decisive Dog', img: 'Images for Quest Mode/Decisive Dog.jpg', difficulty: 'expert', aiDiff: 'medium', power: 'decisive', desc: 'Letter selections are permanent — invalid words lose your turn', boardSize: 9, turns: 4 },
             { id: 'possum', name: 'Pushy Possum', img: 'Images for Quest Mode/Pushy Possum.jpg', difficulty: 'expert', power: 'shove', desc: 'Shoves the board, pushing half the tiles away', boardSize: 12, turns: 8 },
             { id: 'penguin', name: 'Professor Penguin', img: 'Images for Quest Mode/Professor Penguin.jpg', difficulty: 'expert', power: 'science', desc: 'Only plays scientific terms (6+ letters)' },
             { id: 'walrus', name: 'Wizardly Walrus', img: 'Images for Quest Mode/Wizardly Walrus.jpg', difficulty: 'expert', power: 'spells', desc: 'Casts 3 powerful spells during battle' }
@@ -2672,12 +2689,17 @@
 
                 if (turnTimerRemaining <= 0) {
                     stopTurnTimer();
-                    msg("Time's up!");
-                    sel = [];
-                    hideAcceptBtn();
-                    addHistory(player, null, 0, 0);
-                    if (onlineMode) broadcastMove(null, null, 0, 'pass');
-                    advanceTurn();
+                    if (sel.length >= 3) {
+                        msg("Time's up! Submitting your word...");
+                        submitWord();
+                    } else {
+                        msg("Time's up!");
+                        sel = [];
+                        hideAcceptBtn();
+                        addHistory(player, null, 0, 0);
+                        if (onlineMode) broadcastMove(null, null, 0, 'pass');
+                        advanceTurn();
+                    }
                 }
             }, 1000);
         }
@@ -3073,6 +3095,7 @@
             if (gameOver || submitting || aiThinking) return;
             if (tutorialActive) return;
             if (onlineMode && !isMyTurn()) return;
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'decisive') { msg('No undo against Decisive Dog!'); return; }
             if (sel.length) {
                 hideAcceptBtn();
                 sel.pop();
@@ -3085,6 +3108,7 @@
             if (gameOver || submitting || aiThinking) return;
             if (tutorialActive) return;
             if (onlineMode && !isMyTurn()) return;
+            if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'decisive') { msg('No clearing against Decisive Dog!'); return; }
             hideAcceptBtn();
             sel = [];
             updateUI();
@@ -3172,6 +3196,14 @@
             document.getElementById('btn-submit').textContent = 'Submit Word';
 
             if (!result.valid) {
+                // Decisive Dog: invalid word loses your turn
+                if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'decisive') {
+                    msg('Lose your turn!');
+                    playSound('reject');
+                    addHistory(player, null, 0, 0);
+                    advanceTurn();
+                    return;
+                }
                 let rejectMsg = '"' + word + '" is not a valid word!';
                 if (questMode && QUEST_ENEMIES[questEnemyIndex]?.power === 'numbers') {
                     rejectMsg += ' Remember: Only number words are allowed against Nerdy Newt.';
@@ -4997,6 +5029,8 @@
                 document.getElementById('condor-taunt').classList.add('visible');
             } else if (enemy.power === 'numbers') {
                 document.getElementById('newt-taunt').classList.add('visible');
+            } else if (enemy.power === 'decisive') {
+                document.getElementById('dog-taunt').classList.add('visible');
             } else if (enemy.power === 'none') {
                 document.getElementById('goat-taunt').classList.add('visible');
             } else {
@@ -5072,7 +5106,7 @@
         }
 
         async function applyPossumShove() {
-            const shiftCells = 6;
+            const shiftCells = 5;
             const shiftPx = shiftCells * CELL;
             const dirArrows = { left: '\u2B05', right: '\u27A1', up: '\u2B06', down: '\u2B07' };
             const dirLabels = { left: 'Shoved Left!', right: 'Shoved Right!', up: 'Shoved Up!', down: 'Shoved Down!' };
@@ -5284,6 +5318,11 @@
 
         function dismissNewtTaunt() {
             document.getElementById('newt-taunt').classList.remove('visible');
+            setTimeout(() => aiTakeTurn(), 600);
+        }
+
+        function dismissDogTaunt() {
+            document.getElementById('dog-taunt').classList.remove('visible');
             setTimeout(() => aiTakeTurn(), 600);
         }
 
