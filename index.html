@@ -11,7 +11,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: #0f172a;
+            background: url('Jungle Assets/Background.png') center center / cover no-repeat fixed;
+            background-color: #0f172a;
             color: #e2e8f0;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             display: flex;
@@ -21,151 +22,212 @@
             padding: 20px;
         }
 
-        /* ===== Menu Screen ===== */
-        #menu-screen {
+        /* ===== Menu Screen — Jungle Theme (image assets) ===== */
+        #menu-screen, #quickplay-screen {
             position: fixed; inset: 0; z-index: 200;
-            background: linear-gradient(180deg, #0a1628 0%, #0f2940 30%, #134b5f 60%, #1a5c3a 85%, #0f3d1f 100%);
+            background: url('Jungle Assets/Background.png') center center / cover no-repeat;
+            background-color: #1a3d12;
             display: flex; flex-direction: column;
-            justify-content: safe center; align-items: center;
+            justify-content: center; align-items: center;
             transition: opacity 0.6s ease, transform 0.6s ease;
             overflow-x: hidden; overflow-y: auto;
-            padding: 20px 0;
+            padding: 20px 16px;
+            padding: 20px 16px env(safe-area-inset-bottom) 16px;
         }
-        .menu-decorations {
-            position: absolute; inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .menu-ground {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            height: 60px;
-            background: linear-gradient(180deg, #2d5a1e 0%, #1a3d12 100%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .menu-title, .menu-subtitle, .menu-cards, .menu-options-btn {
-            position: relative; z-index: 1;
-        }
-        .deco {
-            position: absolute;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-        }
-        .deco-palm-left { left: 2%; bottom: 20px; width: 140px; opacity: 0.95; }
-        .deco-palm-right { right: 3%; bottom: 30px; width: 120px; opacity: 0.95; transform: scaleX(-1); }
-        .deco-palm-bg { left: 15%; bottom: 40px; width: 100px; opacity: 0.3; }
-        .deco-bush-left { left: 8%; bottom: 15px; width: 80px; }
-        .deco-bush-right { right: 10%; bottom: 15px; width: 55px; }
-        .deco-grass-1 { left: 20%; bottom: 10px; width: 60px; opacity: 0.8; }
-        .deco-grass-2 { right: 22%; bottom: 8px; width: 40px; opacity: 0.7; }
-        .deco-grass-3 { left: 45%; bottom: 12px; width: 50px; opacity: 0.6; }
-        .deco-flower-red { left: 12%; bottom: 35px; width: 20px; }
-        .deco-flower-purple { right: 15%; bottom: 40px; width: 18px; }
-        .deco-flower-yellow { left: 30%; bottom: 28px; width: 16px; }
-        #menu-screen.hidden {
+        #menu-screen.hidden, #quickplay-screen.hidden {
             opacity: 0; transform: scale(1.05);
             pointer-events: none;
         }
+        .menu-title, .menu-buttons, .options-gear, .tropical-btn-back {
+            position: relative; z-index: 1;
+        }
 
         .menu-title {
-            font-size: 52px; font-weight: 900;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f87171);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(64px, 18vw, 100px); font-weight: 600;
+            line-height: 1.0;
+            color: #FFF8DC;
+            -webkit-text-stroke: 3px #4a2a0a;
+            text-shadow:
+                0 0 12px rgba(255,200,50,0.4),
+                0 0 30px rgba(255,180,40,0.2),
+                0 2px 0 #a0622a,
+                0 4px 0 #8B4513,
+                0 6px 0 #6b3410,
+                0 8px 16px rgba(0,0,0,0.7),
+                0 4px 24px rgba(0,0,0,0.4);
+            margin-top: clamp(-60px, -8vh, -20px);
+            margin-bottom: clamp(20px, 5vh, 40px);
             text-align: center;
+            letter-spacing: 2px;
         }
-        .menu-subtitle {
-            font-size: 16px; color: #64748b;
-            margin-bottom: 48px; text-align: center;
-        }
-
-        .menu-cards {
-            display: flex; gap: 20px;
-            flex-wrap: wrap; justify-content: center;
-            max-width: 740px;
+        .menu-title-sub {
+            font-size: clamp(32px, 9vw, 48px);
         }
 
-        .menu-card {
-            width: 210px; padding: 28px 20px;
-            background: #1e293b; border-radius: 16px;
-            text-align: center; cursor: pointer;
-            border: 2px solid transparent;
-            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+        .menu-buttons {
+            display: flex; flex-direction: column;
+            align-items: center; gap: clamp(14px, 3vh, 22px);
         }
-        .menu-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+
+        .tropical-btn {
+            width: min(320px, 78vw);
+            height: auto;
+            padding: 0;
+            background: url('Jungle Assets/PNG/shop/btn.png') center center / 100% 100% no-repeat !important;
+            border: none !important;
+            border-radius: 0 !important;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(20px, 5vw, 28px); font-weight: 600;
+            color: #FFF8DC;
+            text-shadow: 1px 2px 3px rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.15s, filter 0.15s;
+            -webkit-tap-highlight-color: transparent;
+            /* Vertical padding scaled to button image aspect ratio */
+            padding: clamp(14px, 3.5vw, 20px) clamp(24px, 6vw, 48px);
         }
-        .menu-card.pvp:hover { border-color: #a78bfa; }
-        .menu-card.pvc:hover { border-color: #60a5fa; }
-        .menu-card.tutorial:hover { border-color: #34d399; }
+        .tropical-btn:hover {
+            transform: scale(1.04);
+            filter: brightness(1.12);
+            background: url('Jungle Assets/PNG/shop/btn.png') center center / 100% 100% no-repeat !important;
+        }
+        .tropical-btn:active {
+            transform: scale(0.97);
+            filter: brightness(1.5);
+            background: url('Jungle Assets/PNG/shop/btn.png') center center / 100% 100% no-repeat !important;
+        }
 
-        .menu-card-icon { font-size: 40px; margin-bottom: 12px; }
-        .menu-card-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
-        .menu-card-desc { font-size: 13px; color: #94a3b8; line-height: 1.4; }
+        /* Back button — uses the square green btn asset */
+        .tropical-btn-back {
+            margin-top: clamp(10px, 2vh, 20px);
+            width: clamp(56px, 14vw, 72px);
+            height: clamp(56px, 14vw, 72px);
+            padding: 0;
+            background: url('Jungle Assets/PNG/btn/prew.png') center center / contain no-repeat;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.15s, filter 0.15s;
+            -webkit-tap-highlight-color: transparent;
+            font-size: 0; color: transparent; /* hide text, image-only */
+        }
+        .tropical-btn-back:hover {
+            transform: scale(1.08);
+            filter: brightness(1.1);
+        }
+        .tropical-btn-back:active {
+            transform: scale(0.95);
+            filter: brightness(0.5);
+        }
 
-        .menu-card.pvp .menu-card-title { color: #a78bfa; }
-        .menu-card.pvc .menu-card-title { color: #60a5fa; }
-        .menu-card.tutorial .menu-card-title { color: #34d399; }
+        /* Options gear — bottom right, uses settings asset */
+        .options-gear {
+            position: absolute; bottom: clamp(14px, 3vh, 24px); right: clamp(14px, 3vw, 24px);
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; z-index: 2;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .options-gear-icon {
+            width: clamp(48px, 12vw, 64px);
+            height: clamp(48px, 12vw, 64px);
+            background: url('Jungle Assets/PNG/menu/setting.png') center center / contain no-repeat;
+            transition: transform 0.3s, filter 0.3s;
+        }
+        .options-gear:hover .options-gear-icon {
+            transform: rotate(25deg) scale(1.05);
+            filter: brightness(1.1);
+        }
+        .options-gear:active .options-gear-icon {
+            transform: scale(0.95);
+            filter: brightness(0.5);
+        }
+        .options-gear-label {
+            margin-top: 2px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(10px, 2.5vw, 13px); font-weight: 600;
+            color: #FFF8DC;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+        }
 
-        /* ===== Options Screen ===== */
+        /* ===== Options Screen — Jungle Theme ===== */
         #options-screen {
             position: fixed; inset: 0; z-index: 210;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background: url('Jungle Assets/Background.png') center center / cover no-repeat;
+            background-color: #1a3d12;
             display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
+            justify-content: safe center; align-items: center;
             transition: opacity 0.4s ease, transform 0.4s ease;
             overflow-y: auto;
-            padding: 24px 0;
+            padding: 24px 16px;
         }
         #options-screen.hidden {
             opacity: 0; transform: scale(1.05);
             pointer-events: none;
         }
         .options-title {
-            font-size: 36px; font-weight: 900; color: #e2e8f0;
-            margin-bottom: 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(28px, 7vw, 38px); font-weight: 600;
+            color: #FFF8DC;
+            -webkit-text-stroke: 1.5px #5C3317;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.6), 0 1px 0 #8B4513;
+            margin-bottom: 16px;
         }
         .options-section {
-            background: #1e293b; border-radius: 12px;
-            padding: 16px 28px; margin-bottom: 8px;
-            min-width: 340px; max-width: 420px;
+            background: url('Jungle Assets/PNG/settings/table.png') center center / 100% 100% no-repeat;
+            padding: clamp(24px, 5vw, 36px) clamp(28px, 6vw, 44px);
+            margin-bottom: 10px;
+            width: min(440px, 90vw); min-width: 0;
+            border: none; border-radius: 0;
         }
-        .options-section-title { font-size: 16px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
-        .options-section-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; line-height: 1.4; }
-        .options-hint { font-size: 12px; color: #94a3b8; margin-top: 8px; font-style: italic; }
+        .options-section-title { font-size: 16px; font-weight: 700; color: #4a3520; margin-bottom: 4px; }
+        .options-section-desc { font-size: 12px; color: #6b5040; margin-bottom: 12px; line-height: 1.4; }
+        .options-hint { font-size: 12px; color: #6b5040; margin-top: 8px; font-style: italic; }
         .options-buttons { display: flex; gap: 8px; }
-        .options-buttons-5 .opt-btn { padding: 10px 8px; font-size: 13px; }
+        .options-buttons-5 .opt-btn { padding: 10px 6px; font-size: 12px; }
         .opt-btn {
-            flex: 1; padding: 10px 16px; border-radius: 8px;
-            border: 2px solid #334155; background: #0f172a; color: #94a3b8;
+            flex: 1; padding: 10px 14px; border-radius: 10px;
+            border: 2px solid #9aae8a; background: rgba(120,160,100,0.25); color: #4a3520;
             font-size: 14px; font-weight: 600; cursor: pointer;
             transition: all 0.2s;
         }
-        .opt-btn:hover { border-color: #60a5fa; color: #e2e8f0; }
-        .opt-btn.opt-active { border-color: #60a5fa; background: #1e3a5f; color: #60a5fa; }
+        .opt-btn:hover { border-color: #6a9a4a; color: #2a1a08; background: rgba(120,160,100,0.45); }
+        .opt-btn:active { filter: brightness(0.5); }
+        .opt-btn.opt-active {
+            border-color: #4a8a2a;
+            background: url('Jungle Assets/PNG/btn/01.png') center center / cover no-repeat;
+            color: #FFF8DC; text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
         .options-turns-row { display: flex; align-items: center; }
         .opt-turns-input {
-            width: 64px; padding: 10px 12px; border-radius: 8px;
-            border: 2px solid #334155; background: #0f172a; color: #e2e8f0;
+            width: 64px; padding: 10px 12px; border-radius: 10px;
+            border: 2px solid #9aae8a; background: rgba(255,255,240,0.85); color: #4a3520;
             font-size: 16px; font-weight: 600; text-align: center;
             outline: none; transition: border-color 0.2s;
             -moz-appearance: textfield;
         }
         .opt-turns-input::-webkit-outer-spin-button,
         .opt-turns-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .opt-turns-input:focus { border-color: #60a5fa; }
+        .opt-turns-input:focus { border-color: #4a8a2a; }
         .opt-turns-input.input-error { border-color: #ef4444; }
         .turns-error { color: #ef4444; font-weight: 600; }
-        .menu-options-btn {
-            margin-top: 20px; padding: 12px 32px;
-            border-radius: 10px; border: 2px solid #334155;
-            background: #1e293b; color: #94a3b8;
-            font-size: 15px; font-weight: 600; cursor: pointer;
-            transition: all 0.25s;
+        .options-back-btn {
+            margin-top: 16px;
+            width: clamp(56px, 14vw, 72px);
+            height: clamp(56px, 14vw, 72px);
+            padding: 0;
+            background: url('Jungle Assets/PNG/btn/prew.png') center center / contain no-repeat;
+            border: none; border-radius: 0;
+            cursor: pointer;
+            transition: transform 0.15s, filter 0.15s;
+            -webkit-tap-highlight-color: transparent;
+            font-size: 0; color: transparent;
         }
-        .menu-options-btn:hover { border-color: #a78bfa; color: #e2e8f0; transform: translateY(-2px); }
+        .options-back-btn:hover { transform: scale(1.08); filter: brightness(1.1); }
+        .options-back-btn:active { transform: scale(0.95); filter: brightness(0.5); }
 
         /* ===== Turn Timer ===== */
         #turn-timer {
@@ -510,87 +572,122 @@
         /* ===== Online / Lobby Screens ===== */
         #online-screen {
             position: fixed; inset: 0; z-index: 210;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background: url('Jungle Assets/Background.png') center center / cover no-repeat;
+            background-color: #1a3d12;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             transition: opacity 0.4s ease, transform 0.4s ease;
+            padding: 24px 16px;
         }
         #online-screen.hidden {
             opacity: 0; transform: scale(1.05);
             pointer-events: none;
         }
         .online-title {
-            font-size: 36px; font-weight: 900; color: #e2e8f0;
-            margin-bottom: 32px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(28px, 7vw, 38px); font-weight: 600;
+            color: #FFF8DC;
+            -webkit-text-stroke: 1.5px #5C3317;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.6), 0 1px 0 #8B4513;
+            margin-bottom: 28px;
         }
         .online-sections {
             display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;
         }
         .online-section {
-            background: #1e293b; border-radius: 12px;
-            padding: 28px 32px; min-width: 260px; text-align: center;
-            border: 2px solid #334155;
+            background: url('Jungle Assets/PNG/settings/table.png') center center / 100% 100% no-repeat;
+            padding: clamp(28px, 5vw, 38px) clamp(28px, 6vw, 40px);
+            min-width: 260px; text-align: center;
+            border: none; border-radius: 0;
         }
         .online-section h3 {
-            font-size: 18px; font-weight: 700; color: #f59e0b;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 18px; font-weight: 700; color: #4a3520;
             margin-bottom: 16px;
         }
         .online-section p {
-            font-size: 13px; color: #94a3b8; margin-bottom: 16px; line-height: 1.5;
+            font-size: 13px; color: #6b5040; margin-bottom: 16px; line-height: 1.5;
         }
         .online-section button {
             padding: 10px 28px; font-size: 15px; font-weight: 600;
-            background: #f59e0b; color: #0f172a; border-radius: 8px;
-            border: none; cursor: pointer; transition: background 0.2s, transform 0.15s;
+            background: url('Jungle Assets/PNG/shop/btn.png') center center / 100% 100% no-repeat !important;
+            color: #FFF8DC; border-radius: 0 !important;
+            border: none !important; cursor: pointer;
+            transition: transform 0.15s, filter 0.15s;
+            font-family: 'Fredoka', sans-serif;
+            text-shadow: 1px 2px 3px rgba(0,0,0,0.6);
+            -webkit-appearance: none; appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            padding: 14px 32px;
         }
         .online-section button:hover {
-            background: #fbbf24; transform: translateY(-2px);
+            transform: scale(1.04); filter: brightness(1.12);
+            background: url('Jungle Assets/PNG/shop/btn.png') center center / 100% 100% no-repeat !important;
+        }
+        .online-section button:active {
+            transform: scale(0.97); filter: brightness(1.5);
+            background: url('Jungle Assets/PNG/shop/btn.png') center center / 100% 100% no-repeat !important;
         }
         .online-code-input {
-            width: 160px; padding: 10px 14px; border-radius: 8px;
-            border: 2px solid #334155; background: #0f172a; color: #e2e8f0;
+            width: 160px; padding: 10px 14px; border-radius: 10px;
+            border: 2px solid #9aae8a; background: rgba(255,255,240,0.85); color: #4a3520;
             font-size: 20px; font-weight: 700; text-align: center;
             letter-spacing: 4px; text-transform: uppercase;
             outline: none; transition: border-color 0.2s;
             font-family: 'Courier New', monospace;
             margin-bottom: 12px; display: block; margin-left: auto; margin-right: auto;
         }
-        .online-code-input:focus { border-color: #f59e0b; }
+        .online-code-input:focus { border-color: #4a8a2a; }
         .online-back-btn {
-            margin-top: 28px; padding: 10px 28px; border-radius: 8px;
-            border: 2px solid #334155; background: #1e293b; color: #94a3b8;
-            font-size: 14px; font-weight: 600; cursor: pointer;
-            transition: all 0.2s;
+            margin-top: 20px;
+            width: clamp(56px, 14vw, 72px);
+            height: clamp(56px, 14vw, 72px);
+            padding: 0;
+            background: url('Jungle Assets/PNG/btn/prew.png') center center / contain no-repeat;
+            border: none; border-radius: 0;
+            cursor: pointer;
+            transition: transform 0.15s, filter 0.15s;
+            -webkit-tap-highlight-color: transparent;
+            font-size: 0; color: transparent;
         }
         .online-back-btn:hover {
-            border-color: #f59e0b; color: #e2e8f0; transform: translateY(-2px);
+            transform: scale(1.08); filter: brightness(1.1);
+        }
+        .online-back-btn:active {
+            transform: scale(0.95); filter: brightness(0.5);
         }
 
         #lobby-screen {
             position: fixed; inset: 0; z-index: 210;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background: url('Jungle Assets/Background.png') center center / cover no-repeat;
+            background-color: #1a3d12;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             transition: opacity 0.4s ease, transform 0.4s ease;
+            padding: 24px 16px;
         }
         #lobby-screen.hidden {
             opacity: 0; transform: scale(1.05);
             pointer-events: none;
         }
         .lobby-label {
-            font-size: 16px; color: #94a3b8; margin-bottom: 12px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px; color: #FFF8DC; margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         .lobby-code {
             font-size: 56px; font-weight: 900; letter-spacing: 12px;
-            color: #f59e0b; font-family: 'Courier New', monospace;
+            color: #FFD700; font-family: 'Courier New', monospace;
             margin-bottom: 8px;
+            text-shadow: 0 3px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,215,0,0.3);
         }
         .lobby-status {
-            font-size: 16px; color: #64748b; margin-bottom: 24px;
+            font-size: 16px; color: #e8d5b8; margin-bottom: 24px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
         }
         .lobby-status .dot {
             display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-            background: #f59e0b; margin-right: 6px;
+            background: #FFD700; margin-right: 6px;
             animation: lobby-pulse 1.2s ease-in-out infinite alternate;
         }
         @keyframes lobby-pulse {
@@ -598,16 +695,32 @@
         }
         .lobby-buttons { display: flex; gap: 12px; }
         .lobby-buttons button {
-            padding: 10px 24px; font-size: 14px; border-radius: 8px;
+            padding: 12px 28px; font-size: 14px; border-radius: 10px;
+            font-family: 'Fredoka', sans-serif; font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            transition: transform 0.15s, filter 0.15s, box-shadow 0.15s;
+            -webkit-tap-highlight-color: transparent;
         }
         .lobby-copy-btn {
-            background: #334155; color: #e2e8f0;
+            background: linear-gradient(135deg, #2d6b1e 0%, #3d8b2e 50%, #2a7520 100%);
+            color: #FFF8DC; border: 3px solid #8B6914;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
         }
-        .lobby-copy-btn:hover { background: #475569; }
+        .lobby-copy-btn:hover {
+            background: linear-gradient(135deg, #358b24 0%, #4a9e38 50%, #32882a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+        }
+        .lobby-copy-btn:active { transform: scale(0.97); filter: brightness(1.5); }
         .lobby-cancel-btn {
-            background: #92400e; color: #fff;
+            background: rgba(90,58,26,0.7); color: #c8a878;
+            border: 2px solid rgba(139,105,20,0.5);
         }
-        .lobby-cancel-btn:hover { background: #78350f; }
+        .lobby-cancel-btn:hover {
+            border-color: #ef4444; color: #ef4444; background: rgba(100,30,30,0.5);
+            transform: translateY(-2px);
+        }
+        .lobby-cancel-btn:active { transform: scale(0.97); filter: brightness(0.5); }
 
         /* Online menu card */
         .menu-card.online:hover { border-color: #f59e0b; }
@@ -639,7 +752,7 @@
 
         #quest-screen {
             position: fixed; inset: 0; z-index: 210;
-            background: linear-gradient(180deg, #06050f 0%, #0d0b1a 30%, #0f172a 70%, #0a1020 100%);
+            background: url('Jungle Assets/Background.png') center center / cover no-repeat;
             display: flex; flex-direction: column;
             align-items: center; justify-content: flex-end;
             transition: opacity 0.4s ease;
@@ -669,77 +782,96 @@
             align-items: center;
         }
 
-        /* Vertical connector line between nodes */
+        /* Vertical connector vine between nodes */
         .quest-connector {
-            width: 4px;
+            width: 8px;
             height: 80px;
-            background: linear-gradient(180deg, #334155 0%, #475569 50%, #334155 100%);
+            background: linear-gradient(180deg, #3d6b1e 0%, #5a8a3c 30%, #4a7a2c 50%, #5a8a3c 70%, #3d6b1e 100%);
+            border-radius: 4px;
             position: relative;
+            box-shadow: inset -2px 0 3px rgba(0,0,0,0.3), 1px 0 2px rgba(0,0,0,0.15);
         }
         .quest-connector.defeated-line {
-            background: linear-gradient(180deg, #166534 0%, #22c55e 50%, #166534 100%);
-            box-shadow: 0 0 8px rgba(34,197,94,0.3);
+            background: linear-gradient(180deg, #22c55e 0%, #4ade80 30%, #34d399 50%, #4ade80 70%, #22c55e 100%);
+            box-shadow: inset -2px 0 3px rgba(0,0,0,0.2), 0 0 10px rgba(34,197,94,0.4);
         }
-        /* Glowing dot at connector midpoint */
+        /* Leaf accent at connector midpoint */
         .quest-connector::after {
-            content: '';
+            content: '\1F343';
             position: absolute; left: 50%; top: 50%;
             transform: translate(-50%, -50%);
-            width: 10px; height: 10px; border-radius: 50%;
-            background: #475569;
+            font-size: 16px;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
         }
         .quest-connector.defeated-line::after {
-            background: #22c55e;
+            content: '\2714';
+            font-size: 14px;
+            color: #fff;
+            background: #16a34a;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
             box-shadow: 0 0 10px rgba(34,197,94,0.5);
         }
 
-        /* Enemy card — landscape rectangle, width = 2x height */
+        /* Enemy card — landscape rectangle with wooden frame */
         .quest-enemy-card {
             width: min(50vw, 480px);
             aspect-ratio: 2 / 1;
-            background: #111827;
+            background: linear-gradient(145deg, #5a3a1a 0%, #6b4423 25%, #5a3a1a 50%, #7a5433 75%, #5a3a1a 100%);
             border-radius: 14px;
-            border: 3px solid #1e293b;
+            border: 5px solid #8B6914;
             display: flex;
             align-items: stretch;
             overflow: hidden;
             position: relative;
             transition: border-color 0.4s, box-shadow 0.4s, opacity 0.4s, filter 0.4s;
+            box-shadow:
+                0 4px 16px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                inset 0 -2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Current enemy — bold glowing border */
+        /* Current enemy — golden glowing wooden border */
         .quest-enemy-card.available {
-            border-color: #f97316;
+            border-color: #FFD700;
             box-shadow:
-                0 0 20px rgba(249,115,22,0.4),
-                0 0 50px rgba(249,115,22,0.15),
-                inset 0 0 30px rgba(249,115,22,0.05);
+                0 0 20px rgba(255,215,0,0.5),
+                0 0 50px rgba(255,165,0,0.2),
+                0 4px 16px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.15),
+                inset 0 -2px 4px rgba(0,0,0,0.3);
             animation: quest-current-pulse 2s ease-in-out infinite alternate;
         }
         @keyframes quest-current-pulse {
             from {
                 box-shadow:
-                    0 0 15px rgba(249,115,22,0.3),
-                    0 0 40px rgba(249,115,22,0.1),
-                    inset 0 0 20px rgba(249,115,22,0.03);
+                    0 0 15px rgba(255,215,0,0.4),
+                    0 0 40px rgba(255,165,0,0.15),
+                    0 4px 16px rgba(0,0,0,0.5),
+                    inset 0 1px 0 rgba(255,255,255,0.15);
             }
             to {
                 box-shadow:
-                    0 0 30px rgba(249,115,22,0.55),
-                    0 0 70px rgba(249,115,22,0.2),
-                    inset 0 0 40px rgba(249,115,22,0.08);
-                border-color: #fb923c;
+                    0 0 30px rgba(255,215,0,0.65),
+                    0 0 70px rgba(255,165,0,0.25),
+                    0 4px 16px rgba(0,0,0,0.5),
+                    inset 0 1px 0 rgba(255,255,255,0.2);
+                border-color: #FFA500;
             }
         }
 
         .quest-enemy-card.defeated {
-            border-color: #166534;
-            box-shadow: 0 0 12px rgba(34,197,94,0.15);
+            border-color: #2d8b4e;
+            box-shadow:
+                0 0 14px rgba(34,197,94,0.25),
+                0 4px 12px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.08);
         }
         .quest-enemy-card.locked {
-            border-color: #1e293b;
-            opacity: 0.35;
-            filter: grayscale(0.8) brightness(0.6);
+            border-color: #5a4a3a;
+            opacity: 0.4;
+            filter: grayscale(0.6) brightness(0.7);
         }
 
         /* Image takes left ~45% */
@@ -748,28 +880,30 @@
             position: relative;
             overflow: hidden;
             flex-shrink: 0;
+            border-right: 3px solid #8B6914;
         }
         .quest-enemy-card .qec-img-wrap img {
             width: 100%; height: 100%;
             object-fit: cover;
             display: block;
         }
-        /* Gradient fade from image to info */
+        /* Subtle gradient fade at image edge */
         .quest-enemy-card .qec-img-wrap::after {
             content: '';
             position: absolute; top: 0; right: 0;
-            width: 40%; height: 100%;
-            background: linear-gradient(90deg, transparent, #111827);
+            width: 25%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(90,58,26,0.6));
         }
         /* Defeated checkmark overlay */
         .quest-enemy-card.defeated .qec-img-wrap::before {
             content: '\2714';
             position: absolute; top: 8px; left: 8px; z-index: 2;
-            width: 28px; height: 28px; border-radius: 50%;
-            background: #16a34a;
+            width: 30px; height: 30px; border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff; font-size: 15px; font-weight: 900;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
         /* Info panel on the right */
@@ -777,15 +911,16 @@
             flex: 1; display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 12px 16px 12px 4px;
+            padding: 12px 16px 12px 10px;
             position: relative; z-index: 1;
         }
 
         .quest-enemy-card .qec-name {
             font-size: clamp(16px, 2.5vw, 22px);
-            color: #e2e8f0;
+            color: #FFF8DC;
             margin-bottom: 4px;
             line-height: 1.2;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
         }
         /* Per-enemy fonts */
         .quest-enemy-card[data-enemy="goat"] .qec-name {
@@ -850,39 +985,51 @@
             font-size: 10px; font-weight: 700; text-transform: uppercase;
             letter-spacing: 2px; margin-bottom: 6px;
         }
-        .qec-diff.easy { color: #34d399; }
-        .qec-diff.medium { color: #fbbf24; }
-        .qec-diff.expert { color: #f87171; }
+        .qec-diff.easy { color: #4ade80; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .qec-diff.medium { color: #fbbf24; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .qec-diff.expert { color: #f87171; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
         .quest-enemy-card .qec-power {
-            font-size: 14px; color: #94a3b8; line-height: 1.35;
+            font-size: 14px; color: #e8d5b8; line-height: 1.35;
             margin-bottom: 10px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
         }
 
         .quest-battle-btn {
             align-self: flex-start;
-            padding: 7px 22px; border-radius: 8px;
-            background: linear-gradient(135deg, #f97316, #ea580c);
-            color: #fff; border: none;
-            font-size: 13px; font-weight: 700; cursor: pointer;
+            padding: 8px 24px; border-radius: 10px;
+            background: linear-gradient(135deg, #2d6b1e 0%, #3d8b2e 50%, #2a7520 100%);
+            color: #FFF8DC; border: 3px solid #8B6914;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 14px; font-weight: 700; cursor: pointer;
             transition: transform 0.15s, box-shadow 0.15s;
             text-transform: uppercase; letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
         }
         .quest-battle-btn:hover {
             transform: scale(1.06);
-            box-shadow: 0 4px 20px rgba(249,115,22,0.4);
+            box-shadow: 0 4px 20px rgba(45,107,30,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+            background: linear-gradient(135deg, #358b24 0%, #4a9e38 50%, #32882a 100%);
+        }
+        .quest-battle-btn:active {
+            transform: scale(0.97);
+            filter: brightness(0.5);
         }
 
         .quest-status-badge {
             align-self: flex-start;
             display: inline-block; padding: 4px 12px;
             border-radius: 6px; font-size: 11px; font-weight: 700;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
         }
         .quest-status-badge.defeated-badge {
-            background: rgba(22,101,52,0.3); color: #4ade80;
+            background: rgba(22,101,52,0.5); color: #4ade80;
+            border: 1px solid rgba(34,197,94,0.3);
         }
         .quest-status-badge.locked-badge {
-            background: rgba(100,116,139,0.15); color: #64748b;
+            background: rgba(60,40,20,0.4); color: #a89070;
+            border: 1px solid rgba(100,80,50,0.3);
         }
 
         /* Bottom controls bar */
@@ -893,24 +1040,57 @@
             align-items: center;
         }
         .quest-back-btn {
-            padding: 10px 28px; border-radius: 8px;
-            border: 2px solid #334155; background: #1e293b; color: #94a3b8;
+            padding: 10px 28px; border-radius: 10px;
+            border: 3px solid #8B6914;
+            background: linear-gradient(135deg, #2d6b1e 0%, #3d8b2e 50%, #2a7520 100%);
+            color: #FFF8DC;
+            font-family: 'Fredoka', sans-serif;
             font-size: 14px; font-weight: 600; cursor: pointer;
             transition: all 0.2s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
         }
-        .quest-back-btn:hover { border-color: #f97316; color: #e2e8f0; transform: translateY(-2px); }
+        .quest-back-btn:hover {
+            background: linear-gradient(135deg, #358b24 0%, #4a9e38 50%, #32882a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+        }
+        .quest-back-btn:active {
+            transform: scale(0.97);
+            filter: brightness(0.5);
+        }
         .quest-reset-btn {
-            padding: 8px 16px; border-radius: 6px;
-            border: 1px solid #475569; background: transparent; color: #64748b;
+            padding: 8px 16px; border-radius: 8px;
+            border: 2px solid rgba(139,105,20,0.5);
+            background: rgba(90,58,26,0.7); color: #c8a878;
             font-size: 12px; cursor: pointer; transition: all 0.2s;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.4);
         }
-        .quest-reset-btn:hover { border-color: #ef4444; color: #ef4444; }
+        .quest-reset-btn:hover { border-color: #ef4444; color: #ef4444; background: rgba(100,30,30,0.5); }
+        .quest-reset-btn:active { filter: brightness(0.5); }
+
+        /* Unlock-all checkbox — bottom-left corner */
+        .quest-unlock-all {
+            position: absolute; bottom: 20px; left: 16px; z-index: 6;
+            display: flex; align-items: center; gap: 6px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .quest-unlock-all input[type="checkbox"] {
+            width: 16px; height: 16px; cursor: pointer;
+            accent-color: #4a8a2a;
+        }
+        .quest-unlock-all span {
+            font-size: 11px; color: rgba(255,248,220,0.5);
+            font-family: 'Fredoka', sans-serif;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
 
         /* Transition flash overlay for scrolling */
         #quest-flash {
             position: absolute; inset: 0; z-index: 4;
             pointer-events: none; opacity: 0;
-            background: radial-gradient(ellipse at center, rgba(249,115,22,0.3) 0%, transparent 70%);
+            background: radial-gradient(ellipse at center, rgba(255,215,0,0.35) 0%, transparent 70%);
             transition: opacity 0.3s;
         }
         #quest-flash.flash-active {
@@ -927,7 +1107,7 @@
         .quest-sparkle {
             position: absolute; border-radius: 50%;
             pointer-events: none; z-index: 3;
-            background: #f97316;
+            background: #FFD700;
             animation: quest-sparkle-fly 1s ease-out forwards;
         }
         @keyframes quest-sparkle-fly {
@@ -1124,26 +1304,23 @@
             }
             #controls { gap: 6px; }
             button { padding: 7px 14px; font-size: 13px; }
-            .menu-title { font-size: 36px; }
-            .menu-subtitle { margin-bottom: 20px; }
-            .menu-cards { gap: 10px; padding: 0 10px; }
-            .menu-card { width: calc(50% - 10px); min-width: 0; padding: 14px 10px; }
-            .menu-card-icon { font-size: 28px; margin-bottom: 6px; }
-            .menu-card-title { font-size: 15px; margin-bottom: 4px; }
-            .menu-card-desc { font-size: 11px; }
-            .deco-palm-left { width: 90px; }
-            .deco-palm-right { width: 80px; }
-            .deco-palm-bg { width: 70px; }
-            .deco-bush-left { width: 55px; }
-            .deco-bush-right { width: 40px; }
-            .options-section { min-width: 280px; padding: 16px 20px; }
+            /* Tropical buttons — override generic button rule above */
+            .tropical-btn { width: min(280px, 78vw); font-size: clamp(18px, 4.5vw, 22px); padding: clamp(12px, 3vw, 16px) clamp(20px, 5vw, 36px); }
+            .tropical-btn-back { width: clamp(48px, 12vw, 60px); height: clamp(48px, 12vw, 60px); }
+            .options-back-btn { width: clamp(48px, 12vw, 60px); height: clamp(48px, 12vw, 60px); }
+            .menu-title { -webkit-text-stroke: 1.5px #5C3317; }
+            .menu-buttons { gap: clamp(10px, 2.5vh, 16px); }
+            #menu-screen, #quickplay-screen { padding: 16px 10px; }
+            #options-screen { justify-content: flex-start; padding: 20px 10px; }
+            .options-section { min-width: 0; width: min(380px, 92vw); padding: clamp(18px, 4vw, 28px) clamp(22px, 5vw, 36px); }
             #online-screen {
                 justify-content: flex-start;
                 padding-top: 24px;
                 overflow-y: auto;
             }
-            .online-title { font-size: 28px; }
-            .online-section { min-width: 220px; padding: 20px 18px; }
+            .online-title { font-size: 28px; -webkit-text-stroke: 1px #5C3317; }
+            .online-section { min-width: 0; width: min(340px, 88vw); padding: clamp(20px, 4vw, 28px) clamp(22px, 5vw, 32px); }
+            .online-back-btn { width: clamp(48px, 12vw, 60px); height: clamp(48px, 12vw, 60px); }
             .lobby-code { font-size: 40px; letter-spacing: 8px; }
             #online-indicator { font-size: 11px; padding: 6px 10px; }
             .quest-enemy-card { width: min(80vw, 360px); }
@@ -1182,6 +1359,28 @@
             .victory-portrait { width: 55px; height: 55px; }
             .victory-content h1 { font-size: 36px; }
         }
+
+        /* Extra-small phones (iPhone SE, Galaxy Fold, etc.) */
+        @media (max-width: 380px) {
+            .tropical-btn { width: 88vw; padding: 10px 14px; }
+            .tropical-btn-back { width: 44px; height: 44px; }
+            .options-gear-icon { width: 42px; height: 42px; }
+            .options-section { width: 96vw; padding: 16px 14px; }
+            .opt-btn { font-size: 12px; padding: 8px 4px; }
+            .options-back-btn { width: 44px; height: 44px; }
+            .online-section { width: 94vw; padding: 18px 14px; }
+            .online-back-btn { width: 44px; height: 44px; }
+        }
+
+        /* Short screens (landscape phones) — tighten vertical spacing */
+        @media (max-height: 600px) {
+            #menu-screen, #quickplay-screen { justify-content: flex-start; padding-top: 8px; }
+            .menu-title { margin-top: 0; margin-bottom: 6px; font-size: clamp(30px, 8vw, 42px); }
+            .menu-buttons { gap: 6px; }
+            .tropical-btn { padding: 8px 20px; }
+            .options-gear { bottom: 6px; right: 6px; }
+            .options-gear-label { display: none; }
+        }
     </style>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
@@ -1189,56 +1388,27 @@
 <body>
     <!-- Menu Screen -->
     <div id="menu-screen">
-        <div class="menu-title">Word Conquest</div>
-        <div class="menu-subtitle">Capture territory by spelling words on the grid</div>
-        <div class="menu-cards">
-            <div class="menu-card pvp" onclick="startGame('pvp')">
-                <div class="menu-card-icon">&#9876;&#65039;</div>
-                <div class="menu-card-title">Player vs Player</div>
-                <div class="menu-card-desc">Two players take turns on the same device</div>
-            </div>
-            <div class="menu-card pvc" onclick="startGame('pvc')">
-                <div class="menu-card-icon">&#129302;</div>
-                <div class="menu-card-title">Player vs Computer</div>
-                <div class="menu-card-desc">Challenge the AI opponent</div>
-            </div>
-            <div class="menu-card tutorial" onclick="startGame('tutorial')">
-                <div class="menu-card-icon">&#128218;</div>
-                <div class="menu-card-title">Tutorial</div>
-                <div class="menu-card-desc">Learn how to play step by step</div>
-            </div>
-            <div class="menu-card online" onclick="showOnlineScreen()">
-                <div class="menu-card-icon">&#127760;</div>
-                <div class="menu-card-title">Online</div>
-                <div class="menu-card-desc">Play against a friend over the internet</div>
-            </div>
-            <div class="menu-card quest" onclick="showQuestScreen()">
-                <div class="menu-card-icon">&#127965;</div>
-                <div class="menu-card-title">Campaign</div>
-                <div class="menu-card-desc" id="quest-card-desc"></div>
-            </div>
+        <div class="menu-title">Word<br>Conquest</div>
+        <div class="menu-buttons">
+            <button class="tropical-btn" onclick="showQuickPlayScreen()">Quick Play</button>
+            <button class="tropical-btn" onclick="showQuestScreen()">Campaign</button>
+            <button class="tropical-btn" onclick="startGame('tutorial')">Tutorial</button>
         </div>
-        <!-- Temporary test dropdown -->
-        <div style="text-align:center; margin-top:18px;">
-            <select id="quest-test-select" style="padding:8px 16px; font-size:16px; border-radius:8px; border:2px solid #f97316; background:#1a1a2e; color:#fff; cursor:pointer;">
-                <option value="" disabled selected>-- Test Campaign Battle --</option>
-            </select>
+        <div class="options-gear" onclick="openOptions()">
+            <div class="options-gear-icon"></div>
+            <div class="options-gear-label">Options</div>
         </div>
-        <button class="menu-options-btn" onclick="openOptions()">Options</button>
-        <div class="menu-decorations">
-            <img class="deco deco-palm-left" alt="">
-            <img class="deco deco-palm-right" alt="">
-            <img class="deco deco-palm-bg" alt="">
-            <img class="deco deco-bush-left" alt="">
-            <img class="deco deco-bush-right" alt="">
-            <img class="deco deco-grass-1" alt="">
-            <img class="deco deco-grass-2" alt="">
-            <img class="deco deco-grass-3" alt="">
-            <img class="deco deco-flower-red" alt="">
-            <img class="deco deco-flower-purple" alt="">
-            <img class="deco deco-flower-yellow" alt="">
+    </div>
+
+    <!-- Quick Play Screen -->
+    <div id="quickplay-screen" class="hidden">
+        <div class="menu-title menu-title-sub">Quick Play</div>
+        <div class="menu-buttons">
+            <button class="tropical-btn" onclick="hideQuickPlayScreen(); startGame('pvp')">Player vs Player</button>
+            <button class="tropical-btn" onclick="hideQuickPlayScreen(); startGame('pvc')">Player vs Computer</button>
+            <button class="tropical-btn" onclick="hideQuickPlayScreen(); showOnlineScreen()">Online Play</button>
         </div>
-        <div class="menu-ground"></div>
+        <button class="tropical-btn-back" onclick="hideQuickPlayScreen()">Back</button>
     </div>
 
     <!-- Options Screen -->
@@ -1252,7 +1422,6 @@
                 <button class="opt-btn opt-active" onclick="setDifficulty('medium')" id="opt-medium">Medium</button>
                 <button class="opt-btn" onclick="setDifficulty('expert')" id="opt-expert">Expert</button>
             </div>
-            <div class="options-hint" id="difficulty-hint">Default balanced AI.</div>
         </div>
 
         <div class="options-section">
@@ -1273,19 +1442,17 @@
                 <button class="opt-btn" onclick="setBoardSize(12)" id="opt-size-12">12&times;12</button>
                 <button class="opt-btn" onclick="setBoardSize(13)" id="opt-size-13">13&times;13</button>
             </div>
-            <div class="options-hint" id="size-hint">Default board size.</div>
         </div>
 
         <div class="options-section">
             <div class="options-section-title">Turns Per Player</div>
-            <div class="options-section-desc">Number of turns each player takes before the game ends.</div>
             <div class="options-turns-row">
                 <input type="number" id="opt-turns" class="opt-turns-input" value="8" min="1" max="20" oninput="setTurnsOption()">
-                <span class="options-hint" id="turns-hint" style="margin-top:0; margin-left:12px;"></span>
+                <span id="turns-hint" style="margin-top:0; margin-left:12px; font-size:12px; color:#6b5040;"></span>
             </div>
         </div>
 
-        <button class="menu-options-btn" onclick="closeOptions()" style="margin-top:32px;">Back to Menu</button>
+        <button class="options-back-btn" onclick="closeOptions()">Back to Menu</button>
     </div>
 
     <!-- Online Screen -->
@@ -1326,6 +1493,10 @@
             <button class="quest-back-btn" onclick="hideQuestScreen()">Back to Menu</button>
             <button class="quest-reset-btn" onclick="resetQuestProgress()">Reset Progress</button>
         </div>
+        <label class="quest-unlock-all">
+            <input type="checkbox" id="quest-unlock-check" onchange="renderQuestEnemies()">
+            <span>Unlock All</span>
+        </label>
     </div>
 
     <!-- Shakeup Overlay -->
@@ -2601,11 +2772,23 @@
 
         /* ===== Options Menu ===== */
         function openOptions() {
+            document.getElementById('quickplay-screen').classList.add('hidden');
             document.getElementById('options-screen').classList.remove('hidden');
         }
 
         function closeOptions() {
             document.getElementById('options-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+        }
+
+        function showQuickPlayScreen() {
+            document.getElementById('menu-screen').classList.add('hidden');
+            document.getElementById('quickplay-screen').classList.remove('hidden');
+        }
+
+        function hideQuickPlayScreen() {
+            document.getElementById('quickplay-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
         }
 
         function setDifficulty(level) {
@@ -2613,12 +2796,6 @@
             document.getElementById('opt-easy').classList.toggle('opt-active', level === 'easy');
             document.getElementById('opt-medium').classList.toggle('opt-active', level === 'medium');
             document.getElementById('opt-expert').classList.toggle('opt-active', level === 'expert');
-            const hints = {
-                easy: 'AI picks weaker words and sometimes reduces strength.',
-                medium: 'Default balanced AI.',
-                expert: 'AI picks optimal words and sometimes boosts strength.'
-            };
-            document.getElementById('difficulty-hint').textContent = hints[level];
         }
 
         function setTimerOption(seconds) {
@@ -2636,14 +2813,14 @@
 
             if (isNaN(val) || val < 1) {
                 hint.textContent = '';
-                hint.className = 'options-hint';
+                hint.className = '';
                 input.classList.remove('input-error');
                 return;
             }
 
             if (val > 20) {
                 hint.textContent = 'Too Many Turns (Select 1-20)';
-                hint.className = 'options-hint turns-error';
+                hint.className = 'turns-error';
                 input.classList.add('input-error');
                 return;
             }
@@ -2659,8 +2836,7 @@
             [9, 10, 11, 12, 13].forEach(s => {
                 document.getElementById('opt-size-' + s).classList.toggle('opt-active', s === size);
             });
-            const labels = { 9: 'Smallest — tighter fights.', 10: 'Small board.', 11: 'Default board size.', 12: 'Large board — more room to maneuver.', 13: 'Largest — wide open battles.' };
-            document.getElementById('size-hint').textContent = labels[size];
+            recalculateGridSize(size);
         }
 
         /* ===== Turn Timer ===== */
@@ -2871,6 +3047,7 @@
             resetState();
             document.getElementById('game-over').classList.remove('visible');
             // Return to menu
+            document.getElementById('quickplay-screen').classList.add('hidden');
             document.getElementById('menu-screen').classList.remove('hidden');
             genGrid();
             renderHistory();
@@ -4818,7 +4995,7 @@
 
         function spawnQuestSparkles() {
             const screen = document.getElementById('quest-screen');
-            const colors = ['#f97316', '#fbbf24', '#fb923c', '#facc15', '#34d399', '#a78bfa'];
+            const colors = ['#FFD700', '#fbbf24', '#4ade80', '#34d399', '#8B6914', '#fb923c'];
             for (let i = 0; i < 30; i++) {
                 const spark = document.createElement('div');
                 spark.className = 'quest-sparkle';
@@ -4846,11 +5023,13 @@
 
             // Build chain HTML: enemies listed bottom-to-top (index 0 at bottom, 5 at top)
             // But in DOM order, top-to-bottom, so index 5 first
+            const unlockAllEl = document.getElementById('quest-unlock-check');
+            const unlockAll = unlockAllEl && unlockAllEl.checked;
             let html = '';
             for (let i = QUEST_ENEMIES.length - 1; i >= 0; i--) {
                 const enemy = QUEST_ENEMIES[i];
                 const defeated = questProgress.includes(i);
-                const available = !defeated && (i === 0 || questProgress.includes(i - 1));
+                const available = !defeated && (unlockAll || i === 0 || questProgress.includes(i - 1));
                 const locked = !defeated && !available;
                 const statusClass = locked ? 'locked' : (defeated ? 'defeated' : 'available');
 
@@ -5638,20 +5817,6 @@
             });
 
             document.getElementById('quest-card-desc').textContent = 'Battle ' + QUEST_ENEMIES.length + ' unique enemies in a campaign';
-
-            // Temp: populate quest test dropdown
-            const sel = document.getElementById('quest-test-select');
-            QUEST_ENEMIES.forEach((e, i) => {
-                const opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = e.name;
-                sel.appendChild(opt);
-            });
-            sel.addEventListener('change', () => {
-                const idx = parseInt(sel.value);
-                sel.selectedIndex = 0;
-                startQuestBattle(idx);
-            });
 
             // Load menu pixel art decorations
             const decoMap = {
